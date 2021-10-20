@@ -30,24 +30,7 @@ namespace SS_OpenCV
                 }
             }
         }
-        public static void Mean(Image<Bgr, byte> img, Image<Bgr, byte> imgCopy)
-        {
-            unsafe
-            {
-                // direct access to the image memory(sequencial)
-                // direcion top left -> bottom right
 
-                MIplImage m = img.MIplImage;
-                byte* dataPtr = (byte*)m.imageData.ToPointer(); // Pointer to the image
-                byte blue, green, red, gray;
-
-                int width = img.Width;
-                int height = img.Height;
-                int nChan = m.nChannels; // number of channels - 3
-                int padding = m.widthStep - m.nChannels * m.width; // alinhament bytes (padding)
-                int x, y;
-            }
-        }
 
         public static void Negative(Image<Bgr, byte> img)
         {
@@ -575,9 +558,59 @@ namespace SS_OpenCV
                 }
             }
         }
+        public static void Mean(Image<Bgr, byte> img, Image<Bgr, byte> imgCopy)
+        {
+            unsafe
+            {
+                // direct access to the image memory(sequencial)
+                // direcion top left -> bottom right
 
+                MIplImage m = img.MIplImage;
+                byte* dataPtr = (byte*)m.imageData.ToPointer(); // Pointer to the image
+                MIplImage mCopy = imgCopy.MIplImage;
+                byte* dataPtrCopy = (byte*)mCopy.imageData.ToPointer(); // Pointer to the image
+                byte blue, green, red, gray;
 
+                int width = img.Width;
+                int height = img.Height;
+                int nChan = m.nChannels; // number of channels - 3
+                int padding = m.widthStep - m.nChannels * m.width; // alinhament bytes (padding)
+                int x, y;
+                int blueSum = 0, greenSum = 0, redSum = 0;
+                int nC = m.nChannels;
+                dataPtrCopy += nChan + m.widthStep;
+                dataPtr += nChan + m.widthStep;
+                if (nC == 3)
+                {
+                    for (y = 1; y < height - 1; y++)
+                    {
+                        for (x = 1; x < width - 1; x++)
+                        {
+                            blueSum = dataPtrCopy[0] + (dataPtrCopy - nChan)[0] + (dataPtrCopy + nChan)[0];
+                            greenSum = dataPtrCopy[1] + (dataPtrCopy - nChan)[1] + (dataPtrCopy + nChan)[1];
+                            redSum = dataPtrCopy[2] + (dataPtrCopy - nChan)[2] + (dataPtrCopy + nChan)[2];
 
+                            blueSum += (dataPtrCopy - m.widthStep)[0] + (dataPtrCopy - m.widthStep - nChan)[0] + (dataPtrCopy - m.widthStep + nChan)[0];
+                            greenSum += (dataPtrCopy - m.widthStep)[1] + (dataPtrCopy - m.widthStep - nChan)[1] + (dataPtrCopy - m.widthStep + nChan)[1];
+                            redSum += (dataPtrCopy - m.widthStep)[2] + (dataPtrCopy - m.widthStep - nChan)[2] + (dataPtrCopy - m.widthStep + nChan)[2];
+
+                            blueSum += (dataPtrCopy + m.widthStep)[0] + (dataPtrCopy + m.widthStep - nChan)[0] + (dataPtrCopy + m.widthStep + nChan)[0];
+                            greenSum += (dataPtrCopy + m.widthStep)[1] + (dataPtrCopy + m.widthStep - nChan)[1] + (dataPtrCopy + m.widthStep + nChan)[1];
+                            redSum += (dataPtrCopy + m.widthStep)[2] + (dataPtrCopy + m.widthStep - nChan)[2] + (dataPtrCopy + m.widthStep + nChan)[2];
+
+                            dataPtr[0] = (byte)Math.Round(blueSum / 9.0);
+                            dataPtr[1] = (byte)Math.Round(greenSum / 9.0);
+                            dataPtr[2] = (byte)Math.Round(redSum / 9.0);
+
+                            dataPtrCopy += nChan;
+                            dataPtr += nChan;
+                        }
+                        dataPtrCopy += nChan + padding + nChan;
+                        dataPtr += nChan + padding + nChan;
+                    }
+                }
+            }
+        }
         /// <summary>
         /// Histogram equalization
         /// </summary>
