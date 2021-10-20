@@ -208,3 +208,17 @@ C:\Users\mykyt\Documents\Faculdade\SS\SS_OpenCV_2021_10_05\SS_OpenCV_Base\SS_Ope
 C:\Users\mykyt\Documents\Faculdade\SS\SS_OpenCV_2021_10_05\SS_OpenCV_Base\SS_OpenCV\obj\Debug\SS_OpenCV.csproj.CopyComplete
 C:\Users\mykyt\Documents\Faculdade\SS\SS_OpenCV_2021_10_05\SS_OpenCV_Base\SS_OpenCV\obj\Debug\SS_OpenCV.exe
 C:\Users\mykyt\Documents\Faculdade\SS\SS_OpenCV_2021_10_05\SS_OpenCV_Base\SS_OpenCV\obj\Debug\SS_OpenCV.pdb
+D:\joaom\Documents\Mestrado\SS\SS_OpenCV_2021_10_05\SS_OpenCV_Base\SS_OpenCV\bin\Debug\SS_OpenCV.exe.config
+D:\joaom\Documents\Mestrado\SS\SS_OpenCV_2021_10_05\SS_OpenCV_Base\SS_OpenCV\bin\Debug\SS_OpenCV.exe
+D:\joaom\Documents\Mestrado\SS\SS_OpenCV_2021_10_05\SS_OpenCV_Base\SS_OpenCV\bin\Debug\SS_OpenCV.pdb
+D:\joaom\Documents\Mestrado\SS\SS_OpenCV_2021_10_05\SS_OpenCV_Base\SS_OpenCV\bin\Debug\SS_Eval.pdb
+D:\joaom\Documents\Mestrado\SS\SS_OpenCV_2021_10_05\SS_OpenCV_Base\SS_OpenCV\obj\Debug\SS_OpenCV.csprojAssemblyReference.cache
+D:\joaom\Documents\Mestrado\SS\SS_OpenCV_2021_10_05\SS_OpenCV_Base\SS_OpenCV\obj\Debug\SS_OpenCV.AuthorsForm.resources
+D:\joaom\Documents\Mestrado\SS\SS_OpenCV_2021_10_05\SS_OpenCV_Base\SS_OpenCV\obj\Debug\SS_OpenCV.InputBox.resources
+D:\joaom\Documents\Mestrado\SS\SS_OpenCV_2021_10_05\SS_OpenCV_Base\SS_OpenCV\obj\Debug\SS_OpenCV.MainForm.resources
+D:\joaom\Documents\Mestrado\SS\SS_OpenCV_2021_10_05\SS_OpenCV_Base\SS_OpenCV\obj\Debug\SS_OpenCV.Properties.Resources.resources
+D:\joaom\Documents\Mestrado\SS\SS_OpenCV_2021_10_05\SS_OpenCV_Base\SS_OpenCV\obj\Debug\SS_OpenCV.csproj.GenerateResource.cache
+D:\joaom\Documents\Mestrado\SS\SS_OpenCV_2021_10_05\SS_OpenCV_Base\SS_OpenCV\obj\Debug\SS_OpenCV.csproj.CoreCompileInputs.cache
+D:\joaom\Documents\Mestrado\SS\SS_OpenCV_2021_10_05\SS_OpenCV_Base\SS_OpenCV\obj\Debug\SS_OpenCV.csproj.CopyComplete
+D:\joaom\Documents\Mestrado\SS\SS_OpenCV_2021_10_05\SS_OpenCV_Base\SS_OpenCV\obj\Debug\SS_OpenCV.exe
+D:\joaom\Documents\Mestrado\SS\SS_OpenCV_2021_10_05\SS_OpenCV_Base\SS_OpenCV\obj\Debug\SS_OpenCV.pdb
