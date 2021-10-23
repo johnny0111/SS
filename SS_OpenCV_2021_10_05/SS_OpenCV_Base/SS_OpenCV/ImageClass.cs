@@ -568,13 +568,11 @@ namespace SS_OpenCV
                 MIplImage m = img.MIplImage;
                 byte* dataPtr = (byte*)m.imageData.ToPointer(); // Pointer to the image
                 byte* resetPtr = dataPtr;
+                byte* dataPtrBorder = dataPtr;
                 MIplImage mCopy = imgCopy.MIplImage;
                 byte* dataPtrCopy = (byte*)mCopy.imageData.ToPointer(); // Pointer to the image
+
                 byte blue, green, red, gray;
-                byte* dataPtrBorder = (byte*)m.imageData.ToPointer();
-
-                byte* dataPtrBorder4_3 = (byte*)m.imageData.ToPointer();
-
                 int width = img.Width;
                 int height = img.Height;
                 int nChan = m.nChannels; // number of channels - 3
@@ -584,6 +582,7 @@ namespace SS_OpenCV
                 int b1, b2, b3, b4;
                 int blueSum = 0, greenSum = 0, redSum = 0;
                 int nC = m.nChannels;
+
                 dataPtrCopy += nChan + widthStep;
                 dataPtr += nChan + widthStep;
                 if (nC == 3)
@@ -616,9 +615,9 @@ namespace SS_OpenCV
                     }
                     //processar pixel (0,0)
                     dataPtr = resetPtr; // reset ao pointer 
-                    blueSum = 4*dataPtrBorder[0] + 2*(dataPtrBorder + nChan)[0] + 2*(dataPtrBorder - widthStep)[0] + (dataPtrBorder + nChan - widthStep)[0];
-                    greenSum = 4*dataPtrBorder[1] + 2*(dataPtrBorder + nChan)[1] + 2*(dataPtrBorder - widthStep)[1] + (dataPtrBorder + nChan - widthStep)[1];
-                    redSum = 4*dataPtrBorder[2] + 2*(dataPtrBorder + nChan)[2] + 2*(dataPtrBorder - widthStep)[2] + (dataPtrBorder + nChan - widthStep)[2];
+                    blueSum = 4*dataPtrBorder[0] + 2*(dataPtrBorder + nChan)[0] + 2*(dataPtrBorder + widthStep)[0] + (dataPtrBorder + nChan + widthStep)[0];
+                    greenSum = 4*dataPtrBorder[1] + 2*(dataPtrBorder + nChan)[1] + 2*(dataPtrBorder + widthStep)[1] + (dataPtrBorder + nChan + widthStep)[1];
+                    redSum = 4*dataPtrBorder[2] + 2*(dataPtrBorder + nChan)[2] + 2*(dataPtrBorder + widthStep)[2] + (dataPtrBorder + nChan + widthStep)[2];
                     dataPtr[0] = (byte)Math.Round(blueSum / 9.0);
                     dataPtr[1] = (byte)Math.Round(greenSum / 9.0);
                     dataPtr[2] = (byte)Math.Round(redSum / 9.0);
@@ -628,9 +627,9 @@ namespace SS_OpenCV
                     dataPtrBorder += nChan;
                     for (x = 1; x < width - 1 ; x++)
                     {
-                        blueSum = 2*dataPtrBorder[0] + 2*(dataPtrBorder - nChan)[0] + 2*(dataPtrBorder + nChan)[0] + (dataPtrBorder - widthStep)[0] + (dataPtrBorder + nChan + widthStep)[0] + (dataPtrBorder + nChan - widthStep)[0];
-                        greenSum = 2*dataPtrBorder[1] + 2*(dataPtrBorder - nChan)[1] + 2*(dataPtrBorder + nChan)[1] + (dataPtrBorder - widthStep)[1] + (dataPtrBorder + nChan + widthStep)[1] + (dataPtrBorder + nChan - widthStep)[1];
-                        redSum = 2*dataPtrBorder[2] + 2*(dataPtrBorder - nChan)[2] + 2*(dataPtrBorder + nChan)[2] + (dataPtrBorder - widthStep)[2] + (dataPtrBorder + nChan + widthStep)[2] + (dataPtrBorder + nChan - widthStep)[2];
+                        blueSum = 2*dataPtrBorder[0] + 2*(dataPtrBorder - nChan)[0] + 2*(dataPtrBorder + nChan)[0] + (dataPtrBorder + widthStep)[0] + (dataPtrBorder + nChan + widthStep)[0] + (dataPtrBorder + nChan + widthStep)[0];
+                        greenSum = 2*dataPtrBorder[1] + 2*(dataPtrBorder - nChan)[1] + 2*(dataPtrBorder + nChan)[1] + (dataPtrBorder + widthStep)[1] + (dataPtrBorder + nChan + widthStep)[1] + (dataPtrBorder + nChan + widthStep)[1];
+                        redSum = 2*dataPtrBorder[2] + 2*(dataPtrBorder - nChan)[2] + 2*(dataPtrBorder + nChan)[2] + (dataPtrBorder + widthStep)[2] + (dataPtrBorder + nChan + widthStep)[2] + (dataPtrBorder + nChan + widthStep)[2];
                         dataPtr[0] = (byte)Math.Round(blueSum / 9.0);
                         dataPtr[1] = (byte)Math.Round(greenSum / 9.0);
                         dataPtr[2] = (byte)Math.Round(redSum / 9.0);
