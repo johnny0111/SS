@@ -567,19 +567,25 @@ namespace SS_OpenCV
 
                 MIplImage m = img.MIplImage;
                 byte* dataPtr = (byte*)m.imageData.ToPointer(); // Pointer to the image
+                byte* resetPtr = dataPtr;
                 MIplImage mCopy = imgCopy.MIplImage;
                 byte* dataPtrCopy = (byte*)mCopy.imageData.ToPointer(); // Pointer to the image
                 byte blue, green, red, gray;
+                byte* dataPtrBorder = (byte*)m.imageData.ToPointer();
+
+                byte* dataPtrBorder4_3 = (byte*)m.imageData.ToPointer();
 
                 int width = img.Width;
                 int height = img.Height;
                 int nChan = m.nChannels; // number of channels - 3
                 int padding = m.widthStep - m.nChannels * m.width; // alinhament bytes (padding)
+                int widthStep = m.widthStep;
                 int x, y;
+                int b1, b2, b3, b4;
                 int blueSum = 0, greenSum = 0, redSum = 0;
                 int nC = m.nChannels;
-                dataPtrCopy += nChan + m.widthStep;
-                dataPtr += nChan + m.widthStep;
+                dataPtrCopy += nChan + widthStep;
+                dataPtr += nChan + widthStep;
                 if (nC == 3)
                 {
                     for (y = 1; y < height - 1; y++)
@@ -590,13 +596,13 @@ namespace SS_OpenCV
                             greenSum = dataPtrCopy[1] + (dataPtrCopy - nChan)[1] + (dataPtrCopy + nChan)[1];
                             redSum = dataPtrCopy[2] + (dataPtrCopy - nChan)[2] + (dataPtrCopy + nChan)[2];
 
-                            blueSum += (dataPtrCopy - m.widthStep)[0] + (dataPtrCopy - m.widthStep - nChan)[0] + (dataPtrCopy - m.widthStep + nChan)[0];
-                            greenSum += (dataPtrCopy - m.widthStep)[1] + (dataPtrCopy - m.widthStep - nChan)[1] + (dataPtrCopy - m.widthStep + nChan)[1];
-                            redSum += (dataPtrCopy - m.widthStep)[2] + (dataPtrCopy - m.widthStep - nChan)[2] + (dataPtrCopy - m.widthStep + nChan)[2];
+                            blueSum += (dataPtrCopy - widthStep)[0] + (dataPtrCopy - widthStep - nChan)[0] + (dataPtrCopy - widthStep + nChan)[0];
+                            greenSum += (dataPtrCopy - widthStep)[1] + (dataPtrCopy - widthStep - nChan)[1] + (dataPtrCopy - widthStep + nChan)[1];
+                            redSum += (dataPtrCopy - widthStep)[2] + (dataPtrCopy - widthStep - nChan)[2] + (dataPtrCopy - widthStep + nChan)[2];
 
-                            blueSum += (dataPtrCopy + m.widthStep)[0] + (dataPtrCopy + m.widthStep - nChan)[0] + (dataPtrCopy + m.widthStep + nChan)[0];
-                            greenSum += (dataPtrCopy + m.widthStep)[1] + (dataPtrCopy + m.widthStep - nChan)[1] + (dataPtrCopy + m.widthStep + nChan)[1];
-                            redSum += (dataPtrCopy + m.widthStep)[2] + (dataPtrCopy + m.widthStep - nChan)[2] + (dataPtrCopy + m.widthStep + nChan)[2];
+                            blueSum += (dataPtrCopy + widthStep)[0] + (dataPtrCopy + widthStep - nChan)[0] + (dataPtrCopy + widthStep + nChan)[0];
+                            greenSum += (dataPtrCopy + widthStep)[1] + (dataPtrCopy + widthStep - nChan)[1] + (dataPtrCopy + widthStep + nChan)[1];
+                            redSum += (dataPtrCopy + widthStep)[2] + (dataPtrCopy + widthStep - nChan)[2] + (dataPtrCopy + widthStep + nChan)[2];
 
                             dataPtr[0] = (byte)Math.Round(blueSum / 9.0);
                             dataPtr[1] = (byte)Math.Round(greenSum / 9.0);
@@ -607,6 +613,99 @@ namespace SS_OpenCV
                         }
                         dataPtrCopy += nChan + padding + nChan;
                         dataPtr += nChan + padding + nChan;
+                    }
+                    //processar pixel (0,0)
+                    dataPtr = resetPtr; // reset ao pointer 
+                    blueSum = 4*dataPtrBorder[0] + 2*(dataPtrBorder + nChan)[0] + 2*(dataPtrBorder - widthStep)[0] + (dataPtrBorder + nChan - widthStep)[0];
+                    greenSum = 4*dataPtrBorder[1] + 2*(dataPtrBorder + nChan)[1] + 2*(dataPtrBorder - widthStep)[1] + (dataPtrBorder + nChan - widthStep)[1];
+                    redSum = 4*dataPtrBorder[2] + 2*(dataPtrBorder + nChan)[2] + 2*(dataPtrBorder - widthStep)[2] + (dataPtrBorder + nChan - widthStep)[2];
+                    dataPtr[0] = (byte)Math.Round(blueSum / 9.0);
+                    dataPtr[1] = (byte)Math.Round(greenSum / 9.0);
+                    dataPtr[2] = (byte)Math.Round(redSum / 9.0);
+
+                    //processar a border superior a partir do segundo pixel
+                    dataPtr += nChan;
+                    dataPtrBorder += nChan;
+                    for (x = 1; x < width - 1 ; x++)
+                    {
+                        blueSum = 2*dataPtrBorder[0] + 2*(dataPtrBorder - nChan)[0] + 2*(dataPtrBorder + nChan)[0] + (dataPtrBorder - widthStep)[0] + (dataPtrBorder + nChan + widthStep)[0] + (dataPtrBorder + nChan - widthStep)[0];
+                        greenSum = 2*dataPtrBorder[1] + 2*(dataPtrBorder - nChan)[1] + 2*(dataPtrBorder + nChan)[1] + (dataPtrBorder - widthStep)[1] + (dataPtrBorder + nChan + widthStep)[1] + (dataPtrBorder + nChan - widthStep)[1];
+                        redSum = 2*dataPtrBorder[2] + 2*(dataPtrBorder - nChan)[2] + 2*(dataPtrBorder + nChan)[2] + (dataPtrBorder - widthStep)[2] + (dataPtrBorder + nChan + widthStep)[2] + (dataPtrBorder + nChan - widthStep)[2];
+                        dataPtr[0] = (byte)Math.Round(blueSum / 9.0);
+                        dataPtr[1] = (byte)Math.Round(greenSum / 9.0);
+                        dataPtr[2] = (byte)Math.Round(redSum / 9.0);
+                        dataPtr += nChan;
+                        dataPtrBorder += nChan;
+                    }
+
+ 
+                    //processar pixel (0,N)
+                    blueSum = 4*dataPtrBorder[0] + 2*(dataPtrBorder - nChan)[0] + 2*(dataPtrBorder - widthStep)[0] + (dataPtrBorder - nChan - widthStep)[0];
+                    greenSum = 4*dataPtrBorder[1] + 2*(dataPtrBorder - nChan)[1] + 2*(dataPtrBorder - widthStep)[1] + (dataPtrBorder - nChan - widthStep)[1];
+                    redSum = 4*dataPtrBorder[2] + 2*(dataPtrBorder - nChan)[2] + 2*(dataPtrBorder - widthStep)[2] + (dataPtrBorder - nChan - widthStep)[2];
+                    dataPtr[0] = (byte)Math.Round(blueSum / 9.0);
+                    dataPtr[1] = (byte)Math.Round(greenSum / 9.0);
+                    dataPtr[2] = (byte)Math.Round(redSum / 9.0);
+                    dataPtrBorder += nChan + padding + nChan;
+                    dataPtr += nChan + padding + nChan;
+
+                    //processar border direita
+                    for (y = 1; y < height - 1; y++)
+                    {
+                        blueSum = 2*dataPtrBorder[0] + 2*(dataPtrBorder - widthStep)[0] + 2*(dataPtrBorder + widthStep)[0] + (dataPtrBorder - nChan)[0] + (dataPtrBorder - nChan + widthStep)[0] + (dataPtrBorder - nChan - widthStep)[0];
+                        greenSum = 2 * dataPtrBorder[1] + 2 * (dataPtrBorder - widthStep)[1] + 2 * (dataPtrBorder + widthStep)[1] + (dataPtrBorder - nChan)[1] + (dataPtrBorder - nChan + widthStep)[1] + (dataPtrBorder - nChan - widthStep)[1];
+                        redSum = 2 * dataPtrBorder[2] + 2 * (dataPtrBorder - widthStep)[2] + 2 * (dataPtrBorder + widthStep)[2] + (dataPtrBorder - nChan)[2] + (dataPtrBorder - nChan + widthStep)[2] + (dataPtrBorder - nChan - widthStep)[2];
+                        dataPtr[0] = (byte)Math.Round(blueSum / 9.0);
+                        dataPtr[1] = (byte)Math.Round(greenSum / 9.0);
+                        dataPtr[2] = (byte)Math.Round(redSum / 9.0);
+                        dataPtrBorder += nChan + padding + nChan;
+                        dataPtr += nChan + padding + nChan;
+                    }
+
+                    //processar pixel (N,N)
+                    blueSum = 4 * dataPtrBorder[0] + 2 * (dataPtrBorder - nChan)[0] + 2 * (dataPtrBorder + widthStep)[0] + (dataPtrBorder - nChan + widthStep)[0];
+                    greenSum = 4 * dataPtrBorder[1] + 2 * (dataPtrBorder - nChan)[1] + 2 * (dataPtrBorder + widthStep)[1] + (dataPtrBorder - nChan + widthStep)[1];
+                    redSum = 4 * dataPtrBorder[2] + 2 * (dataPtrBorder - nChan)[2] + 2 * (dataPtrBorder + widthStep)[2] + (dataPtrBorder - nChan + widthStep)[2];
+                    dataPtr[0] = (byte)Math.Round(blueSum / 9.0);
+                    dataPtr[1] = (byte)Math.Round(greenSum / 9.0);
+                    dataPtr[2] = (byte)Math.Round(redSum / 9.0);
+                    dataPtr -= nChan;
+                    dataPtrBorder -= nChan;
+
+                    //processar border inferior
+                    for (x = 1; x < width - 1; x++)
+                    {
+                        blueSum = 2 * dataPtrBorder[0] + 2 * (dataPtrBorder - nChan)[0] + 2 * (dataPtrBorder + nChan)[0] + (dataPtrBorder + widthStep)[0] + (dataPtrBorder + nChan + widthStep)[0] + (dataPtrBorder - nChan + widthStep)[0];
+                        greenSum = 2 * dataPtrBorder[1] + 2 * (dataPtrBorder - nChan)[1] + 2 * (dataPtrBorder + nChan)[1] + (dataPtrBorder + widthStep)[1] + (dataPtrBorder + nChan + widthStep)[1] + (dataPtrBorder - nChan - widthStep)[1];
+                        redSum = 2 * dataPtrBorder[2] + 2 * (dataPtrBorder - nChan)[2] + 2 * (dataPtrBorder + nChan)[2] + (dataPtrBorder + widthStep)[2] + (dataPtrBorder + nChan + widthStep)[2] + (dataPtrBorder - nChan - widthStep)[2];
+                        dataPtr[0] = (byte)Math.Round(blueSum / 9.0);
+                        dataPtr[1] = (byte)Math.Round(greenSum / 9.0);
+                        dataPtr[2] = (byte)Math.Round(redSum / 9.0);
+                        dataPtr -= nChan;
+                        dataPtrBorder -= nChan;
+                    }
+
+                    //processar pixel (N,0)
+                    blueSum = 4 * dataPtrBorder[0] + 2 * (dataPtrBorder + nChan)[0] + 2 * (dataPtrBorder - widthStep)[0] + (dataPtrBorder + nChan - widthStep)[0];
+                    greenSum = 4 * dataPtrBorder[1] + 2 * (dataPtrBorder + nChan)[1] + 2 * (dataPtrBorder - widthStep)[1] + (dataPtrBorder + nChan - widthStep)[1];
+                    redSum = 4 * dataPtrBorder[2] + 2 * (dataPtrBorder + nChan)[2] + 2 * (dataPtrBorder - widthStep)[2] + (dataPtrBorder + nChan - widthStep)[2];
+                    dataPtr[0] = (byte)Math.Round(blueSum / 9.0);
+                    dataPtr[1] = (byte)Math.Round(greenSum / 9.0);
+                    dataPtr[2] = (byte)Math.Round(redSum / 9.0);
+                    dataPtrBorder += nChan + padding + nChan;
+                    dataPtr += nChan + padding + nChan;
+
+                    //processar border esquerda
+                    for (x = 1; x < width - 1; x++)
+                    {
+                        blueSum = 2 * dataPtrBorder[0] + 2 * (dataPtrBorder - widthStep)[0] + 2 * (dataPtrBorder + widthStep)[0] + (dataPtrBorder + nChan)[0] + (dataPtrBorder + nChan + widthStep)[0] + (dataPtrBorder + nChan - widthStep)[0];
+                        greenSum = 2 * dataPtrBorder[1] + 2 * (dataPtrBorder - widthStep)[1] + 2 * (dataPtrBorder + widthStep)[1] + (dataPtrBorder + nChan)[1] + (dataPtrBorder + nChan + widthStep)[1] + (dataPtrBorder + nChan - widthStep)[1];
+                        redSum = 2 * dataPtrBorder[2] + 2 * (dataPtrBorder - widthStep)[2] + 2 * (dataPtrBorder + widthStep)[2] + (dataPtrBorder + nChan)[2] + (dataPtrBorder + nChan + widthStep)[2] + (dataPtrBorder + nChan - widthStep)[2];
+                        dataPtr[0] = (byte)Math.Round(blueSum / 9.0);
+                        dataPtr[1] = (byte)Math.Round(greenSum / 9.0);
+                        dataPtr[2] = (byte)Math.Round(redSum / 9.0);
+                        dataPtrBorder -= nChan + padding + nChan;
+                        dataPtr -= nChan + padding + nChan;
                     }
                 }
             }
