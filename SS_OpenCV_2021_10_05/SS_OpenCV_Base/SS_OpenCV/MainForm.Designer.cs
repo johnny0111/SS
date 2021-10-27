@@ -56,6 +56,7 @@
             this.autoresToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.evalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.nonUniformToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ImageViewer = new System.Windows.Forms.PictureBox();
             this.menuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -226,7 +227,8 @@
             // 
             this.filtersToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mediaToolStripMenuItem,
-            this.brightnessContrastToolStripMenuItem});
+            this.brightnessContrastToolStripMenuItem,
+            this.nonUniformToolStripMenuItem});
             this.filtersToolStripMenuItem.Name = "filtersToolStripMenuItem";
             this.filtersToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.filtersToolStripMenuItem.Text = "Filters";
@@ -234,14 +236,14 @@
             // mediaToolStripMenuItem
             // 
             this.mediaToolStripMenuItem.Name = "mediaToolStripMenuItem";
-            this.mediaToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.mediaToolStripMenuItem.Size = new System.Drawing.Size(210, 26);
             this.mediaToolStripMenuItem.Text = "Mean - solution A";
             this.mediaToolStripMenuItem.Click += new System.EventHandler(this.mediaToolStripMenuItem_Click);
             // 
             // brightnessContrastToolStripMenuItem
             // 
             this.brightnessContrastToolStripMenuItem.Name = "brightnessContrastToolStripMenuItem";
-            this.brightnessContrastToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.brightnessContrastToolStripMenuItem.Size = new System.Drawing.Size(210, 26);
             this.brightnessContrastToolStripMenuItem.Text = "BrightContrast";
             this.brightnessContrastToolStripMenuItem.Click += new System.EventHandler(this.brightContrastToolStripMenuItem_Click);
             // 
@@ -273,15 +275,22 @@
             this.panel1.Controls.Add(this.ImageViewer);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 28);
-            this.panel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.panel1.Margin = new System.Windows.Forms.Padding(4);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(771, 408);
             this.panel1.TabIndex = 6;
             // 
+            // nonUniformToolStripMenuItem
+            // 
+            this.nonUniformToolStripMenuItem.Name = "nonUniformToolStripMenuItem";
+            this.nonUniformToolStripMenuItem.Size = new System.Drawing.Size(210, 26);
+            this.nonUniformToolStripMenuItem.Text = "Non Uniform";
+            this.nonUniformToolStripMenuItem.Click += new System.EventHandler(this.nonUniformToolStripMenuItem_Click);
+            // 
             // ImageViewer
             // 
             this.ImageViewer.Location = new System.Drawing.Point(4, 4);
-            this.ImageViewer.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ImageViewer.Margin = new System.Windows.Forms.Padding(4);
             this.ImageViewer.Name = "ImageViewer";
             this.ImageViewer.Size = new System.Drawing.Size(576, 427);
             this.ImageViewer.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -296,7 +305,7 @@
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "MainForm";
             this.Text = "Sistemas Sensoriais 2021/2022 - Image processing";
             this.menuStrip1.ResumeLayout(false);
@@ -340,6 +349,7 @@
         private System.Windows.Forms.ToolStripMenuItem greenToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem blueToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem brightnessContrastToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem nonUniformToolStripMenuItem;
     }
 }
 

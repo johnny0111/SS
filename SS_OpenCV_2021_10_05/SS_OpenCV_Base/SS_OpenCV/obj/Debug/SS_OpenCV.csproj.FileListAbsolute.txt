@@ -222,3 +222,4 @@ D:\joaom\Documents\Mestrado\SS\SS_OpenCV_2021_10_05\SS_OpenCV_Base\SS_OpenCV\obj
 D:\joaom\Documents\Mestrado\SS\SS_OpenCV_2021_10_05\SS_OpenCV_Base\SS_OpenCV\obj\Debug\SS_OpenCV.csproj.CopyComplete
 D:\joaom\Documents\Mestrado\SS\SS_OpenCV_2021_10_05\SS_OpenCV_Base\SS_OpenCV\obj\Debug\SS_OpenCV.exe
 D:\joaom\Documents\Mestrado\SS\SS_OpenCV_2021_10_05\SS_OpenCV_Base\SS_OpenCV\obj\Debug\SS_OpenCV.pdb
+D:\joaom\Documents\Mestrado\SS\SS_OpenCV_2021_10_05\SS_OpenCV_Base\SS_OpenCV\obj\Debug\SS_OpenCV.NonUniform.resources

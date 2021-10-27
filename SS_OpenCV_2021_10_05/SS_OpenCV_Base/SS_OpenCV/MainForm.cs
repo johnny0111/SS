@@ -322,6 +322,28 @@ namespace SS_OpenCV
 
             Cursor = Cursors.Default; // normal cursor
         }
+
+        private void nonUniformToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (img == null) // verify if the image is already opened
+                return;
+            Cursor = Cursors.WaitCursor; // clock cursor 
+
+            //copy Undo Image
+            imgUndo = img.Copy();
+
+            NonUniform f3 = new NonUniform();
+            f3.ShowDialog();
+           
+            ImageClass.NonUniform(img, imgUndo, f3.matrix, f3.Weight, f3.offSet);
+
+            ImageViewer.Image = img.Bitmap;
+            ImageViewer.Refresh(); // refresh image on the screen
+
+            Cursor = Cursors.Default; // normal cursor
+
+            
+        }
     }
 
 

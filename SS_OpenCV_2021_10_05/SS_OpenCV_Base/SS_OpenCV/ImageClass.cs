@@ -572,14 +572,12 @@ namespace SS_OpenCV
                 MIplImage mCopy = imgCopy.MIplImage;
                 byte* dataPtrCopy = (byte*)mCopy.imageData.ToPointer(); // Pointer to the image
 
-                byte blue, green, red, gray;
                 int width = img.Width;
                 int height = img.Height;
                 int nChan = m.nChannels; // number of channels - 3
                 int padding = m.widthStep - m.nChannels * m.width; // alinhament bytes (padding)
                 int widthStep = m.widthStep;
                 int x, y;
-                int b1, b2, b3, b4;
                 int blueSum = 0, greenSum = 0, redSum = 0;
                 int nC = m.nChannels;
 
@@ -713,6 +711,106 @@ namespace SS_OpenCV
         /// Histogram equalization
         /// </summary>
         /// <param name="img"></param>
+        /// 
+
+        public static void NonUniform(Image<Bgr, byte> img, Image<Bgr, byte> imgCopy, float[,] matrix, float matrixWeight, float offset)
+        {
+            unsafe
+            {
+                // direct access to the image memory(sequencial)
+                // direcion top left -> bottom right
+
+                MIplImage m = img.MIplImage;
+                byte* dataPtr = (byte*)m.imageData.ToPointer(); // Pointer to the image
+                byte* resetPtr = dataPtr;
+                byte* dataPtrBorder = dataPtr;
+                MIplImage mCopy = imgCopy.MIplImage;
+                byte* dataPtrCopy = (byte*)mCopy.imageData.ToPointer(); // Pointer to the image
+
+                int width = img.Width;
+                int height = img.Height;
+                int nChan = m.nChannels; // number of channels - 3
+                int padding = m.widthStep - m.nChannels * m.width; // alinhament bytes (padding)
+                int widthStep = m.widthStep;
+                int x, y;
+                float blueSum = 0, greenSum = 0, redSum = 0;
+                int nC = m.nChannels;
+
+                dataPtrCopy += nChan + widthStep;
+                dataPtr += nChan + widthStep;
+                if (nC == 3)
+                {
+                    for (y = 1; y < height - 1; y++)
+                    {
+                        for (x = 1; x < width - 1; x++)
+                        {   
+                            //segunda linha
+                            blueSum = matrix[1, 1] * (float)dataPtrCopy[0] + 
+                                + matrix[1, 0] * (float)(dataPtrCopy - nChan)[0] +
+                                + matrix[1, 2] * (float)(dataPtrCopy + nChan)[0];
+
+                            greenSum = matrix[1, 1] * (float)dataPtrCopy[1] + 
+                                + matrix[1, 0] * (dataPtrCopy - nChan)[1] + 
+                                + matrix[1, 2] * (dataPtrCopy + nChan)[1];
+
+                            redSum = matrix[1, 1] * dataPtrCopy[2] +
+                                + matrix[1, 0] * (dataPtrCopy - nChan)[2] + 
+                                + matrix[1, 2] * (dataPtrCopy + nChan)[2];
+
+
+                            //primeira linha                    
+                            blueSum += matrix[0, 1] * (dataPtrCopy - widthStep)[0] + 
+                                + matrix[0, 0] * (dataPtrCopy - widthStep - nChan)[0] + 
+                                + matrix[0, 2] * (dataPtrCopy - widthStep + nChan)[0];
+
+                            greenSum += matrix[0, 1] * (dataPtrCopy - widthStep)[1] + 
+                                 + matrix[0, 0] * (dataPtrCopy - widthStep - nChan)[1] + 
+                                 + matrix[0, 2] * (dataPtrCopy - widthStep + nChan)[1];
+                            redSum += matrix[0, 1] * (dataPtrCopy - widthStep)[2] + 
+                                + matrix[0, 0] * (dataPtrCopy - widthStep - nChan)[2] +
+                                + matrix[0, 2] * (dataPtrCopy - widthStep + nChan)[2];
+
+
+                            //terceira linha
+                            blueSum += matrix[2, 1] * (dataPtrCopy + widthStep)[0] + 
+                                + matrix[2, 0] * (dataPtrCopy + widthStep - nChan)[0] +
+                                + matrix[2, 2] * (dataPtrCopy + widthStep + nChan)[0];
+
+                            greenSum += matrix[2, 1] * (dataPtrCopy + widthStep)[1] +
+                                + matrix[2, 0] * (dataPtrCopy + widthStep - nChan)[1] +
+                                + matrix[2, 2] * (dataPtrCopy + widthStep + nChan)[1];
+
+                            redSum += matrix[2, 1] * (dataPtrCopy + widthStep)[2] +
+                                + matrix[2, 0] * (dataPtrCopy + widthStep - nChan)[2] +
+                                + matrix[2, 2] * (dataPtrCopy + widthStep + nChan)[2];
+
+
+                            dataPtr[0] = (byte)Math.Round((blueSum / matrixWeight) + offset);
+                            dataPtr[1] = (byte)Math.Round((greenSum / matrixWeight) + offset);
+                            dataPtr[2] = (byte)Math.Round((redSum / matrixWeight) + offset);
+                            if (dataPtr[0] > 255)
+                                dataPtr[0] = 255;
+                            else if (dataPtr[1] > 255)
+                                dataPtr[1] = 255;
+                            else if(dataPtr[2] > 255)
+                                dataPtr[2] = 255;
+                            if (dataPtr[0] == 0 )
+                                dataPtr[0] = 0;
+                            else if(dataPtr[1] == 0)
+                                dataPtr[1] = 0;
+                            else if(dataPtr[2] == 0)
+                                dataPtr[2] = 0;
+                           
+                            dataPtrCopy += nChan;
+                            dataPtr += nChan;
+                        }
+                        dataPtrCopy += nChan + padding + nChan;
+                        dataPtr += nChan + padding + nChan;
+                    }
+                    Console.WriteLine(matrix[0, 0]);
+                }
+            }
+        }
         public static void Equalization(Image<Bgr, byte> img)
         {
             unsafe
