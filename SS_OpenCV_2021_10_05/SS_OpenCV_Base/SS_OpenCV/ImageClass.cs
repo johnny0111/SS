@@ -743,71 +743,79 @@ namespace SS_OpenCV
                     for (y = 1; y < height - 1; y++)
                     {
                         for (x = 1; x < width - 1; x++)
-                        {   
+                        {
                             //segunda linha
-                            blueSum = matrix[1, 1] * (float)dataPtrCopy[0] + 
-                                + matrix[1, 0] * (float)(dataPtrCopy - nChan)[0] +
-                                + matrix[1, 2] * (float)(dataPtrCopy + nChan)[0];
+                            blueSum = matrix[1, 1] * (float)dataPtrCopy[0] +
+                                +matrix[1, 0] * (float)(dataPtrCopy - nChan)[0] +
+                                +matrix[1, 2] * (float)(dataPtrCopy + nChan)[0];
 
-                            greenSum = matrix[1, 1] * (float)dataPtrCopy[1] + 
-                                + matrix[1, 0] * (dataPtrCopy - nChan)[1] + 
-                                + matrix[1, 2] * (dataPtrCopy + nChan)[1];
+                            greenSum = matrix[1, 1] * (float)dataPtrCopy[1] +
+                                +matrix[1, 0] * (dataPtrCopy - nChan)[1] +
+                                +matrix[1, 2] * (dataPtrCopy + nChan)[1];
 
                             redSum = matrix[1, 1] * dataPtrCopy[2] +
-                                + matrix[1, 0] * (dataPtrCopy - nChan)[2] + 
-                                + matrix[1, 2] * (dataPtrCopy + nChan)[2];
+                                +matrix[1, 0] * (dataPtrCopy - nChan)[2] +
+                                +matrix[1, 2] * (dataPtrCopy + nChan)[2];
 
 
                             //primeira linha                    
-                            blueSum += matrix[0, 1] * (dataPtrCopy - widthStep)[0] + 
-                                + matrix[0, 0] * (dataPtrCopy - widthStep - nChan)[0] + 
-                                + matrix[0, 2] * (dataPtrCopy - widthStep + nChan)[0];
+                            blueSum += matrix[0, 1] * (dataPtrCopy - widthStep)[0] +
+                                +matrix[0, 0] * (dataPtrCopy - widthStep - nChan)[0] +
+                                +matrix[0, 2] * (dataPtrCopy - widthStep + nChan)[0];
 
-                            greenSum += matrix[0, 1] * (dataPtrCopy - widthStep)[1] + 
-                                 + matrix[0, 0] * (dataPtrCopy - widthStep - nChan)[1] + 
-                                 + matrix[0, 2] * (dataPtrCopy - widthStep + nChan)[1];
-                            redSum += matrix[0, 1] * (dataPtrCopy - widthStep)[2] + 
-                                + matrix[0, 0] * (dataPtrCopy - widthStep - nChan)[2] +
-                                + matrix[0, 2] * (dataPtrCopy - widthStep + nChan)[2];
+                            greenSum += matrix[0, 1] * (dataPtrCopy - widthStep)[1] +
+                                 +matrix[0, 0] * (dataPtrCopy - widthStep - nChan)[1] +
+                                 +matrix[0, 2] * (dataPtrCopy - widthStep + nChan)[1];
+                            redSum += matrix[0, 1] * (dataPtrCopy - widthStep)[2] +
+                                +matrix[0, 0] * (dataPtrCopy - widthStep - nChan)[2] +
+                                +matrix[0, 2] * (dataPtrCopy - widthStep + nChan)[2];
 
 
                             //terceira linha
-                            blueSum += matrix[2, 1] * (dataPtrCopy + widthStep)[0] + 
-                                + matrix[2, 0] * (dataPtrCopy + widthStep - nChan)[0] +
-                                + matrix[2, 2] * (dataPtrCopy + widthStep + nChan)[0];
+                            blueSum += matrix[2, 1] * (dataPtrCopy + widthStep)[0] +
+                                +matrix[2, 0] * (dataPtrCopy + widthStep - nChan)[0] +
+                                +matrix[2, 2] * (dataPtrCopy + widthStep + nChan)[0];
 
                             greenSum += matrix[2, 1] * (dataPtrCopy + widthStep)[1] +
-                                + matrix[2, 0] * (dataPtrCopy + widthStep - nChan)[1] +
-                                + matrix[2, 2] * (dataPtrCopy + widthStep + nChan)[1];
+                                +matrix[2, 0] * (dataPtrCopy + widthStep - nChan)[1] +
+                                +matrix[2, 2] * (dataPtrCopy + widthStep + nChan)[1];
 
                             redSum += matrix[2, 1] * (dataPtrCopy + widthStep)[2] +
-                                + matrix[2, 0] * (dataPtrCopy + widthStep - nChan)[2] +
-                                + matrix[2, 2] * (dataPtrCopy + widthStep + nChan)[2];
+                                +matrix[2, 0] * (dataPtrCopy + widthStep - nChan)[2] +
+                                +matrix[2, 2] * (dataPtrCopy + widthStep + nChan)[2];
 
 
-                            dataPtr[0] = (byte)Math.Round((blueSum / matrixWeight) + offset);
-                            dataPtr[1] = (byte)Math.Round((greenSum / matrixWeight) + offset);
-                            dataPtr[2] = (byte)Math.Round((redSum / matrixWeight) + offset);
-                            if (dataPtr[0] > 255)
+                            blueSum = (float)Math.Round((blueSum / matrixWeight) + offset);
+                            greenSum = (float)Math.Round((greenSum / matrixWeight) + offset);
+                            redSum = (float)Math.Round((redSum / matrixWeight) + offset);
+
+                            if (blueSum > 255)
                                 dataPtr[0] = 255;
-                            else if (dataPtr[1] > 255)
+                            else if (blueSum < 0)
+                                dataPtr[0] = (byte)0;
+                            else dataPtr[0] = (byte)blueSum;
+                            if (greenSum > 255)
                                 dataPtr[1] = 255;
-                            else if(dataPtr[2] > 255)
+                            else if (greenSum < 0)
+                                dataPtr[1] = (byte)0;
+                            else dataPtr[1] = (byte)greenSum;
+                            if (redSum > 255)
                                 dataPtr[2] = 255;
-                            if (dataPtr[0] == 0 )
-                                dataPtr[0] = 0;
-                            else if(dataPtr[1] == 0)
-                                dataPtr[1] = 0;
-                            else if(dataPtr[2] == 0)
-                                dataPtr[2] = 0;
-                           
+                            else if (redSum < 0)
+                                dataPtr[2] = (byte)0;
+                            else dataPtr[2] = (byte)redSum;
+
+
+
+
+
                             dataPtrCopy += nChan;
                             dataPtr += nChan;
                         }
                         dataPtrCopy += nChan + padding + nChan;
                         dataPtr += nChan + padding + nChan;
                     }
-                    Console.WriteLine(matrix[0, 0]);
+                    //Console.WriteLine(matrix[0, 0]);
                 }
             }
         }
