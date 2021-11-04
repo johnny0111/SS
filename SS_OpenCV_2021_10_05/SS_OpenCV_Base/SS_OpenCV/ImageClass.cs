@@ -622,7 +622,7 @@ namespace SS_OpenCV
 
                     //processar a border superior a partir do segundo pixel
                     dataPtr += nChan;
-                    dataPtrBorder += nChan;
+                    dataPtrBorder += nChan; 
                     for (x = 1; x < width - 1 ; x++)
                     {
                         blueSum = 2*dataPtrBorder[0] + 2*(dataPtrBorder - nChan)[0] + 2*(dataPtrBorder + nChan)[0] + (dataPtrBorder + widthStep)[0] + (dataPtrBorder + nChan + widthStep)[0] + (dataPtrBorder + nChan + widthStep)[0];
@@ -816,6 +816,149 @@ namespace SS_OpenCV
                         dataPtr += nChan + padding + nChan;
                     }
                     //Console.WriteLine(matrix[0, 0]);
+                }
+            }
+        }
+
+        public static void Sobel(Image<Bgr, byte> img, Image<Bgr, byte> imgCopy)
+        {
+            unsafe
+            {
+                MIplImage m = img.MIplImage;
+                byte* dataPtr = (byte*)m.imageData.ToPointer(); // Pointer to the image
+                byte* resetPtr = dataPtr;
+                byte* dataPtrBorder = dataPtr;
+                MIplImage mCopy = imgCopy.MIplImage;
+                byte* dataPtrCopy = (byte*)mCopy.imageData.ToPointer(); // Pointer to the image
+
+                int width = img.Width;
+                int height = img.Height;
+                int nChan = m.nChannels; // number of channels - 3
+                int padding = m.widthStep - m.nChannels * m.width; // alinhament bytes (padding)
+                int widthStep = m.widthStep;
+                int x, y;
+                int SxBlueSum = 0, SxGreenSum = 0, SxRedSum = 0, SyBlueSum = 0, SyGreenSum = 0, SyRedSum = 0, SBlue, SGreen, SRed = 0;
+                int nC = m.nChannels;
+
+                dataPtrCopy += nChan + widthStep;
+                dataPtr += nChan + widthStep;
+                if (nC == 3)
+                {
+                    for (y = 1; y < height - 1; y++)
+                    {
+                        for (x = 1; x < width - 1; x++)
+                        {
+
+                            SxBlueSum = (dataPtrCopy - widthStep - nChan)[0] + 2 * (dataPtrCopy - nChan)[0] + (dataPtrCopy + widthStep - nChan)[0] -
+                                        (dataPtrCopy - widthStep + nChan)[0] - 2 * (dataPtrCopy + nChan)[0] - (dataPtrCopy + widthStep + nChan)[0];
+
+                            SxGreenSum = (dataPtrCopy - widthStep - nChan)[1] + 2 * (dataPtrCopy - nChan)[1] + (dataPtrCopy + widthStep - nChan)[1] -
+                                        (dataPtrCopy - widthStep + nChan)[1] - 2 * (dataPtrCopy + nChan)[1] - (dataPtrCopy + widthStep + nChan)[1];
+
+                            SxRedSum = (dataPtrCopy - widthStep - nChan)[2] + 2 * (dataPtrCopy - nChan)[2] + (dataPtrCopy + widthStep - nChan)[2] -
+                                        (dataPtrCopy - widthStep + nChan)[2] - 2 * (dataPtrCopy + nChan)[2] - (dataPtrCopy + widthStep + nChan)[2];
+
+
+                            SyBlueSum = (dataPtrCopy + widthStep - nChan)[0] + 2 * (dataPtrCopy + widthStep)[0] + (dataPtrCopy + widthStep + nChan)[0] -
+                                        (dataPtrCopy - widthStep - nChan)[0] - 2 * (dataPtrCopy - widthStep)[0] - (dataPtrCopy - widthStep + nChan)[0];
+
+                            SyGreenSum = (dataPtrCopy + widthStep - nChan)[1] + 2 * (dataPtrCopy + widthStep)[1] + (dataPtrCopy + widthStep + nChan)[1] -
+                                        (dataPtrCopy - widthStep - nChan)[1] - 2 * (dataPtrCopy - widthStep)[1] - (dataPtrCopy - widthStep + nChan)[1];
+
+                            SyRedSum = (dataPtrCopy + widthStep - nChan)[2] + 2 * (dataPtrCopy + widthStep)[2] + (dataPtrCopy + widthStep + nChan)[2] -
+                                        (dataPtrCopy - widthStep - nChan)[2] - 2 * (dataPtrCopy - widthStep)[2] - (dataPtrCopy - widthStep + nChan)[2];
+
+                            SBlue = Math.Abs(SxBlueSum)+ Math.Abs(SyBlueSum);
+                            SGreen = Math.Abs(SxGreenSum) + Math.Abs(SyGreenSum);
+                            SRed = Math.Abs(SxRedSum) + Math.Abs(SyRedSum);
+
+                            if (SBlue > 255)
+                                SBlue = 255;
+                            else if (SBlue < 0)
+                                SBlue = 0;
+
+                            if (SGreen > 255)
+                                SGreen = 255;
+                            else if (SGreen < 0)
+                                SGreen = 0;
+
+                            if (SRed > 255)
+                                SRed = 255;
+                            else if (SRed < 0)
+                                SRed = 0;
+
+                            
+                            
+                            dataPtr[0] = (byte)SBlue;
+                            dataPtr[1] = (byte)SGreen;
+                            dataPtr[2] = (byte)SRed;
+
+                            dataPtrCopy += nChan;
+                            dataPtr += nChan;
+                        }
+                        dataPtrCopy += nChan + padding + nChan;
+                        dataPtr += nChan + padding + nChan;
+                    }
+                }
+            }
+        }
+
+        public static void Diferentiation(Image<Bgr, byte> img, Image<Bgr, byte> imgCopy)
+        {
+            unsafe
+            {
+                MIplImage m = img.MIplImage;
+                byte* dataPtr = (byte*)m.imageData.ToPointer(); // Pointer to the image
+                byte* resetPtr = dataPtr;
+                byte* dataPtrBorder = dataPtr;
+                MIplImage mCopy = imgCopy.MIplImage;
+                byte* dataPtrCopy = (byte*)mCopy.imageData.ToPointer(); // Pointer to the image
+
+                int width = img.Width;
+                int height = img.Height;
+                int nChan = m.nChannels; // number of channels - 3
+                int padding = m.widthStep - m.nChannels * m.width; // alinhament bytes (padding)
+                int widthStep = m.widthStep;
+                int x, y;
+                int GBlue = 0, GGreen = 0, GRed = 0;
+                int nC = m.nChannels;
+
+                //dataPtrCopy += nChan + widthStep;
+                //dataPtr += nChan + widthStep;
+                if (nC == 3)
+                {
+                    for (y = 0; y < height - 1; y++)
+                    {
+                        for (x = 0; x < width - 1; x++)
+                        {
+                            GBlue = Math.Abs(dataPtrCopy[0] - (dataPtrCopy + nChan)[0]) + Math.Abs(dataPtrCopy[0] - (dataPtrCopy + widthStep)[0]);
+                            GGreen = Math.Abs(dataPtrCopy[1] - (dataPtrCopy + nChan)[1]) + Math.Abs(dataPtrCopy[1] - (dataPtrCopy + widthStep)[1]);
+                            GRed = Math.Abs(dataPtrCopy[2] - (dataPtrCopy + nChan)[2]) + Math.Abs(dataPtrCopy[2] - (dataPtrCopy + widthStep)[2]);
+
+                            if (GBlue > 255)
+                                GBlue = 255;
+                            else if (GBlue < 0)
+                                GBlue = 0;
+
+                            if (GGreen > 255)
+                                GGreen = 255;
+                            else if (GGreen < 0)
+                                GGreen = 0;
+
+                            if (GRed > 255)
+                                GRed = 255;
+                            else if (GRed < 0)
+                                GRed = 0;
+
+                            dataPtr[0] = (byte)GBlue;
+                            dataPtr[1] = (byte)GGreen;
+                            dataPtr[2] = (byte)GRed;
+                            dataPtr += nChan;
+                            dataPtrCopy += nChan;
+                        }
+                        dataPtrCopy +=  padding + nChan;
+                        dataPtr += padding + nChan;
+                    }
                 }
             }
         }
