@@ -613,6 +613,7 @@ namespace SS_OpenCV
                     }
                     //processar pixel (0,0)
                     dataPtr = resetPtr; // reset ao pointer 
+                    dataPtrBorder = resetPtr;
                     blueSum = 4*dataPtrBorder[0] + 2*(dataPtrBorder + nChan)[0] + 2*(dataPtrBorder + widthStep)[0] + (dataPtrBorder + nChan + widthStep)[0];
                     greenSum = 4*dataPtrBorder[1] + 2*(dataPtrBorder + nChan)[1] + 2*(dataPtrBorder + widthStep)[1] + (dataPtrBorder + nChan + widthStep)[1];
                     redSum = 4*dataPtrBorder[2] + 2*(dataPtrBorder + nChan)[2] + 2*(dataPtrBorder + widthStep)[2] + (dataPtrBorder + nChan + widthStep)[2];
@@ -625,26 +626,27 @@ namespace SS_OpenCV
                     dataPtrBorder += nChan; 
                     for (x = 1; x < width - 1 ; x++)
                     {
-                        blueSum = 2*dataPtrBorder[0] + 2*(dataPtrBorder - nChan)[0] + 2*(dataPtrBorder + nChan)[0] + (dataPtrBorder + widthStep)[0] + (dataPtrBorder + nChan + widthStep)[0] + (dataPtrBorder + nChan + widthStep)[0];
-                        greenSum = 2*dataPtrBorder[1] + 2*(dataPtrBorder - nChan)[1] + 2*(dataPtrBorder + nChan)[1] + (dataPtrBorder + widthStep)[1] + (dataPtrBorder + nChan + widthStep)[1] + (dataPtrBorder + nChan + widthStep)[1];
-                        redSum = 2*dataPtrBorder[2] + 2*(dataPtrBorder - nChan)[2] + 2*(dataPtrBorder + nChan)[2] + (dataPtrBorder + widthStep)[2] + (dataPtrBorder + nChan + widthStep)[2] + (dataPtrBorder + nChan + widthStep)[2];
+                        blueSum = 2*dataPtrBorder[0] + 2*(dataPtrBorder - nChan)[0] + 2*(dataPtrBorder + nChan)[0] + (dataPtrBorder + widthStep)[0] + (dataPtrBorder + nChan + widthStep)[0] + (dataPtrBorder - nChan + widthStep)[0];
+                        greenSum = 2*dataPtrBorder[1] + 2*(dataPtrBorder - nChan)[1] + 2*(dataPtrBorder + nChan)[1] + (dataPtrBorder + widthStep)[1] + (dataPtrBorder + nChan + widthStep)[1] + (dataPtrBorder - nChan + widthStep)[1];
+                        redSum = 2*dataPtrBorder[2] + 2*(dataPtrBorder - nChan)[2] + 2*(dataPtrBorder + nChan)[2] + (dataPtrBorder + widthStep)[2] + (dataPtrBorder + nChan + widthStep)[2] + (dataPtrBorder - nChan + widthStep)[2];
                         dataPtr[0] = (byte)Math.Round(blueSum / 9.0);
                         dataPtr[1] = (byte)Math.Round(greenSum / 9.0);
                         dataPtr[2] = (byte)Math.Round(redSum / 9.0);
                         dataPtr += nChan;
                         dataPtrBorder += nChan;
                     }
+                    dataPtr += nChan;
+                    dataPtrBorder += nChan;
 
- 
                     //processar pixel (0,N)
-                    blueSum = 4*dataPtrBorder[0] + 2*(dataPtrBorder - nChan)[0] + 2*(dataPtrBorder - widthStep)[0] + (dataPtrBorder - nChan - widthStep)[0];
-                    greenSum = 4*dataPtrBorder[1] + 2*(dataPtrBorder - nChan)[1] + 2*(dataPtrBorder - widthStep)[1] + (dataPtrBorder - nChan - widthStep)[1];
-                    redSum = 4*dataPtrBorder[2] + 2*(dataPtrBorder - nChan)[2] + 2*(dataPtrBorder - widthStep)[2] + (dataPtrBorder - nChan - widthStep)[2];
+                    blueSum = 4*dataPtrBorder[0] + 2*(dataPtrBorder - nChan)[0] + 2*(dataPtrBorder + widthStep)[0] + (dataPtrBorder - nChan - widthStep)[0];
+                    greenSum = 4*dataPtrBorder[1] + 2*(dataPtrBorder - nChan)[1] + 2*(dataPtrBorder + widthStep)[1] + (dataPtrBorder - nChan - widthStep)[1];
+                    redSum = 4*dataPtrBorder[2] + 2*(dataPtrBorder - nChan)[2] + 2*(dataPtrBorder + widthStep)[2] + (dataPtrBorder - nChan - widthStep)[2];
                     dataPtr[0] = (byte)Math.Round(blueSum / 9.0);
                     dataPtr[1] = (byte)Math.Round(greenSum / 9.0);
                     dataPtr[2] = (byte)Math.Round(redSum / 9.0);
-                    dataPtrBorder += nChan + padding + nChan;
-                    dataPtr += nChan + padding + nChan;
+                    dataPtrBorder += widthStep + padding ;
+                    dataPtr += widthStep + padding ;
 
                     //processar border direita
                     for (y = 1; y < height - 1; y++)
@@ -655,14 +657,14 @@ namespace SS_OpenCV
                         dataPtr[0] = (byte)Math.Round(blueSum / 9.0);
                         dataPtr[1] = (byte)Math.Round(greenSum / 9.0);
                         dataPtr[2] = (byte)Math.Round(redSum / 9.0);
-                        dataPtrBorder += nChan + padding + nChan;
-                        dataPtr += nChan + padding + nChan;
+                        dataPtrBorder += widthStep + padding ;
+                        dataPtr += widthStep + padding ;
                     }
 
                     //processar pixel (N,N)
-                    blueSum = 4 * dataPtrBorder[0] + 2 * (dataPtrBorder - nChan)[0] + 2 * (dataPtrBorder + widthStep)[0] + (dataPtrBorder - nChan + widthStep)[0];
-                    greenSum = 4 * dataPtrBorder[1] + 2 * (dataPtrBorder - nChan)[1] + 2 * (dataPtrBorder + widthStep)[1] + (dataPtrBorder - nChan + widthStep)[1];
-                    redSum = 4 * dataPtrBorder[2] + 2 * (dataPtrBorder - nChan)[2] + 2 * (dataPtrBorder + widthStep)[2] + (dataPtrBorder - nChan + widthStep)[2];
+                    blueSum = 4 * dataPtrBorder[0] + 2 * (dataPtrBorder - nChan)[0] + 2 * (dataPtrBorder - widthStep)[0] + (dataPtrBorder - nChan - widthStep)[0];
+                    greenSum = 4 * dataPtrBorder[1] + 2 * (dataPtrBorder - nChan)[1] + 2 * (dataPtrBorder - widthStep)[1] + (dataPtrBorder - nChan - widthStep)[1];
+                    redSum = 4 * dataPtrBorder[2] + 2 * (dataPtrBorder - nChan)[2] + 2 * (dataPtrBorder - widthStep)[2] + (dataPtrBorder - nChan - widthStep)[2];
                     dataPtr[0] = (byte)Math.Round(blueSum / 9.0);
                     dataPtr[1] = (byte)Math.Round(greenSum / 9.0);
                     dataPtr[2] = (byte)Math.Round(redSum / 9.0);
@@ -672,9 +674,9 @@ namespace SS_OpenCV
                     //processar border inferior
                     for (x = 1; x < width - 1; x++)
                     {
-                        blueSum = 2 * dataPtrBorder[0] + 2 * (dataPtrBorder - nChan)[0] + 2 * (dataPtrBorder + nChan)[0] + (dataPtrBorder + widthStep)[0] + (dataPtrBorder + nChan + widthStep)[0] + (dataPtrBorder - nChan + widthStep)[0];
-                        greenSum = 2 * dataPtrBorder[1] + 2 * (dataPtrBorder - nChan)[1] + 2 * (dataPtrBorder + nChan)[1] + (dataPtrBorder + widthStep)[1] + (dataPtrBorder + nChan + widthStep)[1] + (dataPtrBorder - nChan - widthStep)[1];
-                        redSum = 2 * dataPtrBorder[2] + 2 * (dataPtrBorder - nChan)[2] + 2 * (dataPtrBorder + nChan)[2] + (dataPtrBorder + widthStep)[2] + (dataPtrBorder + nChan + widthStep)[2] + (dataPtrBorder - nChan - widthStep)[2];
+                        blueSum = 2 * dataPtrBorder[0] + 2 * (dataPtrBorder - nChan)[0] + 2 * (dataPtrBorder + nChan)[0] + (dataPtrBorder - widthStep)[0] + (dataPtrBorder + nChan - widthStep)[0] + (dataPtrBorder - nChan - widthStep)[0];
+                        greenSum = 2 * dataPtrBorder[1] + 2 * (dataPtrBorder - nChan)[1] + 2 * (dataPtrBorder + nChan)[1] + (dataPtrBorder - widthStep)[1] + (dataPtrBorder + nChan - widthStep)[1] + (dataPtrBorder - nChan - widthStep)[1];
+                        redSum = 2 * dataPtrBorder[2] + 2 * (dataPtrBorder - nChan)[2] + 2 * (dataPtrBorder + nChan)[2] + (dataPtrBorder - widthStep)[2] + (dataPtrBorder + nChan - widthStep)[2] + (dataPtrBorder - nChan - widthStep)[2];
                         dataPtr[0] = (byte)Math.Round(blueSum / 9.0);
                         dataPtr[1] = (byte)Math.Round(greenSum / 9.0);
                         dataPtr[2] = (byte)Math.Round(redSum / 9.0);
@@ -689,11 +691,11 @@ namespace SS_OpenCV
                     dataPtr[0] = (byte)Math.Round(blueSum / 9.0);
                     dataPtr[1] = (byte)Math.Round(greenSum / 9.0);
                     dataPtr[2] = (byte)Math.Round(redSum / 9.0);
-                    dataPtrBorder += nChan + padding + nChan;
-                    dataPtr += nChan + padding + nChan;
+                    dataPtrBorder = dataPtrBorder - padding - widthStep;
+                    dataPtr = dataPtr - padding - widthStep;
 
                     //processar border esquerda
-                    for (x = 1; x < width - 1; x++)
+                    for (y = 1; y < height - 1; y++)
                     {
                         blueSum = 2 * dataPtrBorder[0] + 2 * (dataPtrBorder - widthStep)[0] + 2 * (dataPtrBorder + widthStep)[0] + (dataPtrBorder + nChan)[0] + (dataPtrBorder + nChan + widthStep)[0] + (dataPtrBorder + nChan - widthStep)[0];
                         greenSum = 2 * dataPtrBorder[1] + 2 * (dataPtrBorder - widthStep)[1] + 2 * (dataPtrBorder + widthStep)[1] + (dataPtrBorder + nChan)[1] + (dataPtrBorder + nChan + widthStep)[1] + (dataPtrBorder + nChan - widthStep)[1];
@@ -701,8 +703,8 @@ namespace SS_OpenCV
                         dataPtr[0] = (byte)Math.Round(blueSum / 9.0);
                         dataPtr[1] = (byte)Math.Round(greenSum / 9.0);
                         dataPtr[2] = (byte)Math.Round(redSum / 9.0);
-                        dataPtrBorder -= nChan + padding + nChan;
-                        dataPtr -= nChan + padding + nChan;
+                        dataPtrBorder = dataPtrBorder - widthStep - padding ;
+                        dataPtr = dataPtr - widthStep - padding ;
                     }
                 }
             }
