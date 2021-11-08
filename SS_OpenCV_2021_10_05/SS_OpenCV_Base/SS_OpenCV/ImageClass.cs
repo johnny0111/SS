@@ -899,6 +899,8 @@ namespace SS_OpenCV
                 byte* dataPtrBorder = dataPtr;
                 MIplImage mCopy = imgCopy.MIplImage;
                 byte* dataPtrCopy = (byte*)mCopy.imageData.ToPointer(); // Pointer to the image
+                byte* resetPtrCopy = dataPtrCopy;
+
 
                 int width = img.Width;
                 int height = img.Height;
@@ -989,6 +991,353 @@ namespace SS_OpenCV
                         dataPtr += nChan + padding + nChan;
                     }
                     //Console.WriteLine(matrix[0, 0]);
+
+                    //processar pixel (0,0)
+                    dataPtr = resetPtr; // reset ao pointer 
+                    dataPtrBorder = resetPtrCopy;
+
+                    blueSum = matrix[1, 1] * dataPtrBorder[0] +
+                                    +matrix[1, 0] * dataPtrBorder[0] +
+                                    +matrix[1, 2] * (dataPtrBorder + nChan)[0] +
+                                    +matrix[0, 1] * (dataPtrBorder)[0] +
+                                    +matrix[0, 0] * (dataPtrBorder)[0] +
+                                    +matrix[0, 2] * (dataPtrBorder + nChan)[0] +
+                                    +matrix[2, 1] * (dataPtrBorder + widthStep)[0] +
+                                    +matrix[2, 0] * (dataPtrBorder + widthStep)[0] +
+                                    +matrix[2, 2] * (dataPtrBorder + widthStep + nChan)[0];
+
+                    greenSum = matrix[1, 1] * dataPtrBorder[1] +
+                                    +matrix[1, 0] * dataPtrBorder[1] +
+                                    +matrix[1, 2] * (dataPtrBorder + nChan)[1] +
+                                    +matrix[0, 1] * (dataPtrBorder)[1] +
+                                    +matrix[0, 0] * (dataPtrBorder)[1] +
+                                    +matrix[0, 2] * (dataPtrBorder + nChan)[1] +
+                                    +matrix[2, 1] * (dataPtrBorder + widthStep)[1] +
+                                    +matrix[2, 0] * (dataPtrBorder + widthStep)[1] +
+                                    +matrix[2, 2] * (dataPtrBorder + widthStep + nChan)[1];
+
+                    redSum = matrix[1, 1] * dataPtrBorder[2] +
+                                    +matrix[1, 0] * dataPtrBorder[2] +
+                                    +matrix[1, 2] * (dataPtrBorder + nChan)[2] +
+                                    +matrix[0, 1] * (dataPtrBorder)[2] +
+                                    +matrix[0, 0] * (dataPtrBorder)[2] +
+                                    +matrix[0, 2] * (dataPtrBorder + nChan)[2] +
+                                    +matrix[2, 1] * (dataPtrBorder + widthStep)[2] +
+                                    +matrix[2, 0] * (dataPtrBorder + widthStep)[2] +
+                                    +matrix[2, 2] * (dataPtrBorder + widthStep + nChan)[2];
+
+                    blueSum = (float)Math.Round((blueSum / matrixWeight) + offset);
+                    greenSum = (float)Math.Round((greenSum / matrixWeight) + offset);
+                    redSum = (float)Math.Round((redSum / matrixWeight) + offset);
+
+                    dataPtr[0] = (byte)(blueSum < 0 ? 0 : blueSum > 255 ? 255 : blueSum);
+                    dataPtr[1] = (byte)(greenSum < 0 ? 0 : greenSum > 255 ? 255 : greenSum);
+                    dataPtr[2] = (byte)(redSum < 0 ? 0 : redSum > 255 ? 255 : redSum);
+
+                    //processar a border superior a partir do segundo pixel
+                    dataPtr += nChan;
+                    dataPtrBorder += nChan;
+                    for (x = 1; x < width - 1; x++)
+                    {
+                        blueSum = matrix[1, 1] * dataPtrBorder[0] +
+                                    +matrix[1, 0] * (dataPtrBorder - nChan)[0] +
+                                    +matrix[1, 2] * (dataPtrBorder + nChan)[0] +
+                                    +matrix[0, 1] * (dataPtrBorder)[0] +
+                                    +matrix[0, 0] * (dataPtrBorder - nChan)[0] +
+                                    +matrix[0, 2] * (dataPtrBorder + nChan)[0] +
+                                    +matrix[2, 1] * (dataPtrBorder + widthStep)[0] +
+                                    +matrix[2, 0] * (dataPtrBorder + widthStep - nChan)[0] +
+                                    +matrix[2, 2] * (dataPtrBorder + widthStep + nChan)[0];
+
+                        greenSum = matrix[1, 1] * dataPtrBorder[1] +
+                                    +matrix[1, 0] * (dataPtrBorder - nChan)[1] +
+                                    +matrix[1, 2] * (dataPtrBorder + nChan)[1] +
+                                    +matrix[0, 1] * (dataPtrBorder)[1] +
+                                    +matrix[0, 0] * (dataPtrBorder - nChan)[1] +
+                                    +matrix[0, 2] * (dataPtrBorder + nChan)[1] +
+                                    +matrix[2, 1] * (dataPtrBorder + widthStep)[1] +
+                                    +matrix[2, 0] * (dataPtrBorder + widthStep - nChan)[1] +
+                                    +matrix[2, 2] * (dataPtrBorder + widthStep + nChan)[1];
+
+                        redSum = matrix[1, 1] * dataPtrBorder[2] +
+                                    +matrix[1, 0] * (dataPtrBorder - nChan)[2] +
+                                    +matrix[1, 2] * (dataPtrBorder + nChan)[2] +
+                                    +matrix[0, 1] * (dataPtrBorder)[2] +
+                                    +matrix[0, 0] * (dataPtrBorder - nChan)[2] +
+                                    +matrix[0, 2] * (dataPtrBorder + nChan)[2] +
+                                    +matrix[2, 1] * (dataPtrBorder + widthStep)[2] +
+                                    +matrix[2, 0] * (dataPtrBorder + widthStep - nChan)[2] +
+                                    +matrix[2, 2] * (dataPtrBorder + widthStep + nChan)[2];
+
+                        blueSum = (float)Math.Round((blueSum / matrixWeight) + offset);
+                        greenSum = (float)Math.Round((greenSum / matrixWeight) + offset);
+                        redSum = (float)Math.Round((redSum / matrixWeight) + offset);
+
+                        dataPtr[0] = (byte)(blueSum < 0 ? 0 : blueSum > 255 ? 255 : blueSum);
+                        dataPtr[1] = (byte)(greenSum < 0 ? 0 : greenSum > 255 ? 255 : greenSum);
+                        dataPtr[2] = (byte)(redSum < 0 ? 0 : redSum > 255 ? 255 : redSum);
+
+                        dataPtr += nChan;
+                        dataPtrBorder += nChan;
+                    }
+
+                    //processar pixel (0,N)
+                    blueSum = matrix[1, 1] * dataPtrBorder[0] +
+                                    +matrix[1, 0] * (dataPtrBorder - nChan)[0] +
+                                    +matrix[1, 2] * (dataPtrBorder)[0] +
+                                    +matrix[0, 1] * (dataPtrBorder)[0] +
+                                    +matrix[0, 0] * (dataPtrBorder - nChan)[0] +
+                                    +matrix[0, 2] * (dataPtrBorder)[0] +
+                                    +matrix[2, 1] * (dataPtrBorder + widthStep)[0] +
+                                    +matrix[2, 0] * (dataPtrBorder + widthStep - nChan)[0] +
+                                    +matrix[2, 2] * (dataPtrBorder + widthStep)[0];
+
+                    greenSum = matrix[1, 1] * dataPtrBorder[1] +
+                                    +matrix[1, 0] * (dataPtrBorder - nChan)[1] +
+                                    +matrix[1, 2] * (dataPtrBorder)[1] +
+                                    +matrix[0, 1] * (dataPtrBorder)[1] +
+                                    +matrix[0, 0] * (dataPtrBorder - nChan)[1] +
+                                    +matrix[0, 2] * (dataPtrBorder)[1] +
+                                    +matrix[2, 1] * (dataPtrBorder + widthStep)[1] +
+                                    +matrix[2, 0] * (dataPtrBorder + widthStep - nChan)[1] +
+                                    +matrix[2, 2] * (dataPtrBorder + widthStep)[1];
+
+                    redSum = matrix[1, 1] * dataPtrBorder[2] +
+                                    +matrix[1, 0] * (dataPtrBorder - nChan)[2] +
+                                    +matrix[1, 2] * (dataPtrBorder)[2] +
+                                    +matrix[0, 1] * (dataPtrBorder)[2] +
+                                    +matrix[0, 0] * (dataPtrBorder - nChan)[2] +
+                                    +matrix[0, 2] * (dataPtrBorder)[2] +
+                                    +matrix[2, 1] * (dataPtrBorder + widthStep)[2] +
+                                    +matrix[2, 0] * (dataPtrBorder + widthStep - nChan)[2] +
+                                    +matrix[2, 2] * (dataPtrBorder + widthStep)[2];
+
+                    blueSum = (float)Math.Round((blueSum / matrixWeight) + offset);
+                    greenSum = (float)Math.Round((greenSum / matrixWeight) + offset);
+                    redSum = (float)Math.Round((redSum / matrixWeight) + offset);
+
+                    dataPtr[0] = (byte)(blueSum < 0 ? 0 : blueSum > 255 ? 255 : blueSum);
+                    dataPtr[1] = (byte)(greenSum < 0 ? 0 : greenSum > 255 ? 255 : greenSum);
+                    dataPtr[2] = (byte)(redSum < 0 ? 0 : redSum > 255 ? 255 : redSum);
+
+                    dataPtrBorder += padding + nChan;
+                    dataPtr += padding + nChan;
+
+                    //processar border direita
+                    for (y = 1; y < height - 1; y++)
+                    {
+                        blueSum = matrix[1, 1] * dataPtrBorder[0] +
+                                    +matrix[1, 0] * (dataPtrBorder)[0] +
+                                    +matrix[1, 2] * (dataPtrBorder + nChan)[0] +
+                                    +matrix[0, 1] * (dataPtrBorder - widthStep)[0] +
+                                    +matrix[0, 0] * (dataPtrBorder - widthStep)[0] +
+                                    +matrix[0, 2] * (dataPtrBorder - widthStep + nChan)[0] +
+                                    +matrix[2, 1] * (dataPtrBorder + widthStep)[0] +
+                                    +matrix[2, 0] * (dataPtrBorder + widthStep)[0] +
+                                    +matrix[2, 2] * (dataPtrBorder + widthStep + nChan)[0];
+
+                        greenSum = matrix[1, 1] * dataPtrBorder[1] +
+                                    +matrix[1, 0] * (dataPtrBorder)[1] +
+                                    +matrix[1, 2] * (dataPtrBorder + nChan)[1] +
+                                    +matrix[0, 1] * (dataPtrBorder - widthStep)[1] +
+                                    +matrix[0, 0] * (dataPtrBorder - widthStep)[1] +
+                                    +matrix[0, 2] * (dataPtrBorder - widthStep + nChan)[1] +
+                                    +matrix[2, 1] * (dataPtrBorder + widthStep)[1] +
+                                    +matrix[2, 0] * (dataPtrBorder + widthStep)[1] +
+                                    +matrix[2, 2] * (dataPtrBorder + widthStep + nChan)[1];
+
+                        redSum = matrix[1, 1] * dataPtrBorder[2] +
+                                    +matrix[1, 0] * (dataPtrBorder)[2] +
+                                    +matrix[1, 2] * (dataPtrBorder + nChan)[2] +
+                                    +matrix[0, 1] * (dataPtrBorder - widthStep)[2] +
+                                    +matrix[0, 0] * (dataPtrBorder - widthStep)[2] +
+                                    +matrix[0, 2] * (dataPtrBorder - widthStep + nChan)[2] +
+                                    +matrix[2, 1] * (dataPtrBorder + widthStep)[2] +
+                                    +matrix[2, 0] * (dataPtrBorder + widthStep)[2] +
+                                    +matrix[2, 2] * (dataPtrBorder + widthStep + nChan)[2];
+
+                        blueSum = (float)Math.Round((blueSum / matrixWeight) + offset);
+                        greenSum = (float)Math.Round((greenSum / matrixWeight) + offset);
+                        redSum = (float)Math.Round((redSum / matrixWeight) + offset);
+
+                        dataPtr[0] = (byte)(blueSum < 0 ? 0 : blueSum > 255 ? 255 : blueSum);
+                        dataPtr[1] = (byte)(greenSum < 0 ? 0 : greenSum > 255 ? 255 : greenSum);
+                        dataPtr[2] = (byte)(redSum < 0 ? 0 : redSum > 255 ? 255 : redSum);
+
+                        dataPtrBorder += widthStep - padding - nChan;
+                        dataPtr += widthStep - padding - nChan;
+
+                        blueSum = matrix[1, 1] * dataPtrBorder[0] +
+                                    +matrix[1, 0] * (dataPtrBorder - nChan)[0] +
+                                    +matrix[1, 2] * (dataPtrBorder)[0] +
+                                    +matrix[0, 1] * (dataPtrBorder - widthStep)[0] +
+                                    +matrix[0, 0] * (dataPtrBorder - widthStep - nChan)[0] +
+                                    +matrix[0, 2] * (dataPtrBorder - widthStep)[0] +
+                                    +matrix[2, 1] * (dataPtrBorder + widthStep)[0] +
+                                    +matrix[2, 0] * (dataPtrBorder + widthStep - nChan)[0] +
+                                    +matrix[2, 2] * (dataPtrBorder + widthStep)[0];
+
+                        greenSum = matrix[1, 1] * dataPtrBorder[1] +
+                                    +matrix[1, 0] * (dataPtrBorder - nChan)[1] +
+                                    +matrix[1, 2] * (dataPtrBorder)[1] +
+                                    +matrix[0, 1] * (dataPtrBorder - widthStep)[1] +
+                                    +matrix[0, 0] * (dataPtrBorder - widthStep - nChan)[1] +
+                                    +matrix[0, 2] * (dataPtrBorder - widthStep)[1] +
+                                    +matrix[2, 1] * (dataPtrBorder + widthStep)[1] +
+                                    +matrix[2, 0] * (dataPtrBorder + widthStep - nChan)[1] +
+                                    +matrix[2, 2] * (dataPtrBorder + widthStep)[1];
+
+                        redSum = matrix[1, 1] * dataPtrBorder[2] +
+                                    +matrix[1, 0] * (dataPtrBorder - nChan)[2] +
+                                    +matrix[1, 2] * (dataPtrBorder)[2] +
+                                    +matrix[0, 1] * (dataPtrBorder - widthStep)[2] +
+                                    +matrix[0, 0] * (dataPtrBorder - widthStep - nChan)[2] +
+                                    +matrix[0, 2] * (dataPtrBorder - widthStep)[2] +
+                                    +matrix[2, 1] * (dataPtrBorder + widthStep)[2] +
+                                    +matrix[2, 0] * (dataPtrBorder + widthStep - nChan)[2] +
+                                    +matrix[2, 2] * (dataPtrBorder + widthStep)[2];
+
+                        blueSum = (float)Math.Round((blueSum / matrixWeight) + offset);
+                        greenSum = (float)Math.Round((greenSum / matrixWeight) + offset);
+                        redSum = (float)Math.Round((redSum / matrixWeight) + offset);
+
+                        dataPtr[0] = (byte)(blueSum < 0 ? 0 : blueSum > 255 ? 255 : blueSum);
+                        dataPtr[1] = (byte)(greenSum < 0 ? 0 : greenSum > 255 ? 255 : greenSum);
+                        dataPtr[2] = (byte)(redSum < 0 ? 0 : redSum > 255 ? 255 : redSum);
+
+                        dataPtrBorder += padding + nChan;
+                        dataPtr += padding + nChan;
+                    }
+
+                    //processar o pixel (N,0)
+
+                    blueSum = matrix[1, 1] * dataPtrBorder[0] +
+                                    +matrix[1, 0] * (dataPtrBorder)[0] +
+                                    +matrix[1, 2] * (dataPtrBorder + nChan)[0] +
+                                    +matrix[0, 1] * (dataPtrBorder - widthStep)[0] +
+                                    +matrix[0, 0] * (dataPtrBorder - widthStep)[0] +
+                                    +matrix[0, 2] * (dataPtrBorder - widthStep + nChan)[0] +
+                                    +matrix[2, 1] * (dataPtrBorder)[0] +
+                                    +matrix[2, 0] * (dataPtrBorder)[0] +
+                                    +matrix[2, 2] * (dataPtrBorder + nChan)[0];
+
+                    greenSum = matrix[1, 1] * dataPtrBorder[1] +
+                                    +matrix[1, 0] * (dataPtrBorder)[1] +
+                                    +matrix[1, 2] * (dataPtrBorder + nChan)[1] +
+                                    +matrix[0, 1] * (dataPtrBorder - widthStep)[1] +
+                                    +matrix[0, 0] * (dataPtrBorder - widthStep)[1] +
+                                    +matrix[0, 2] * (dataPtrBorder - widthStep + nChan)[1] +
+                                    +matrix[2, 1] * (dataPtrBorder)[1] +
+                                    +matrix[2, 0] * (dataPtrBorder)[1] +
+                                    +matrix[2, 2] * (dataPtrBorder + nChan)[1];
+
+                    redSum = matrix[1, 1] * dataPtrBorder[2] +
+                                    +matrix[1, 0] * (dataPtrBorder)[2] +
+                                    +matrix[1, 2] * (dataPtrBorder + nChan)[2] +
+                                    +matrix[0, 1] * (dataPtrBorder - widthStep)[2] +
+                                    +matrix[0, 0] * (dataPtrBorder - widthStep)[2] +
+                                    +matrix[0, 2] * (dataPtrBorder - widthStep + nChan)[2] +
+                                    +matrix[2, 1] * (dataPtrBorder)[2] +
+                                    +matrix[2, 0] * (dataPtrBorder)[2] +
+                                    +matrix[2, 2] * (dataPtrBorder + nChan)[2];
+
+                    blueSum = (float)Math.Round((blueSum / matrixWeight) + offset);
+                    greenSum = (float)Math.Round((greenSum / matrixWeight) + offset);
+                    redSum = (float)Math.Round((redSum / matrixWeight) + offset);
+
+                    dataPtr[0] = (byte)(blueSum < 0 ? 0 : blueSum > 255 ? 255 : blueSum);
+                    dataPtr[1] = (byte)(greenSum < 0 ? 0 : greenSum > 255 ? 255 : greenSum);
+                    dataPtr[2] = (byte)(redSum < 0 ? 0 : redSum > 255 ? 255 : redSum);
+
+                    //processar a border inferior a partir do segundo pixel
+                    dataPtr += nChan;
+                    dataPtrBorder += nChan;
+                    for (x = 1; x < width - 1; x++)
+                    {
+                        blueSum = matrix[1, 1] * dataPtrBorder[0] +
+                                    +matrix[1, 0] * (dataPtrBorder - nChan)[0] +
+                                    +matrix[1, 2] * (dataPtrBorder + nChan)[0] +
+                                    +matrix[0, 1] * (dataPtrBorder - widthStep)[0] +
+                                    +matrix[0, 0] * (dataPtrBorder - widthStep - nChan)[0] +
+                                    +matrix[0, 2] * (dataPtrBorder - widthStep + nChan)[0] +
+                                    +matrix[2, 1] * (dataPtrBorder)[0] +
+                                    +matrix[2, 0] * (dataPtrBorder - nChan)[0] +
+                                    +matrix[2, 2] * (dataPtrBorder + nChan)[0];
+
+                        greenSum = matrix[1, 1] * dataPtrBorder[1] +
+                                    +matrix[1, 0] * (dataPtrBorder - nChan)[1] +
+                                    +matrix[1, 2] * (dataPtrBorder + nChan)[1] +
+                                    +matrix[0, 1] * (dataPtrBorder - widthStep)[1] +
+                                    +matrix[0, 0] * (dataPtrBorder - widthStep - nChan)[1] +
+                                    +matrix[0, 2] * (dataPtrBorder - widthStep + nChan)[1] +
+                                    +matrix[2, 1] * (dataPtrBorder)[1] +
+                                    +matrix[2, 0] * (dataPtrBorder - nChan)[1] +
+                                    +matrix[2, 2] * (dataPtrBorder + nChan)[1];
+
+
+                        redSum = matrix[1, 1] * dataPtrBorder[2] +
+                                    +matrix[1, 0] * (dataPtrBorder - nChan)[2] +
+                                    +matrix[1, 2] * (dataPtrBorder + nChan)[2] +
+                                    +matrix[0, 1] * (dataPtrBorder - widthStep)[2] +
+                                    +matrix[0, 0] * (dataPtrBorder - widthStep - nChan)[2] +
+                                    +matrix[0, 2] * (dataPtrBorder - widthStep + nChan)[2] +
+                                    +matrix[2, 1] * (dataPtrBorder)[2] +
+                                    +matrix[2, 0] * (dataPtrBorder - nChan)[2] +
+                                    +matrix[2, 2] * (dataPtrBorder + nChan)[2];
+
+
+                        blueSum = (float)Math.Round((blueSum / matrixWeight) + offset);
+                        greenSum = (float)Math.Round((greenSum / matrixWeight) + offset);
+                        redSum = (float)Math.Round((redSum / matrixWeight) + offset);
+
+                        dataPtr[0] = (byte)(blueSum < 0 ? 0 : blueSum > 255 ? 255 : blueSum);
+                        dataPtr[1] = (byte)(greenSum < 0 ? 0 : greenSum > 255 ? 255 : greenSum);
+                        dataPtr[2] = (byte)(redSum < 0 ? 0 : redSum > 255 ? 255 : redSum);
+
+                        dataPtr += nChan;
+                        dataPtrBorder += nChan;
+                    }
+
+                    //processar o pixel (N,N)
+                    blueSum = matrix[1, 1] * dataPtrBorder[0] +
+                                    +matrix[1, 0] * (dataPtrBorder - nChan)[0] +
+                                    +matrix[1, 2] * (dataPtrBorder)[0] +
+                                    +matrix[0, 1] * (dataPtrBorder - widthStep)[0] +
+                                    +matrix[0, 0] * (dataPtrBorder - widthStep - nChan)[0] +
+                                    +matrix[0, 2] * (dataPtrBorder - widthStep)[0] +
+                                    +matrix[2, 1] * (dataPtrBorder)[0] +
+                                    +matrix[2, 0] * (dataPtrBorder - nChan)[0] +
+                                    +matrix[2, 2] * (dataPtrBorder)[0];
+
+                    greenSum = matrix[1, 1] * dataPtrBorder[1] +
+                                    +matrix[1, 0] * (dataPtrBorder - nChan)[1] +
+                                    +matrix[1, 2] * (dataPtrBorder)[1] +
+                                    +matrix[0, 1] * (dataPtrBorder - widthStep)[1] +
+                                    +matrix[0, 0] * (dataPtrBorder - widthStep - nChan)[1] +
+                                    +matrix[0, 2] * (dataPtrBorder - widthStep)[1] +
+                                    +matrix[2, 1] * (dataPtrBorder)[1] +
+                                    +matrix[2, 0] * (dataPtrBorder - nChan)[1] +
+                                    +matrix[2, 2] * (dataPtrBorder)[1];
+
+
+                    redSum = matrix[1, 1] * dataPtrBorder[2] +
+                                +matrix[1, 0] * (dataPtrBorder - nChan)[2] +
+                                +matrix[1, 2] * (dataPtrBorder + nChan)[2] +
+                                +matrix[0, 1] * (dataPtrBorder - widthStep)[2] +
+                                +matrix[0, 0] * (dataPtrBorder - widthStep - nChan)[2] +
+                                +matrix[0, 2] * (dataPtrBorder + widthStep + nChan)[2] +
+                                +matrix[2, 1] * (dataPtrBorder + widthStep)[2] +
+                                +matrix[2, 0] * (dataPtrBorder - nChan)[2] +
+                                +matrix[2, 2] * (dataPtrBorder + nChan)[2];
+
+
+                    blueSum = (float)Math.Round((blueSum / matrixWeight) + offset);
+                    greenSum = (float)Math.Round((greenSum / matrixWeight) + offset);
+                    redSum = (float)Math.Round((redSum / matrixWeight) + offset);
+
+                    dataPtr[0] = (byte)(blueSum < 0 ? 0 : blueSum > 255 ? 255 : blueSum);
+                    dataPtr[1] = (byte)(greenSum < 0 ? 0 : greenSum > 255 ? 255 : greenSum);
+                    dataPtr[2] = (byte)(redSum < 0 ? 0 : redSum > 255 ? 255 : redSum);
                 }
             }
         }
