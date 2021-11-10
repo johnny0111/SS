@@ -1691,6 +1691,7 @@ namespace SS_OpenCV
                 byte* dataPtrBorder = dataPtr;
                 MIplImage mCopy = imgCopy.MIplImage;
                 byte* dataPtrCopy = (byte*)mCopy.imageData.ToPointer(); // Pointer to the image
+                byte* resetPtrCopy = dataPtrCopy;
 
                 int width = img.Width;
                 int height = img.Height;
@@ -1737,6 +1738,106 @@ namespace SS_OpenCV
                         dataPtrCopy +=  padding + nChan;
                         dataPtr += padding + nChan;
                     }
+
+                    //processar pixel (0,0)
+                    dataPtr = resetPtr; // reset ao pointer 
+                    dataPtrBorder = resetPtrCopy;
+
+                    GBlue = Math.Abs(dataPtrBorder[0] - (dataPtrBorder + nChan)[0]) + Math.Abs(dataPtrBorder[0] - (dataPtrBorder + widthStep)[0]);
+                    GGreen = Math.Abs(dataPtrBorder[1] - (dataPtrBorder + nChan)[1]) + Math.Abs(dataPtrBorder[1] - (dataPtrBorder + widthStep)[1]);
+                    GRed = Math.Abs(dataPtrBorder[2] - (dataPtrBorder + nChan)[2]) + Math.Abs(dataPtrBorder[2] - (dataPtrBorder + widthStep)[2]);
+
+                    dataPtr[0] = (byte)(GBlue < 0 ? 0 : GBlue > 255 ? 255 : GBlue);
+                    dataPtr[1] = (byte)(GGreen < 0 ? 0 : GGreen > 255 ? 255 : GGreen);
+                    dataPtr[2] = (byte)(GRed < 0 ? 0 : GRed > 255 ? 255 : GRed);
+
+                    //processar a border superior a partir do segundo pixel
+                    dataPtr += nChan;
+                    dataPtrBorder += nChan;
+                    for (x = 1; x < width - 1; x++)
+                    {
+                        GBlue = Math.Abs(dataPtrBorder[0] - (dataPtrBorder + nChan)[0]) + Math.Abs(dataPtrBorder[0] - (dataPtrBorder + widthStep)[0]);
+                        GGreen = Math.Abs(dataPtrBorder[1] - (dataPtrBorder + nChan)[1]) + Math.Abs(dataPtrBorder[1] - (dataPtrBorder + widthStep)[1]);
+                        GRed = Math.Abs(dataPtrBorder[2] - (dataPtrBorder + nChan)[2]) + Math.Abs(dataPtrBorder[2] - (dataPtrBorder + widthStep)[2]);
+
+                        dataPtr[0] = (byte)(GBlue < 0 ? 0 : GBlue > 255 ? 255 : GBlue);
+                        dataPtr[1] = (byte)(GGreen < 0 ? 0 : GGreen > 255 ? 255 : GGreen);
+                        dataPtr[2] = (byte)(GRed < 0 ? 0 : GRed > 255 ? 255 : GRed);
+
+                        dataPtr += nChan;
+                        dataPtrBorder += nChan;
+                    }
+
+                    //processar pixel (0,N)
+                    //subraçai de um pelo ele mesmo da 0
+                    GBlue = Math.Abs(dataPtrCopy[0] - (dataPtrCopy + widthStep)[0]);
+                    GGreen = Math.Abs(dataPtrCopy[1] - (dataPtrCopy + widthStep)[1]);
+                    GRed = Math.Abs(dataPtrCopy[2] - (dataPtrCopy + widthStep)[2]);
+
+
+                    dataPtr[0] = (byte)(GBlue < 0 ? 0 : GBlue > 255 ? 255 : GBlue);
+                    dataPtr[1] = (byte)(GGreen < 0 ? 0 : GGreen > 255 ? 255 : GGreen);
+                    dataPtr[2] = (byte)(GRed < 0 ? 0 : GRed > 255 ? 255 : GRed);
+
+                    dataPtrBorder += padding + nChan;
+                    dataPtr += padding + nChan;
+
+                    //processar border esqueda e direita
+                    for (y = 1; y < height - 1; y++)
+                    {
+                        GBlue = Math.Abs(dataPtrBorder[0] - (dataPtrBorder + nChan)[0]) + Math.Abs(dataPtrBorder[0] - (dataPtrBorder + widthStep)[0]);
+                        GGreen = Math.Abs(dataPtrBorder[1] - (dataPtrBorder + nChan)[1]) + Math.Abs(dataPtrBorder[1] - (dataPtrBorder + widthStep)[1]);
+                        GRed = Math.Abs(dataPtrBorder[2] - (dataPtrBorder + nChan)[2]) + Math.Abs(dataPtrBorder[2] - (dataPtrBorder + widthStep)[2]);
+
+                        dataPtr[0] = (byte)(GBlue < 0 ? 0 : GBlue > 255 ? 255 : GBlue);
+                        dataPtr[1] = (byte)(GGreen < 0 ? 0 : GGreen > 255 ? 255 : GGreen);
+                        dataPtr[2] = (byte)(GRed < 0 ? 0 : GRed > 255 ? 255 : GRed);
+
+                        dataPtrBorder += widthStep - padding - nChan;
+                        dataPtr += widthStep - padding - nChan;
+
+                        GBlue = Math.Abs(dataPtrCopy[0] - (dataPtrCopy + widthStep)[0]);
+                        GGreen = Math.Abs(dataPtrCopy[1] - (dataPtrCopy + widthStep)[1]);
+                        GRed = Math.Abs(dataPtrCopy[2] - (dataPtrCopy + widthStep)[2]);
+
+                        dataPtr[0] = (byte)(GBlue < 0 ? 0 : GBlue > 255 ? 255 : GBlue);
+                        dataPtr[1] = (byte)(GGreen < 0 ? 0 : GGreen > 255 ? 255 : GGreen);
+                        dataPtr[2] = (byte)(GRed < 0 ? 0 : GRed > 255 ? 255 : GRed);
+
+                        dataPtrBorder += padding + nChan;
+                        dataPtr += padding + nChan;
+                    }
+
+                    //processar o pixel (N,0)
+                    GBlue = Math.Abs(dataPtrBorder[0] - (dataPtrBorder + nChan)[0]);
+                    GGreen = Math.Abs(dataPtrBorder[1] - (dataPtrBorder + nChan)[1]);
+                    GRed = Math.Abs(dataPtrBorder[2] - (dataPtrBorder + nChan)[2]);
+
+                    dataPtr[0] = (byte)(GBlue < 0 ? 0 : GBlue > 255 ? 255 : GBlue);
+                    dataPtr[1] = (byte)(GGreen < 0 ? 0 : GGreen > 255 ? 255 : GGreen);
+                    dataPtr[2] = (byte)(GRed < 0 ? 0 : GRed > 255 ? 255 : GRed);
+
+                    //processar a border inferior a partir do segundo pixel
+                    dataPtr += nChan;
+                    dataPtrBorder += nChan;
+                    for (x = 1; x < width - 1; x++)
+                    {
+                        GBlue = Math.Abs(dataPtrBorder[0] - (dataPtrBorder + nChan)[0]);
+                        GGreen = Math.Abs(dataPtrBorder[1] - (dataPtrBorder + nChan)[1]);
+                        GRed = Math.Abs(dataPtrBorder[2] - (dataPtrBorder + nChan)[2]);
+
+                        dataPtr[0] = (byte)(GBlue < 0 ? 0 : GBlue > 255 ? 255 : GBlue);
+                        dataPtr[1] = (byte)(GGreen < 0 ? 0 : GGreen > 255 ? 255 : GGreen);
+                        dataPtr[2] = (byte)(GRed < 0 ? 0 : GRed > 255 ? 255 : GRed);
+
+                        dataPtr += nChan;
+                        dataPtrBorder += nChan;
+                    }
+
+                    //processar o pixel (N,N)s
+                    dataPtr[0] = 0;
+                    dataPtr[1] = 0;
+                    dataPtr[2] = 0;
                 }
             }
         }
