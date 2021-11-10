@@ -1123,7 +1123,7 @@ namespace SS_OpenCV
                     dataPtrBorder += padding + nChan;
                     dataPtr += padding + nChan;
 
-                    //processar border direita
+                    //processar border esqueda e direita
                     for (y = 1; y < height - 1; y++)
                     {
                         blueSum = matrix[1, 1] * dataPtrBorder[0] +
@@ -1352,6 +1352,7 @@ namespace SS_OpenCV
                 byte* dataPtrBorder = dataPtr;
                 MIplImage mCopy = imgCopy.MIplImage;
                 byte* dataPtrCopy = (byte*)mCopy.imageData.ToPointer(); // Pointer to the image
+                byte* resetPtrCopy = dataPtrCopy;
 
                 int width = img.Width;
                 int height = img.Height;
@@ -1421,6 +1422,261 @@ namespace SS_OpenCV
                         dataPtrCopy += nChan + padding + nChan;
                         dataPtr += nChan + padding + nChan;
                     }
+
+                    //processar pixel (0,0)
+                    dataPtr = resetPtr; // reset ao pointer 
+                    dataPtrBorder = resetPtrCopy;
+
+                    SxBlueSum = (dataPtrBorder)[0] + 2 * (dataPtrBorder)[0] + (dataPtrBorder + widthStep)[0] -
+                                        (dataPtrBorder + nChan)[0] - 2 * (dataPtrBorder + nChan)[0] - (dataPtrBorder + widthStep + nChan)[0];
+
+                    SxGreenSum = (dataPtrBorder)[1] + 2 * (dataPtrBorder)[1] + (dataPtrBorder + widthStep)[1] -
+                                        (dataPtrBorder + nChan)[1] - 2 * (dataPtrBorder + nChan)[1] - (dataPtrBorder + widthStep + nChan)[1];
+
+                    SxRedSum = (dataPtrBorder)[2] + 2 * (dataPtrBorder)[2] + (dataPtrBorder + widthStep)[2] -
+                                        (dataPtrBorder + nChan)[2] - 2 * (dataPtrBorder + nChan)[2] - (dataPtrBorder + widthStep + nChan)[2];
+
+
+                    SyBlueSum = (dataPtrBorder + widthStep)[0] + 2 * (dataPtrBorder + widthStep)[0] + (dataPtrBorder + widthStep + nChan)[0] -
+                                (dataPtrBorder)[0] - 2 * (dataPtrBorder)[0] - (dataPtrBorder + nChan)[0];
+
+                    SyGreenSum = (dataPtrBorder + widthStep)[1] + 2 * (dataPtrBorder + widthStep)[1] + (dataPtrBorder + widthStep + nChan)[1] -
+                                (dataPtrBorder)[1] - 2 * (dataPtrBorder)[1] - (dataPtrBorder + nChan)[1];
+
+                    SyRedSum = (dataPtrBorder + widthStep)[2] + 2 * (dataPtrBorder + widthStep)[2] + (dataPtrBorder + widthStep + nChan)[2] -
+                                (dataPtrBorder)[2] - 2 * (dataPtrBorder)[2] - (dataPtrBorder + nChan)[2];
+
+                    SBlue = Math.Abs(SxBlueSum) + Math.Abs(SyBlueSum);
+                    SGreen = Math.Abs(SxGreenSum) + Math.Abs(SyGreenSum);
+                    SRed = Math.Abs(SxRedSum) + Math.Abs(SyRedSum);
+
+                    dataPtr[0] = (byte)(SBlue < 0 ? 0 : SBlue > 255 ? 255 : SBlue);
+                    dataPtr[1] = (byte)(SGreen < 0 ? 0 : SGreen > 255 ? 255 : SGreen);
+                    dataPtr[2] = (byte)(SRed < 0 ? 0 : SRed > 255 ? 255 : SRed);
+
+                    //processar a border superior a partir do segundo pixel
+                    dataPtr += nChan;
+                    dataPtrBorder += nChan;
+                    for (x = 1; x < width - 1; x++)
+                    {
+                        SxBlueSum = (dataPtrBorder - nChan)[0] + 2 * (dataPtrBorder - nChan)[0] + (dataPtrBorder + widthStep - nChan)[0] -
+                                        (dataPtrBorder + nChan)[0] - 2 * (dataPtrBorder + nChan)[0] - (dataPtrBorder + widthStep + nChan)[0];
+
+                        SxGreenSum = (dataPtrBorder - nChan)[1] + 2 * (dataPtrBorder - nChan)[1] + (dataPtrBorder + widthStep - nChan)[1] -
+                                        (dataPtrBorder + nChan)[1] - 2 * (dataPtrBorder + nChan)[1] - (dataPtrBorder + widthStep + nChan)[1];
+
+                        SxRedSum = (dataPtrBorder - nChan)[2] + 2 * (dataPtrBorder - nChan)[2] + (dataPtrBorder + widthStep - nChan)[2] -
+                                        (dataPtrBorder + nChan)[2] - 2 * (dataPtrBorder + nChan)[2] - (dataPtrBorder + widthStep + nChan)[2];
+
+
+                        SyBlueSum = (dataPtrBorder + widthStep - nChan)[0] + 2 * (dataPtrBorder + widthStep)[0] + (dataPtrBorder + widthStep + nChan)[0] -
+                                    (dataPtrBorder - nChan)[0] - 2 * (dataPtrBorder)[0] - (dataPtrBorder + nChan)[0];
+
+                        SyGreenSum = (dataPtrBorder + widthStep - nChan)[1] + 2 * (dataPtrBorder + widthStep)[1] + (dataPtrBorder + widthStep + nChan)[1] -
+                                    (dataPtrBorder - nChan)[1] - 2 * (dataPtrBorder)[1] - (dataPtrBorder + nChan)[1];
+
+                        SyRedSum = (dataPtrBorder + widthStep - nChan)[2] + 2 * (dataPtrBorder + widthStep)[2] + (dataPtrBorder + widthStep + nChan)[2] -
+                                    (dataPtrBorder - nChan)[2] - 2 * (dataPtrBorder)[2] - (dataPtrBorder + nChan)[2];
+
+                        SBlue = Math.Abs(SxBlueSum) + Math.Abs(SyBlueSum);
+                        SGreen = Math.Abs(SxGreenSum) + Math.Abs(SyGreenSum);
+                        SRed = Math.Abs(SxRedSum) + Math.Abs(SyRedSum);
+
+                        dataPtr[0] = (byte)(SBlue < 0 ? 0 : SBlue > 255 ? 255 : SBlue);
+                        dataPtr[1] = (byte)(SGreen < 0 ? 0 : SGreen > 255 ? 255 : SGreen);
+                        dataPtr[2] = (byte)(SRed < 0 ? 0 : SRed > 255 ? 255 : SRed);
+
+                        dataPtr += nChan;
+                        dataPtrBorder += nChan;
+                    }
+
+                    //processar pixel (0,N)
+                    SxBlueSum = (dataPtrBorder - nChan)[0] + 2 * (dataPtrBorder - nChan)[0] + (dataPtrBorder + widthStep - nChan)[0] -
+                                        (dataPtrBorder)[0] - 2 * (dataPtrBorder)[0] - (dataPtrBorder + widthStep)[0];
+
+                    SxGreenSum = (dataPtrBorder - nChan)[1] + 2 * (dataPtrBorder - nChan)[1] + (dataPtrBorder + widthStep - nChan)[1] -
+                                        (dataPtrBorder)[1] - 2 * (dataPtrBorder)[1] - (dataPtrBorder + widthStep)[1];
+
+                    SxRedSum = (dataPtrBorder - nChan)[2] + 2 * (dataPtrBorder - nChan)[2] + (dataPtrBorder + widthStep - nChan)[2] -
+                                        (dataPtrBorder)[2] - 2 * (dataPtrBorder)[2] - (dataPtrBorder + widthStep)[2];
+
+
+                    SyBlueSum = (dataPtrBorder + widthStep - nChan)[0] + 2 * (dataPtrBorder + widthStep)[0] + (dataPtrBorder + widthStep)[0] -
+                                (dataPtrBorder - nChan)[0] - 2 * (dataPtrBorder)[0] - (dataPtrBorder)[0];
+
+                    SyGreenSum = (dataPtrBorder + widthStep - nChan)[1] + 2 * (dataPtrBorder + widthStep)[1] + (dataPtrBorder + widthStep)[1] -
+                                (dataPtrBorder - nChan)[1] - 2 * (dataPtrBorder)[1] - (dataPtrBorder)[1];
+
+                    SyRedSum = (dataPtrBorder + widthStep - nChan)[2] + 2 * (dataPtrBorder + widthStep)[2] + (dataPtrBorder + widthStep)[2] -
+                                (dataPtrBorder - nChan)[2] - 2 * (dataPtrBorder)[2] - (dataPtrBorder)[2];
+
+                    SBlue = Math.Abs(SxBlueSum) + Math.Abs(SyBlueSum);
+                    SGreen = Math.Abs(SxGreenSum) + Math.Abs(SyGreenSum);
+                    SRed = Math.Abs(SxRedSum) + Math.Abs(SyRedSum);
+
+                    dataPtr[0] = (byte)(SBlue < 0 ? 0 : SBlue > 255 ? 255 : SBlue);
+                    dataPtr[1] = (byte)(SGreen < 0 ? 0 : SGreen > 255 ? 255 : SGreen);
+                    dataPtr[2] = (byte)(SRed < 0 ? 0 : SRed > 255 ? 255 : SRed);
+
+                    dataPtrBorder += padding + nChan;
+                    dataPtr += padding + nChan;
+
+                    //processar border esqueda e direita
+                    for (y = 1; y < height - 1; y++)
+                    {
+                        SxBlueSum = (dataPtrBorder - widthStep)[0] + 2 * (dataPtrBorder)[0] + (dataPtrBorder + widthStep)[0] -
+                                        (dataPtrBorder - widthStep + nChan)[0] - 2 * (dataPtrBorder + nChan)[0] - (dataPtrBorder + widthStep + nChan)[0];
+
+                        SxGreenSum = (dataPtrBorder - widthStep)[1] + 2 * (dataPtrBorder)[1] + (dataPtrBorder + widthStep)[1] -
+                                        (dataPtrBorder - widthStep + nChan)[1] - 2 * (dataPtrBorder + nChan)[1] - (dataPtrBorder + widthStep + nChan)[1];
+
+                        SxRedSum = (dataPtrBorder - widthStep)[2] + 2 * (dataPtrBorder)[2] + (dataPtrBorder + widthStep)[2] -
+                                        (dataPtrBorder - widthStep + nChan)[2] - 2 * (dataPtrBorder + nChan)[2] - (dataPtrBorder + widthStep + nChan)[2];
+
+
+                        SyBlueSum = (dataPtrBorder + widthStep)[0] + 2 * (dataPtrBorder + widthStep)[0] + (dataPtrBorder + widthStep + nChan)[0] -
+                                    (dataPtrBorder - widthStep)[0] - 2 * (dataPtrBorder - widthStep)[0] - (dataPtrBorder - widthStep + nChan)[0];
+
+                        SyGreenSum = (dataPtrBorder + widthStep)[1] + 2 * (dataPtrBorder + widthStep)[1] + (dataPtrBorder + widthStep + nChan)[1] -
+                                    (dataPtrBorder - widthStep)[1] - 2 * (dataPtrBorder - widthStep)[1] - (dataPtrBorder - widthStep + nChan)[1];
+
+                        SyRedSum = (dataPtrBorder + widthStep)[2] + 2 * (dataPtrBorder + widthStep)[2] + (dataPtrBorder + widthStep + nChan)[2] -
+                                    (dataPtrBorder - widthStep)[2] - 2 * (dataPtrBorder - widthStep)[2] - (dataPtrBorder - widthStep + nChan)[2];
+
+                        SBlue = Math.Abs(SxBlueSum) + Math.Abs(SyBlueSum);
+                        SGreen = Math.Abs(SxGreenSum) + Math.Abs(SyGreenSum);
+                        SRed = Math.Abs(SxRedSum) + Math.Abs(SyRedSum);
+
+                        dataPtr[0] = (byte)(SBlue < 0 ? 0 : SBlue > 255 ? 255 : SBlue);
+                        dataPtr[1] = (byte)(SGreen < 0 ? 0 : SGreen > 255 ? 255 : SGreen);
+                        dataPtr[2] = (byte)(SRed < 0 ? 0 : SRed > 255 ? 255 : SRed);
+
+                        dataPtrBorder += widthStep - padding - nChan;
+                        dataPtr += widthStep - padding - nChan;
+
+                        SxBlueSum = (dataPtrBorder - widthStep - nChan)[0] + 2 * (dataPtrBorder - nChan)[0] + (dataPtrBorder + widthStep - nChan)[0] -
+                                        (dataPtrBorder - widthStep)[0] - 2 * (dataPtrBorder)[0] - (dataPtrBorder + widthStep)[0];
+
+                        SxGreenSum = (dataPtrBorder - widthStep - nChan)[1] + 2 * (dataPtrBorder - nChan)[1] + (dataPtrBorder + widthStep - nChan)[1] -
+                                        (dataPtrBorder - widthStep)[1] - 2 * (dataPtrBorder)[1] - (dataPtrBorder + widthStep)[1];
+
+                        SxRedSum = (dataPtrBorder - widthStep - nChan)[2] + 2 * (dataPtrBorder - nChan)[2] + (dataPtrBorder + widthStep - nChan)[2] -
+                                        (dataPtrBorder - widthStep)[2] - 2 * (dataPtrBorder)[2] - (dataPtrBorder + widthStep)[2];
+
+
+                        SyBlueSum = (dataPtrBorder + widthStep - nChan)[0] + 2 * (dataPtrBorder + widthStep)[0] + (dataPtrBorder + widthStep)[0] -
+                                    (dataPtrBorder - widthStep - nChan)[0] - 2 * (dataPtrBorder - widthStep)[0] - (dataPtrBorder - widthStep)[0];
+
+                        SyGreenSum = (dataPtrBorder + widthStep - nChan)[1] + 2 * (dataPtrBorder + widthStep)[1] + (dataPtrBorder + widthStep)[1] -
+                                    (dataPtrBorder - widthStep - nChan)[1] - 2 * (dataPtrBorder - widthStep)[1] - (dataPtrBorder - widthStep)[1];
+
+                        SyRedSum = (dataPtrBorder + widthStep - nChan)[2] + 2 * (dataPtrBorder + widthStep)[2] + (dataPtrBorder + widthStep)[2] -
+                                    (dataPtrBorder - widthStep - nChan)[2] - 2 * (dataPtrBorder - widthStep)[2] - (dataPtrBorder - widthStep)[2];
+
+                        SBlue = Math.Abs(SxBlueSum) + Math.Abs(SyBlueSum);
+                        SGreen = Math.Abs(SxGreenSum) + Math.Abs(SyGreenSum);
+                        SRed = Math.Abs(SxRedSum) + Math.Abs(SyRedSum);
+
+                        dataPtr[0] = (byte)(SBlue < 0 ? 0 : SBlue > 255 ? 255 : SBlue);
+                        dataPtr[1] = (byte)(SGreen < 0 ? 0 : SGreen > 255 ? 255 : SGreen);
+                        dataPtr[2] = (byte)(SRed < 0 ? 0 : SRed > 255 ? 255 : SRed);
+
+                        dataPtrBorder += padding + nChan;
+                        dataPtr += padding + nChan;
+                    }
+
+                    //processar o pixel (N,0)
+
+                    SxBlueSum = (dataPtrBorder - widthStep)[0] + 2 * (dataPtrBorder)[0] + (dataPtrBorder)[0] -
+                                        (dataPtrBorder - widthStep + nChan)[0] - 2 * (dataPtrBorder + nChan)[0] - (dataPtrBorder + nChan)[0];
+
+                    SxGreenSum = (dataPtrBorder - widthStep)[1] + 2 * (dataPtrBorder)[1] + (dataPtrBorder)[1] -
+                                        (dataPtrBorder - widthStep + nChan)[1] - 2 * (dataPtrBorder + nChan)[1] - (dataPtrBorder + nChan)[1];
+
+                    SxRedSum = (dataPtrBorder - widthStep)[2] + 2 * (dataPtrBorder)[2] + (dataPtrBorder)[2] -
+                                        (dataPtrBorder - widthStep + nChan)[2] - 2 * (dataPtrBorder + nChan)[2] - (dataPtrBorder + nChan)[2];
+
+
+                    SyBlueSum = (dataPtrBorder)[0] + 2 * (dataPtrBorder)[0] + (dataPtrBorder + nChan)[0] -
+                                (dataPtrBorder - widthStep)[0] - 2 * (dataPtrBorder - widthStep)[0] - (dataPtrBorder - widthStep + nChan)[0];
+
+                    SyGreenSum = (dataPtrBorder)[1] + 2 * (dataPtrBorder)[1] + (dataPtrBorder + nChan)[1] -
+                                (dataPtrBorder - widthStep)[1] - 2 * (dataPtrBorder - widthStep)[1] - (dataPtrBorder - widthStep + nChan)[1];
+
+                    SyRedSum = (dataPtrBorder)[2] + 2 * (dataPtrBorder)[2] + (dataPtrBorder + nChan)[2] -
+                                (dataPtrBorder - widthStep)[2] - 2 * (dataPtrBorder - widthStep)[2] - (dataPtrBorder - widthStep + nChan)[2];
+
+                    SBlue = Math.Abs(SxBlueSum) + Math.Abs(SyBlueSum);
+                    SGreen = Math.Abs(SxGreenSum) + Math.Abs(SyGreenSum);
+                    SRed = Math.Abs(SxRedSum) + Math.Abs(SyRedSum);
+
+                    dataPtr[0] = (byte)(SBlue < 0 ? 0 : SBlue > 255 ? 255 : SBlue);
+                    dataPtr[1] = (byte)(SGreen < 0 ? 0 : SGreen > 255 ? 255 : SGreen);
+                    dataPtr[2] = (byte)(SRed < 0 ? 0 : SRed > 255 ? 255 : SRed);
+
+                    //processar a border inferior a partir do segundo pixel
+                    dataPtr += nChan;
+                    dataPtrBorder += nChan;
+                    for (x = 1; x < width - 1; x++)
+                    {
+                        SxBlueSum = (dataPtrBorder - widthStep - nChan)[0] + 2 * (dataPtrBorder - nChan)[0] + (dataPtrBorder - nChan)[0] -
+                                        (dataPtrBorder - widthStep + nChan)[0] - 2 * (dataPtrBorder + nChan)[0] - (dataPtrBorder + nChan)[0];
+
+                        SxGreenSum = (dataPtrBorder - widthStep - nChan)[1] + 2 * (dataPtrBorder - nChan)[1] + (dataPtrBorder - nChan)[1] -
+                                        (dataPtrBorder - widthStep + nChan)[1] - 2 * (dataPtrBorder + nChan)[1] - (dataPtrBorder + nChan)[1];
+
+                        SxRedSum = (dataPtrBorder - widthStep - nChan)[2] + 2 * (dataPtrBorder - nChan)[2] + (dataPtrBorder - nChan)[2] -
+                                        (dataPtrBorder - widthStep + nChan)[2] - 2 * (dataPtrBorder + nChan)[2] - (dataPtrBorder + nChan)[2];
+
+
+                        SyBlueSum = (dataPtrBorder - nChan)[0] + 2 * (dataPtrBorder)[0] + (dataPtrBorder + nChan)[0] -
+                                    (dataPtrBorder - widthStep - nChan)[0] + 2 * (dataPtrBorder - widthStep)[0] + (dataPtrBorder - widthStep + nChan)[0];
+
+                        SyGreenSum = (dataPtrBorder - nChan)[1] + 2 * (dataPtrBorder)[1] + (dataPtrBorder + nChan)[1] -
+                                    (dataPtrBorder - widthStep - nChan)[1] + 2 * (dataPtrBorder - widthStep)[1] + (dataPtrBorder - widthStep + nChan)[1];
+
+                        SyRedSum = (dataPtrBorder - nChan)[2] + 2 * (dataPtrBorder)[2] + (dataPtrBorder + nChan)[2] -
+                                    (dataPtrBorder - widthStep - nChan)[2] + 2 * (dataPtrBorder - widthStep)[2] + (dataPtrBorder - widthStep + nChan)[2];
+
+                        SBlue = Math.Abs(SxBlueSum) + Math.Abs(SyBlueSum);
+                        SGreen = Math.Abs(SxGreenSum) + Math.Abs(SyGreenSum);
+                        SRed = Math.Abs(SxRedSum) + Math.Abs(SyRedSum);
+
+                        dataPtr[0] = (byte)(SBlue < 0 ? 0 : SBlue > 255 ? 255 : SBlue);
+                        dataPtr[1] = (byte)(SGreen < 0 ? 0 : SGreen > 255 ? 255 : SGreen);
+                        dataPtr[2] = (byte)(SRed < 0 ? 0 : SRed > 255 ? 255 : SRed);
+
+                        dataPtr += nChan;
+                        dataPtrBorder += nChan;
+                    }
+
+                    //processar o pixel (N,N)
+                    SxBlueSum = (dataPtrBorder - widthStep - nChan)[0] + 2 * (dataPtrBorder - nChan)[0] + (dataPtrBorder - nChan)[0] -
+                                        (dataPtrBorder - widthStep)[0] - 2 * (dataPtrBorder)[0] - (dataPtrBorder)[0];
+
+                    SxGreenSum = (dataPtrBorder - widthStep - nChan)[1] + 2 * (dataPtrBorder - nChan)[1] + (dataPtrBorder - nChan)[1] -
+                                        (dataPtrBorder - widthStep)[1] - 2 * (dataPtrBorder)[1] - (dataPtrBorder)[1];
+
+                    SxRedSum = (dataPtrBorder - widthStep - nChan)[2] + 2 * (dataPtrBorder - nChan)[2] + (dataPtrBorder - nChan)[2] -
+                                        (dataPtrBorder - widthStep)[2] - 2 * (dataPtrBorder)[2] - (dataPtrBorder)[2];
+
+
+                    SyBlueSum = (dataPtrBorder - nChan)[0] + 2 * (dataPtrBorder)[0] + (dataPtrBorder)[0] -
+                                (dataPtrBorder - widthStep - nChan)[0] + 2 * (dataPtrBorder - widthStep)[0] + (dataPtrBorder - widthStep)[0];
+
+                    SyGreenSum = (dataPtrBorder - nChan)[1] + 2 * (dataPtrBorder)[1] + (dataPtrBorder)[1] -
+                                (dataPtrBorder - widthStep - nChan)[1] + 2 * (dataPtrBorder - widthStep)[1] + (dataPtrBorder - widthStep)[1];
+
+                    SyRedSum = (dataPtrBorder - nChan)[2] + 2 * (dataPtrBorder)[2] + (dataPtrBorder)[2] -
+                                (dataPtrBorder - widthStep - nChan)[2] + 2 * (dataPtrBorder - widthStep)[2] + (dataPtrBorder - widthStep)[2];
+
+                    SBlue = Math.Abs(SxBlueSum) + Math.Abs(SyBlueSum);
+                    SGreen = Math.Abs(SxGreenSum) + Math.Abs(SyGreenSum);
+                    SRed = Math.Abs(SxRedSum) + Math.Abs(SyRedSum);
+
+                    dataPtr[0] = (byte)(SBlue < 0 ? 0 : SBlue > 255 ? 255 : SBlue);
+                    dataPtr[1] = (byte)(SGreen < 0 ? 0 : SGreen > 255 ? 255 : SGreen);
+                    dataPtr[2] = (byte)(SRed < 0 ? 0 : SRed > 255 ? 255 : SRed);
                 }
             }
         }
