@@ -1770,9 +1770,9 @@ namespace SS_OpenCV
 
                     //processar pixel (0,N)
                     //subraçai de um pelo ele mesmo da 0
-                    GBlue = Math.Abs(dataPtrCopy[0] - (dataPtrCopy + widthStep)[0]);
-                    GGreen = Math.Abs(dataPtrCopy[1] - (dataPtrCopy + widthStep)[1]);
-                    GRed = Math.Abs(dataPtrCopy[2] - (dataPtrCopy + widthStep)[2]);
+                    GBlue = Math.Abs(dataPtrBorder[0] - (dataPtrBorder + widthStep)[0]);
+                    GGreen = Math.Abs(dataPtrBorder[1] - (dataPtrBorder + widthStep)[1]);
+                    GRed = Math.Abs(dataPtrBorder[2] - (dataPtrBorder + widthStep)[2]);
 
 
                     dataPtr[0] = (byte)(GBlue < 0 ? 0 : GBlue > 255 ? 255 : GBlue);
@@ -1796,9 +1796,9 @@ namespace SS_OpenCV
                         dataPtrBorder += widthStep - padding - nChan;
                         dataPtr += widthStep - padding - nChan;
 
-                        GBlue = Math.Abs(dataPtrCopy[0] - (dataPtrCopy + widthStep)[0]);
-                        GGreen = Math.Abs(dataPtrCopy[1] - (dataPtrCopy + widthStep)[1]);
-                        GRed = Math.Abs(dataPtrCopy[2] - (dataPtrCopy + widthStep)[2]);
+                        GBlue = Math.Abs(dataPtrBorder[0] - (dataPtrBorder + widthStep)[0]);
+                        GGreen = Math.Abs(dataPtrBorder[1] - (dataPtrBorder + widthStep)[1]);
+                        GRed = Math.Abs(dataPtrBorder[2] - (dataPtrBorder + widthStep)[2]);
 
                         dataPtr[0] = (byte)(GBlue < 0 ? 0 : GBlue > 255 ? 255 : GBlue);
                         dataPtr[1] = (byte)(GGreen < 0 ? 0 : GGreen > 255 ? 255 : GGreen);
