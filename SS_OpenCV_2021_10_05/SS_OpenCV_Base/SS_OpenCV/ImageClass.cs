@@ -1321,14 +1321,14 @@ namespace SS_OpenCV
 
 
                     redSum = matrix[1, 1] * dataPtrBorder[2] +
-                                +matrix[1, 0] * (dataPtrBorder - nChan)[2] +
-                                +matrix[1, 2] * (dataPtrBorder + nChan)[2] +
-                                +matrix[0, 1] * (dataPtrBorder - widthStep)[2] +
-                                +matrix[0, 0] * (dataPtrBorder - widthStep - nChan)[2] +
-                                +matrix[0, 2] * (dataPtrBorder + widthStep + nChan)[2] +
-                                +matrix[2, 1] * (dataPtrBorder + widthStep)[2] +
-                                +matrix[2, 0] * (dataPtrBorder - nChan)[2] +
-                                +matrix[2, 2] * (dataPtrBorder + nChan)[2];
+                                    +matrix[1, 0] * (dataPtrBorder - nChan)[2] +
+                                    +matrix[1, 2] * (dataPtrBorder)[2] +
+                                    +matrix[0, 1] * (dataPtrBorder - widthStep)[2] +
+                                    +matrix[0, 0] * (dataPtrBorder - widthStep - nChan)[2] +
+                                    +matrix[0, 2] * (dataPtrBorder - widthStep)[2] +
+                                    +matrix[2, 1] * (dataPtrBorder)[2] +
+                                    +matrix[2, 0] * (dataPtrBorder - nChan)[2] +
+                                    +matrix[2, 2] * (dataPtrBorder)[2];
 
 
                     blueSum = (float)Math.Round((blueSum / matrixWeight) + offset);
