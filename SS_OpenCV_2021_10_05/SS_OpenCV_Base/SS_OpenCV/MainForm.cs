@@ -379,6 +379,75 @@ namespace SS_OpenCV
 
             Cursor = Cursors.Default; // normal cursor
         }
+
+        private void histogramGrayToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (img == null) // verify if the image is already opened
+                return;
+
+            Cursor = Cursors.WaitCursor; // clock cursor 
+
+            //copy Undo Image
+            imgUndo = img.Copy();
+
+            int[] gray = new int[256];
+
+            gray = ImageClass.Histogram_Gray(imgUndo);
+
+            Histograma hist = new Histograma(gray);
+            hist.ShowDialog();
+
+            ImageViewer.Image = img.Bitmap;
+            ImageViewer.Refresh(); // refresh image on the screen
+
+            Cursor = Cursors.Default; // normal cursor
+        }
+
+        private void histogramRGBToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            if (img == null) // verify if the image is already opened
+                return;
+
+            Cursor = Cursors.WaitCursor; // clock cursor 
+
+            //copy Undo Image
+            imgUndo = img.Copy();
+
+            int[,] RGB = new int[3,256];
+
+            RGB = ImageClass.Histogram_RGB(imgUndo);
+
+            Histograma hist = new Histograma(RGB);
+            hist.ShowDialog();
+
+            ImageViewer.Image = img.Bitmap;
+            ImageViewer.Refresh(); // refresh image on the screen
+
+            Cursor = Cursors.Default; // normal cursor
+        }
+
+        private void histogramAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (img == null) // verify if the image is already opened
+                return;
+
+            Cursor = Cursors.WaitCursor; // clock cursor 
+
+            //copy Undo Image
+            imgUndo = img.Copy();
+
+            int[,] All = new int[4, 256];
+
+            All = ImageClass.Histogram_All(imgUndo);
+
+            HistogramaAll hist = new HistogramaAll(All);
+            hist.ShowDialog();
+
+            ImageViewer.Image = img.Bitmap;
+            ImageViewer.Refresh(); // refresh image on the screen
+
+            Cursor = Cursors.Default; // normal cursor
+        }
     }
 
 

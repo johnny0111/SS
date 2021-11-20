@@ -452,7 +452,7 @@ namespace SS_OpenCV
                 int nChan = m.nChannels; // number of channels - 3
                 int x, y, xO, yO;
                 int whidthstep = m.widthStep;
-
+                //Esta funçao tem um erro, caso o Xo e Yo sejam 1.34 ou seja com decimas, temos que fazer interpolaçao bilinear
                 //double xCenter = imgOrigem.Width / 2.0;
                 //double yCenter = imgOrigem.Height / 2.0;
                 //double w2 = xCenter / (scaleFactor), h2 = yCenter / (scaleFactor);
@@ -1521,7 +1521,7 @@ namespace SS_OpenCV
                     dataPtrBorder += padding + nChan;
                     dataPtr += padding + nChan;
 
-                    //processar border esqueda e direita
+                    //processar border esquerda e direita
                     for (y = 1; y < height - 1; y++)
                     {
                         SxBlueSum = (dataPtrBorder - widthStep)[0] + 2 * (dataPtrBorder)[0] + (dataPtrBorder + widthStep)[0] -
@@ -1617,6 +1617,7 @@ namespace SS_OpenCV
                     //processar a border inferior a partir do segundo pixel
                     dataPtr += nChan;
                     dataPtrBorder += nChan;
+
                     for (x = 1; x < width - 1; x++)
                     {
                         SxBlueSum = (dataPtrBorder - widthStep - nChan)[0] + 2 * (dataPtrBorder - nChan)[0] + (dataPtrBorder - nChan)[0] -
@@ -1630,13 +1631,13 @@ namespace SS_OpenCV
 
 
                         SyBlueSum = (dataPtrBorder - nChan)[0] + 2 * (dataPtrBorder)[0] + (dataPtrBorder + nChan)[0] -
-                                    (dataPtrBorder - widthStep - nChan)[0] + 2 * (dataPtrBorder - widthStep)[0] + (dataPtrBorder - widthStep + nChan)[0];
+                                    (dataPtrBorder - widthStep - nChan)[0] - 2 * (dataPtrBorder - widthStep)[0] - (dataPtrBorder - widthStep + nChan)[0];
 
                         SyGreenSum = (dataPtrBorder - nChan)[1] + 2 * (dataPtrBorder)[1] + (dataPtrBorder + nChan)[1] -
-                                    (dataPtrBorder - widthStep - nChan)[1] + 2 * (dataPtrBorder - widthStep)[1] + (dataPtrBorder - widthStep + nChan)[1];
+                                    (dataPtrBorder - widthStep - nChan)[1] - 2 * (dataPtrBorder - widthStep)[1] - (dataPtrBorder - widthStep + nChan)[1];
 
                         SyRedSum = (dataPtrBorder - nChan)[2] + 2 * (dataPtrBorder)[2] + (dataPtrBorder + nChan)[2] -
-                                    (dataPtrBorder - widthStep - nChan)[2] + 2 * (dataPtrBorder - widthStep)[2] + (dataPtrBorder - widthStep + nChan)[2];
+                                    (dataPtrBorder - widthStep - nChan)[2] - 2 * (dataPtrBorder - widthStep)[2] - (dataPtrBorder - widthStep + nChan)[2];
 
                         SBlue = Math.Abs(SxBlueSum) + Math.Abs(SyBlueSum);
                         SGreen = Math.Abs(SxGreenSum) + Math.Abs(SyGreenSum);
@@ -1662,13 +1663,13 @@ namespace SS_OpenCV
 
 
                     SyBlueSum = (dataPtrBorder - nChan)[0] + 2 * (dataPtrBorder)[0] + (dataPtrBorder)[0] -
-                                (dataPtrBorder - widthStep - nChan)[0] + 2 * (dataPtrBorder - widthStep)[0] + (dataPtrBorder - widthStep)[0];
+                                (dataPtrBorder - widthStep - nChan)[0] - 2 * (dataPtrBorder - widthStep)[0] - (dataPtrBorder - widthStep)[0];
 
                     SyGreenSum = (dataPtrBorder - nChan)[1] + 2 * (dataPtrBorder)[1] + (dataPtrBorder)[1] -
-                                (dataPtrBorder - widthStep - nChan)[1] + 2 * (dataPtrBorder - widthStep)[1] + (dataPtrBorder - widthStep)[1];
+                                (dataPtrBorder - widthStep - nChan)[1] - 2 * (dataPtrBorder - widthStep)[1] - (dataPtrBorder - widthStep)[1];
 
                     SyRedSum = (dataPtrBorder - nChan)[2] + 2 * (dataPtrBorder)[2] + (dataPtrBorder)[2] -
-                                (dataPtrBorder - widthStep - nChan)[2] + 2 * (dataPtrBorder - widthStep)[2] + (dataPtrBorder - widthStep)[2];
+                                (dataPtrBorder - widthStep - nChan)[2] - 2 * (dataPtrBorder - widthStep)[2] - (dataPtrBorder - widthStep)[2];
 
                     SBlue = Math.Abs(SxBlueSum) + Math.Abs(SyBlueSum);
                     SGreen = Math.Abs(SxGreenSum) + Math.Abs(SyGreenSum);
@@ -1906,118 +1907,134 @@ namespace SS_OpenCV
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="img"></param>
-        /// <param name="imgCopy"></param>
-        public static void Median(Image<Bgr, byte> img, Image<Bgr, byte> imgCopy)
-        {
-            //  imgCopy.SmoothMedian(3).CopyTo(img);
 
+        public static int[] Histogram_Gray(Emgu.CV.Image<Bgr, byte> img)
+        {
             unsafe
             {
-                // acesso directo à memoria da imagem (sequencial)
-                // top left to bottom right
                 MIplImage m = img.MIplImage;
-                img.SetZero();
+                byte* dataPtr = (byte*)m.imageData.ToPointer(); // Pointer to the image
 
-                MIplImage mU = imgCopy.MIplImage;
+                int width = img.Width;
+                int height = img.Height;
+                int nChan = m.nChannels; // number of channels - 3
+                int padding = m.widthStep - m.nChannels * m.width; // alinhament bytes (padding)
+                int widthStep = m.widthStep;
+                int x, y;
 
-                byte* dataPtr = (Byte*)m.imageData.ToPointer();
-                byte* dataPtrIn = (Byte*)mU.imageData.ToPointer();
-                int h = img.Height;
-                int w = img.Width;
-                int nC = m.nChannels;
-                int mWs = m.widthStep;
-                int lineStep = m.widthStep - m.nChannels * m.width + 2 * m.nChannels;
-                int x, y, i;
-                int outvalue;
+                byte blue, green, red, gray;
+                int[] hist = new int[256];
 
-                byte[] valuesB = new byte[9], valuesG = new byte[9], valuesR = new byte[9];
-                int distMin = int.MaxValue, distAux;
-                int idxMin = 0;
-
-                dataPtr += m.nChannels + m.widthStep;
-                dataPtrIn += m.nChannels + m.widthStep;
-                int ii, j;
-                // no borders
-                for (y = 1; y < h - 1; y++)
+                for (y = 0; y < height; y++)
                 {
-                    for (x = 1; x < w - 1; x++)
+                    for (x = 0; x < width; x++)
                     {
-                        i = 0;
-                        valuesB[0] = (dataPtrIn - mWs - nC)[i];
-                        valuesB[1] = (dataPtrIn - mWs)[i];
-                        valuesB[2] = (dataPtrIn - mWs + nC)[i];
-                        valuesB[3] = (dataPtrIn - nC)[i];
-                        valuesB[4] = (dataPtrIn)[i];
-                        valuesB[5] = (dataPtrIn + nC)[i];
-                        valuesB[6] = (dataPtrIn + mWs - nC)[i];
-                        valuesB[7] = (dataPtrIn + mWs)[i];
-                        valuesB[8] = (dataPtrIn + mWs + nC)[i];
+                        //retrive 3 colour components
+                        blue = dataPtr[0];
+                        green = dataPtr[1];
+                        red = dataPtr[2];
 
-                        i = 1;
-                        valuesG[0] = (dataPtrIn - mWs - nC)[i];
-                        valuesG[1] = (dataPtrIn - mWs)[i];
-                        valuesG[2] = (dataPtrIn - mWs + nC)[i];
-                        valuesG[3] = (dataPtrIn - nC)[i];
-                        valuesG[4] = (dataPtrIn)[i];
-                        valuesG[5] = (dataPtrIn + nC)[i];
-                        valuesG[6] = (dataPtrIn + mWs - nC)[i];
-                        valuesG[7] = (dataPtrIn + mWs)[i];
-                        valuesG[8] = (dataPtrIn + mWs + nC)[i];
-                        i = 2;
-                        valuesR[0] = (dataPtrIn - mWs - nC)[i];
-                        valuesR[1] = (dataPtrIn - mWs)[i];
-                        valuesR[2] = (dataPtrIn - mWs + nC)[i];
-                        valuesR[3] = (dataPtrIn - nC)[i];
-                        valuesR[4] = (dataPtrIn)[i];
-                        valuesR[5] = (dataPtrIn + nC)[i];
-                        valuesR[6] = (dataPtrIn + mWs - nC)[i];
-                        valuesR[7] = (dataPtrIn + mWs)[i];
-                        valuesR[8] = (dataPtrIn + mWs + nC)[i];
+                        // convert to gray
+                        gray = (byte)Math.Round(((int)blue + green + red) / 3.0);
 
-                        // calculate distance
-                        distMin = int.MaxValue;
-                        for (ii = 0; ii < 9; ii++)
-                        {
-                            distAux = 0;
-                            for (j = 0; j < 9; j++)
-                            {
-                                distAux +=
-                                    Math.Abs(valuesB[ii] - valuesB[j]) +
-                                    Math.Abs(valuesG[ii] - valuesG[j]) +
-                                    Math.Abs(valuesR[ii] - valuesR[j]);
+                        //vai ao index do hist que neste caso (int)dataPtr[0] e o valor do pixel 0 a 255
+                        hist[gray]++;
+                        // avança apontador 
+                        dataPtr += nChan;
+                    }
+                    //no fim da linha avança alinhamento
+                    dataPtr += padding;
+                }
 
-                            }
-                            idxMin = (distMin > distAux) ? ii : idxMin;
-                            distMin = (distMin > distAux) ? distAux : distMin;
+                return hist;
+            }
+        }
 
-                        }
+        public static int[,] Histogram_RGB(Emgu.CV.Image<Bgr, byte> img)
+        {
+            unsafe
+            {
+                MIplImage m = img.MIplImage;
+                byte* dataPtr = (byte*)m.imageData.ToPointer(); // Pointer to the image
 
-                        dataPtr[0] = (byte)valuesB[idxMin];
-                        dataPtr[1] = (byte)valuesG[idxMin];
-                        dataPtr[2] = (byte)valuesR[idxMin];
+                int width = img.Width;
+                int height = img.Height;
+                int nChan = m.nChannels; // number of channels - 3
+                int padding = m.widthStep - m.nChannels * m.width; // alinhament bytes (padding)
+                int widthStep = m.widthStep;
+                int x, y;
 
+                byte blue, green, red, gray;
+                int[, ] hist = new int[3,256];
 
+                for (y = 0; y < height; y++)
+                {
+                    for (x = 0; x < width; x++)
+                    {
+                        //retrive 3 colour components
+                        blue = dataPtr[0];
+                        green = dataPtr[1];
+                        red = dataPtr[2];
 
-
+                        //vai ao index do hist que neste caso (int)dataPtr[0] e o valor do pixel 0 a 255
+                        hist[0, blue]++;
+                        hist[1, green]++;
+                        hist[2, red]++;
 
                         // avança apontador 
-                        dataPtr += nC;
-                        dataPtrIn += nC;
-
+                        dataPtr += nChan;
                     }
-
                     //no fim da linha avança alinhamento
-                    dataPtr += lineStep;
-                    dataPtrIn += lineStep;
+                    dataPtr += padding;
                 }
+
+                return hist;
             }
+        }
 
+        public static int[,] Histogram_All(Emgu.CV.Image<Bgr, byte> img)
+        {
+            unsafe
+            {
+                MIplImage m = img.MIplImage;
+                byte* dataPtr = (byte*)m.imageData.ToPointer(); // Pointer to the image
 
+                int width = img.Width;
+                int height = img.Height;
+                int nChan = m.nChannels; // number of channels - 3
+                int padding = m.widthStep - m.nChannels * m.width; // alinhament bytes (padding)
+                int widthStep = m.widthStep;
+                int x, y;
 
+                byte blue, green, red, gray;
+                int[,] hist = new int[4, 256];
+
+                for (y = 0; y < height; y++)
+                {
+                    for (x = 0; x < width; x++)
+                    {
+                        //retrive 3 colour components
+                        blue = dataPtr[0];
+                        green = dataPtr[1];
+                        red = dataPtr[2];
+
+                        // convert to gray
+                        gray = (byte)Math.Round(((int)blue + green + red) / 3.0);
+
+                        //vai ao index do hist que neste caso (int)dataPtr[0] e o valor do pixel 0 a 255
+                        hist[0, gray]++;
+                        hist[1, blue]++;
+                        hist[2, green]++;
+                        hist[3, red]++;
+                        // avança apontador 
+                        dataPtr += nChan;
+                    }
+                    //no fim da linha avança alinhamento
+                    dataPtr += padding;
+                }
+
+                return hist;
+            }
         }
 
 
