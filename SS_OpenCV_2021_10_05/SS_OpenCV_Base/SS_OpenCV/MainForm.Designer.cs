@@ -56,11 +56,13 @@
             this.autoZoomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.histogramToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.histogramToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.histogramAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.autoresToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.evalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1 = new System.Windows.Forms.Panel();
             this.ImageViewer = new System.Windows.Forms.PictureBox();
-            this.histogramAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.medianToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.diferentiationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ImageViewer)).BeginInit();
@@ -81,8 +83,8 @@
             this.evalToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Padding = new System.Windows.Forms.Padding(4, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(578, 24);
+            this.menuStrip1.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
+            this.menuStrip1.Size = new System.Drawing.Size(771, 24);
             this.menuStrip1.TabIndex = 2;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -235,7 +237,9 @@
             this.filtersToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mediaToolStripMenuItem,
             this.brightnessContrastToolStripMenuItem,
-            this.nonUniformToolStripMenuItem});
+            this.nonUniformToolStripMenuItem,
+            this.medianToolStripMenuItem,
+            this.diferentiationToolStripMenuItem});
             this.filtersToolStripMenuItem.Name = "filtersToolStripMenuItem";
             this.filtersToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.filtersToolStripMenuItem.Text = "Filters";
@@ -243,21 +247,21 @@
             // mediaToolStripMenuItem
             // 
             this.mediaToolStripMenuItem.Name = "mediaToolStripMenuItem";
-            this.mediaToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.mediaToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.mediaToolStripMenuItem.Text = "Mean - solution A";
             this.mediaToolStripMenuItem.Click += new System.EventHandler(this.mediaToolStripMenuItem_Click);
             // 
             // brightnessContrastToolStripMenuItem
             // 
             this.brightnessContrastToolStripMenuItem.Name = "brightnessContrastToolStripMenuItem";
-            this.brightnessContrastToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.brightnessContrastToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.brightnessContrastToolStripMenuItem.Text = "BrightContrast";
             this.brightnessContrastToolStripMenuItem.Click += new System.EventHandler(this.brightContrastToolStripMenuItem_Click);
             // 
             // nonUniformToolStripMenuItem
             // 
             this.nonUniformToolStripMenuItem.Name = "nonUniformToolStripMenuItem";
-            this.nonUniformToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.nonUniformToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.nonUniformToolStripMenuItem.Text = "Non Uniform";
             this.nonUniformToolStripMenuItem.Click += new System.EventHandler(this.nonUniformToolStripMenuItem_Click);
             // 
@@ -283,6 +287,13 @@
             this.histogramToolStripMenuItem1.Text = "Histogram_RGB";
             this.histogramToolStripMenuItem1.Click += new System.EventHandler(this.histogramRGBToolStripMenuItem1_Click);
             // 
+            // histogramAllToolStripMenuItem
+            // 
+            this.histogramAllToolStripMenuItem.Name = "histogramAllToolStripMenuItem";
+            this.histogramAllToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.histogramAllToolStripMenuItem.Text = "Histogram_All";
+            this.histogramAllToolStripMenuItem.Click += new System.EventHandler(this.histogramAllToolStripMenuItem_Click);
+            // 
             // autoresToolStripMenuItem
             // 
             this.autoresToolStripMenuItem.Name = "autoresToolStripMenuItem";
@@ -303,34 +314,44 @@
             this.panel1.Controls.Add(this.ImageViewer);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 24);
+            this.panel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(578, 330);
+            this.panel1.Size = new System.Drawing.Size(771, 412);
             this.panel1.TabIndex = 6;
             // 
             // ImageViewer
             // 
-            this.ImageViewer.Location = new System.Drawing.Point(3, 3);
+            this.ImageViewer.Location = new System.Drawing.Point(4, 4);
+            this.ImageViewer.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.ImageViewer.Name = "ImageViewer";
             this.ImageViewer.Size = new System.Drawing.Size(576, 427);
             this.ImageViewer.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.ImageViewer.TabIndex = 6;
             this.ImageViewer.TabStop = false;
             // 
-            // histogramAllToolStripMenuItem
+            // medianToolStripMenuItem
             // 
-            this.histogramAllToolStripMenuItem.Name = "histogramAllToolStripMenuItem";
-            this.histogramAllToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.histogramAllToolStripMenuItem.Text = "Histogram_All";
-            this.histogramAllToolStripMenuItem.Click += new System.EventHandler(this.histogramAllToolStripMenuItem_Click);
+            this.medianToolStripMenuItem.Name = "medianToolStripMenuItem";
+            this.medianToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.medianToolStripMenuItem.Text = "Median";
+            this.medianToolStripMenuItem.Click += new System.EventHandler(this.medianToolStripMenuItem_Click);
+            // 
+            // diferentiationToolStripMenuItem
+            // 
+            this.diferentiationToolStripMenuItem.Name = "diferentiationToolStripMenuItem";
+            this.diferentiationToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.diferentiationToolStripMenuItem.Text = "Diferentiation";
+            this.diferentiationToolStripMenuItem.Click += new System.EventHandler(this.diferentiationToolStripMenuItem_Click);
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(578, 354);
+            this.ClientSize = new System.Drawing.Size(771, 436);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "MainForm";
             this.Text = "Sistemas Sensoriais 2021/2022 - Image processing";
             this.menuStrip1.ResumeLayout(false);
@@ -378,6 +399,8 @@
         private System.Windows.Forms.ToolStripMenuItem histogramToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem histogramToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem histogramAllToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem medianToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem diferentiationToolStripMenuItem;
     }
 }
 
