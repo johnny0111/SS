@@ -2202,7 +2202,7 @@ namespace SS_OpenCV
 
                     //processar a border superior a partir do segundo pixel
                     dataPtr += nChan;
-                    dataPtrBorder += nChan;
+                    dataPtrCopy += nChan;
                     for (x = 1; x < width - 1; x++)
                     {
 
@@ -2267,7 +2267,7 @@ namespace SS_OpenCV
                         dataPtr[2] = imgVecR[index];
 
                         dataPtr += nChan;
-                        dataPtrBorder += nChan;
+                        dataPtrCopy += nChan;
                     }
 
                     //processar pixel (0,N)
@@ -2279,9 +2279,9 @@ namespace SS_OpenCV
                     imgVecG[1] = (dataPtrCopy)[1];
                     imgVecR[1] = (dataPtrCopy)[2];
 
-                    imgVecB[2] = (dataPtrCopy + nChan)[0];
-                    imgVecG[2] = (dataPtrCopy + nChan)[1];
-                    imgVecR[2] = (dataPtrCopy + nChan)[2];
+                    imgVecB[2] = (dataPtrCopy )[0];
+                    imgVecG[2] = (dataPtrCopy )[1];
+                    imgVecR[2] = (dataPtrCopy )[2];
 
                     imgVecB[3] = (dataPtrCopy - nChan)[0];
                     imgVecG[3] = (dataPtrCopy - nChan)[1];
@@ -2291,9 +2291,9 @@ namespace SS_OpenCV
                     imgVecG[4] = (dataPtrCopy)[1];
                     imgVecR[4] = (dataPtrCopy)[2];
 
-                    imgVecB[5] = (dataPtrCopy + nChan)[0];
-                    imgVecG[5] = (dataPtrCopy + nChan)[1];
-                    imgVecR[5] = (dataPtrCopy + nChan)[2];
+                    imgVecB[5] = (dataPtrCopy )[0];
+                    imgVecG[5] = (dataPtrCopy )[1];
+                    imgVecR[5] = (dataPtrCopy )[2];
 
                     imgVecB[6] = (dataPtrCopy + widthStep - nChan)[0];
                     imgVecG[6] = (dataPtrCopy + widthStep - nChan)[1];
@@ -2303,9 +2303,9 @@ namespace SS_OpenCV
                     imgVecG[7] = (dataPtrCopy + widthStep)[1];
                     imgVecR[7] = (dataPtrCopy + widthStep)[2];
 
-                    imgVecB[8] = (dataPtrCopy + widthStep + nChan)[0];
-                    imgVecG[8] = (dataPtrCopy + widthStep + nChan)[1];
-                    imgVecR[8] = (dataPtrCopy + widthStep + nChan)[2];
+                    imgVecB[8] = (dataPtrCopy + widthStep )[0];
+                    imgVecG[8] = (dataPtrCopy + widthStep )[1];
+                    imgVecR[8] = (dataPtrCopy + widthStep )[2];
 
                     min = 0;
                     index = 0;
@@ -2330,7 +2330,7 @@ namespace SS_OpenCV
                     dataPtr[1] = imgVecG[index];
                     dataPtr[2] = imgVecR[index];
 
-                    dataPtrBorder += widthStep;
+                    dataPtrCopy += widthStep;
                     dataPtr += widthStep;
 
                     //processar border da direita
@@ -2395,7 +2395,7 @@ namespace SS_OpenCV
                         dataPtr[1] = imgVecG[index];
                         dataPtr[2] = imgVecR[index];
 
-                        dataPtrBorder += widthStep;
+                        dataPtrCopy += widthStep;
                         dataPtr += widthStep;
                     }
 
@@ -2461,7 +2461,7 @@ namespace SS_OpenCV
                     dataPtr[2] = imgVecR[index];
 
                     dataPtr -= nChan;
-                    dataPtrBorder -= nChan;
+                    dataPtrCopy -= nChan;
 
 
                     //processar border inferior
@@ -2528,7 +2528,7 @@ namespace SS_OpenCV
                         dataPtr[2] = imgVecR[index];
 
                         dataPtr -= nChan;
-                        dataPtrBorder -= nChan;
+                        dataPtrCopy -= nChan;
                     }
 
                     //processar pixel (0,N)
@@ -2592,7 +2592,7 @@ namespace SS_OpenCV
                     dataPtr[1] = imgVecG[index];
                     dataPtr[2] = imgVecR[index];
 
-                    dataPtrBorder -= widthStep;
+                    dataPtrCopy -= widthStep;
                     dataPtr -= widthStep;
 
                     //processar border esquerda
@@ -2657,7 +2657,7 @@ namespace SS_OpenCV
                         dataPtr[0] = imgVecB[index];
                         dataPtr[1] = imgVecG[index];
                         dataPtr[2] = imgVecR[index];
-                        dataPtrBorder -= widthStep;
+                        dataPtrCopy -= widthStep;
                         dataPtr -= widthStep;
                     }
 
