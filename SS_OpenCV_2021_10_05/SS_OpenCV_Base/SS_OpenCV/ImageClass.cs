@@ -767,7 +767,7 @@ namespace SS_OpenCV
                     //dataPtr[1] = 0;
                     //dataPtr[2] = 0;
                     dataPtr -= nChan;
-                    dataPtrBorder -= nChan;
+                    dataPtrBorder -= nChan; 
 
                     //processar border inferior
                     for (x = 1; x < width - 1; x++)
@@ -2037,6 +2037,634 @@ namespace SS_OpenCV
             }
         }
 
+        public static void Median(Image<Bgr, byte> img, Image<Bgr, byte> imgCopy)
+        {
+            unsafe
+            {
+                MIplImage m = img.MIplImage;
+                byte* dataPtr = (byte*)m.imageData.ToPointer(); // Pointer to the image
+                byte* resetPtr = dataPtr;
+                byte* dataPtrBorder = dataPtr;
+                MIplImage mCopy = imgCopy.MIplImage;
+                byte* dataPtrCopy = (byte*)mCopy.imageData.ToPointer(); // Pointer to the image
+                byte* resetPtrCopy = dataPtrCopy;
+
+                int width = img.Width;
+                int height = img.Height;
+                int nChan = m.nChannels; // number of channels - 3
+                int padding = m.widthStep - m.nChannels * m.width; // alinhament bytes (padding)
+                int widthStep = m.widthStep;
+                int x, y, i, j;
+                int nC = m.nChannels;
+
+                byte[] imgVecB = new byte[9];
+                byte[] imgVecG = new byte[9];
+                byte[] imgVecR = new byte[9];
+                int   index;
+                double eucSum,min;
+                dataPtrCopy += nChan + widthStep;
+                dataPtr += nChan + widthStep;
+                if (nC == 3)
+                {
+                    
+                    for (y = 1; y < height - 1; y++)
+                    {
+                        for (x = 1; x < width - 1; x++)
+                        {
+                            imgVecB[0] = (dataPtrCopy - widthStep - nChan)[0];
+                            imgVecG[0] = (dataPtrCopy - widthStep - nChan)[1];
+                            imgVecR[0] = (dataPtrCopy - widthStep - nChan)[2];
+
+                            imgVecB[1] = (dataPtrCopy - widthStep)[0];
+                            imgVecG[1] = (dataPtrCopy - widthStep)[1];
+                            imgVecR[1] = (dataPtrCopy - widthStep)[2];
+
+                            imgVecB[2] = (dataPtrCopy - widthStep + nChan)[0];
+                            imgVecG[2] = (dataPtrCopy - widthStep + nChan)[1];
+                            imgVecR[2] = (dataPtrCopy - widthStep + nChan)[2];
+
+                            imgVecB[3] = (dataPtrCopy - nChan)[0];
+                            imgVecG[3] = (dataPtrCopy - nChan)[1];
+                            imgVecR[3] = (dataPtrCopy - nChan)[2];
+
+                            imgVecB[4] = (dataPtrCopy)[0];
+                            imgVecG[4] = (dataPtrCopy)[1];
+                            imgVecR[4] = (dataPtrCopy)[2];
+
+                            imgVecB[5] = (dataPtrCopy + nChan)[0];
+                            imgVecG[5] = (dataPtrCopy + nChan)[1];
+                            imgVecR[5] = (dataPtrCopy + nChan)[2];
+
+                            imgVecB[6] = (dataPtrCopy + widthStep - nChan)[0];
+                            imgVecG[6] = (dataPtrCopy + widthStep - nChan)[1];
+                            imgVecR[6] = (dataPtrCopy + widthStep - nChan)[2];
+
+                            imgVecB[7] = (dataPtrCopy + widthStep)[0];
+                            imgVecG[7] = (dataPtrCopy + widthStep)[1];
+                            imgVecR[7] = (dataPtrCopy + widthStep)[2];
+
+                            imgVecB[8] = (dataPtrCopy + widthStep + nChan)[0];
+                            imgVecG[8] = (dataPtrCopy + widthStep + nChan)[1];
+                            imgVecR[8] = (dataPtrCopy + widthStep + nChan)[2];
+
+                            min = 0;
+                            index = 0;
+                            for (i = 0; i < 9; i++)
+                            {
+                                eucSum = 0;
+                                for (j = 0; j < 9; j++)
+                                    eucSum += Math.Abs((imgVecB[i] - imgVecB[j])) + Math.Abs((imgVecG[i] - imgVecG[j])) + Math.Abs((imgVecR[i] - imgVecR[j]));
+                                    //eucSum += Math.Sqrt((imgVecB[i] - imgVecB[j]) ^ 2 + (imgVecG[i] - imgVecG[j])^2 + (imgVecR[i] - imgVecR[j])^2);
+
+                                if (i == 0)
+                                    min = eucSum;
+
+                                if (eucSum < min)
+                                {
+                                    min = eucSum;
+                                    index = i;
+                                }
+
+                            }
+                            dataPtr[0] = imgVecB[index];
+                            dataPtr[1] =  imgVecG[index];
+                            dataPtr[2] =  imgVecR[index];
+
+                            dataPtrCopy += nChan;
+                            dataPtr += nChan;
+                        }
+                        dataPtrCopy += nChan + padding + nChan;
+                        dataPtr += nChan + padding + nChan;
+                    }
+
+                    //processar pixel (0,0)
+                    dataPtr = resetPtr; // reset ao pointer 
+                    dataPtrCopy = resetPtrCopy;
+
+                    imgVecB[0] = (dataPtrCopy )[0];
+                    imgVecG[0] = (dataPtrCopy )[1];
+                    imgVecR[0] = (dataPtrCopy )[2];
+
+                    imgVecB[1] = (dataPtrCopy )[0];
+                    imgVecG[1] = (dataPtrCopy )[1];
+                    imgVecR[1] = (dataPtrCopy )[2];
+
+                    imgVecB[2] = (dataPtrCopy  + nChan)[0];
+                    imgVecG[2] = (dataPtrCopy  + nChan)[1];
+                    imgVecR[2] = (dataPtrCopy  + nChan)[2];
+
+                    imgVecB[3] = (dataPtrCopy )[0];
+                    imgVecG[3] = (dataPtrCopy )[1];
+                    imgVecR[3] = (dataPtrCopy )[2];
+
+                    imgVecB[4] = (dataPtrCopy)[0];
+                    imgVecG[4] = (dataPtrCopy)[1];
+                    imgVecR[4] = (dataPtrCopy)[2];
+
+                    imgVecB[5] = (dataPtrCopy + nChan)[0];
+                    imgVecG[5] = (dataPtrCopy + nChan)[1];
+                    imgVecR[5] = (dataPtrCopy + nChan)[2];
+
+                    imgVecB[6] = (dataPtrCopy + widthStep)[0];
+                    imgVecG[6] = (dataPtrCopy + widthStep)[1];
+                    imgVecR[6] = (dataPtrCopy + widthStep)[2];
+
+                    imgVecB[7] = (dataPtrCopy + widthStep)[0];
+                    imgVecG[7] = (dataPtrCopy + widthStep)[1];
+                    imgVecR[7] = (dataPtrCopy + widthStep)[2];
+
+                    imgVecB[8] = (dataPtrCopy + widthStep + nChan)[0];
+                    imgVecG[8] = (dataPtrCopy + widthStep + nChan)[1];
+                    imgVecR[8] = (dataPtrCopy + widthStep + nChan)[2];
+
+                    min = 0;
+                    index = 0;
+                    for (i = 0; i < 9; i++)
+                    {
+                        eucSum = 0;
+                        for (j = 0; j < 9; j++)
+                            eucSum += Math.Abs((imgVecB[i] - imgVecB[j])) + Math.Abs((imgVecG[i] - imgVecG[j])) + Math.Abs((imgVecR[i] - imgVecR[j]));
+                        //eucSum += Math.Sqrt((imgVecB[i] - imgVecB[j]) ^ 2 + (imgVecG[i] - imgVecG[j])^2 + (imgVecR[i] - imgVecR[j])^2);
+
+                        if (i == 0)
+                            min = eucSum;
+
+                        if (eucSum < min)
+                        {
+                            min = eucSum;
+                            index = i;
+                        }
+
+                    }
+                    dataPtr[0] =  imgVecB[index];
+                    dataPtr[1] =  imgVecG[index];
+                    dataPtr[2] =  imgVecR[index];
+
+                    //processar a border superior a partir do segundo pixel
+                    dataPtr += nChan;
+                    dataPtrCopy += nChan;
+                    for (x = 1; x < width - 1; x++)
+                    {
+
+
+                        imgVecB[0] = (dataPtrCopy - nChan)[0];
+                        imgVecG[0] = (dataPtrCopy - nChan)[1];
+                        imgVecR[0] = (dataPtrCopy - nChan)[2];
+
+                        imgVecB[1] = (dataPtrCopy)[0];
+                        imgVecG[1] = (dataPtrCopy)[1];
+                        imgVecR[1] = (dataPtrCopy)[2];
+
+                        imgVecB[2] = (dataPtrCopy + nChan)[0];
+                        imgVecG[2] = (dataPtrCopy + nChan)[1];
+                        imgVecR[2] = (dataPtrCopy + nChan)[2];
+
+                        imgVecB[3] = (dataPtrCopy - nChan)[0];
+                        imgVecG[3] = (dataPtrCopy - nChan)[1];
+                        imgVecR[3] = (dataPtrCopy - nChan)[2];
+
+                        imgVecB[4] = (dataPtrCopy)[0];
+                        imgVecG[4] = (dataPtrCopy)[1];
+                        imgVecR[4] = (dataPtrCopy)[2];
+
+                        imgVecB[5] = (dataPtrCopy + nChan)[0];
+                        imgVecG[5] = (dataPtrCopy + nChan)[1];
+                        imgVecR[5] = (dataPtrCopy + nChan)[2];
+
+                        imgVecB[6] = (dataPtrCopy + widthStep - nChan)[0];
+                        imgVecG[6] = (dataPtrCopy + widthStep - nChan)[1];
+                        imgVecR[6] = (dataPtrCopy + widthStep - nChan)[2];
+
+                        imgVecB[7] = (dataPtrCopy + widthStep)[0];
+                        imgVecG[7] = (dataPtrCopy + widthStep)[1];
+                        imgVecR[7] = (dataPtrCopy + widthStep)[2];
+
+                        imgVecB[8] = (dataPtrCopy + widthStep + nChan)[0];
+                        imgVecG[8] = (dataPtrCopy + widthStep + nChan)[1];
+                        imgVecR[8] = (dataPtrCopy + widthStep + nChan)[2];
+
+                        min = 0;
+                        index = 0;
+                        for (i = 0; i < 9; i++)
+                        {
+                            eucSum = 0;
+                            for (j = 0; j < 9; j++)
+                                eucSum += Math.Abs((imgVecB[i] - imgVecB[j])) + Math.Abs((imgVecG[i] - imgVecG[j])) + Math.Abs((imgVecR[i] - imgVecR[j]));
+                            //eucSum += Math.Sqrt((imgVecB[i] - imgVecB[j]) ^ 2 + (imgVecG[i] - imgVecG[j])^2 + (imgVecR[i] - imgVecR[j])^2);
+
+                            if (i == 0)
+                                min = eucSum;
+
+                            if (eucSum < min)
+                            {
+                                min = eucSum;
+                                index = i;
+                            }
+
+                        }
+                        dataPtr[0] = imgVecB[index];
+                        dataPtr[1] = imgVecG[index];
+                        dataPtr[2] = imgVecR[index];
+
+                        dataPtr += nChan;
+                        dataPtrCopy += nChan;
+                    }
+
+                    //processar pixel (0,N)
+                    imgVecB[0] = (dataPtrCopy - nChan)[0];
+                    imgVecG[0] = (dataPtrCopy - nChan)[1];
+                    imgVecR[0] = (dataPtrCopy - nChan)[2];
+
+                    imgVecB[1] = (dataPtrCopy)[0];
+                    imgVecG[1] = (dataPtrCopy)[1];
+                    imgVecR[1] = (dataPtrCopy)[2];
+
+                    imgVecB[2] = (dataPtrCopy )[0];
+                    imgVecG[2] = (dataPtrCopy )[1];
+                    imgVecR[2] = (dataPtrCopy )[2];
+
+                    imgVecB[3] = (dataPtrCopy - nChan)[0];
+                    imgVecG[3] = (dataPtrCopy - nChan)[1];
+                    imgVecR[3] = (dataPtrCopy - nChan)[2];
+
+                    imgVecB[4] = (dataPtrCopy)[0];
+                    imgVecG[4] = (dataPtrCopy)[1];
+                    imgVecR[4] = (dataPtrCopy)[2];
+
+                    imgVecB[5] = (dataPtrCopy )[0];
+                    imgVecG[5] = (dataPtrCopy )[1];
+                    imgVecR[5] = (dataPtrCopy )[2];
+
+                    imgVecB[6] = (dataPtrCopy + widthStep - nChan)[0];
+                    imgVecG[6] = (dataPtrCopy + widthStep - nChan)[1];
+                    imgVecR[6] = (dataPtrCopy + widthStep - nChan)[2];
+
+                    imgVecB[7] = (dataPtrCopy + widthStep)[0];
+                    imgVecG[7] = (dataPtrCopy + widthStep)[1];
+                    imgVecR[7] = (dataPtrCopy + widthStep)[2];
+
+                    imgVecB[8] = (dataPtrCopy + widthStep )[0];
+                    imgVecG[8] = (dataPtrCopy + widthStep )[1];
+                    imgVecR[8] = (dataPtrCopy + widthStep )[2];
+
+                    min = 0;
+                    index = 0;
+                    for (i = 0; i < 9; i++)
+                    {
+                        eucSum = 0;
+                        for (j = 0; j < 9; j++)
+                            eucSum += Math.Abs((imgVecB[i] - imgVecB[j])) + Math.Abs((imgVecG[i] - imgVecG[j])) + Math.Abs((imgVecR[i] - imgVecR[j]));
+                        //eucSum += Math.Sqrt((imgVecB[i] - imgVecB[j]) ^ 2 + (imgVecG[i] - imgVecG[j])^2 + (imgVecR[i] - imgVecR[j])^2);
+
+                        if (i == 0)
+                            min = eucSum;
+
+                        if (eucSum < min)
+                        {
+                            min = eucSum;
+                            index = i;
+                        }
+
+                    }
+                    dataPtr[0] = imgVecB[index];
+                    dataPtr[1] = imgVecG[index];
+                    dataPtr[2] = imgVecR[index];
+
+                    dataPtrCopy += widthStep;
+                    dataPtr += widthStep;
+
+                    //processar border da direita
+                    for (y = 1; y < height - 1; y++)
+                    {
+                        imgVecB[0] = (dataPtrCopy - nChan - widthStep)[0];
+                        imgVecG[0] = (dataPtrCopy - nChan - widthStep)[1];
+                        imgVecR[0] = (dataPtrCopy - nChan - widthStep)[2];
+
+                        imgVecB[1] = (dataPtrCopy - widthStep)[0];
+                        imgVecG[1] = (dataPtrCopy - widthStep)[1];
+                        imgVecR[1] = (dataPtrCopy - widthStep)[2];
+
+                        imgVecB[2] = (dataPtrCopy - widthStep)[0];
+                        imgVecG[2] = (dataPtrCopy - widthStep)[1];
+                        imgVecR[2] = (dataPtrCopy - widthStep)[2];
+
+                        imgVecB[3] = (dataPtrCopy - nChan)[0];
+                        imgVecG[3] = (dataPtrCopy - nChan)[1];
+                        imgVecR[3] = (dataPtrCopy - nChan)[2];
+
+                        imgVecB[4] = (dataPtrCopy)[0];
+                        imgVecG[4] = (dataPtrCopy)[1];
+                        imgVecR[4] = (dataPtrCopy)[2];
+
+                        imgVecB[5] = (dataPtrCopy)[0];
+                        imgVecG[5] = (dataPtrCopy)[1];
+                        imgVecR[5] = (dataPtrCopy)[2];
+
+                        imgVecB[6] = (dataPtrCopy + widthStep - nChan)[0];
+                        imgVecG[6] = (dataPtrCopy + widthStep - nChan)[1];
+                        imgVecR[6] = (dataPtrCopy + widthStep - nChan)[2];
+
+                        imgVecB[7] = (dataPtrCopy + widthStep)[0];
+                        imgVecG[7] = (dataPtrCopy + widthStep)[1];
+                        imgVecR[7] = (dataPtrCopy + widthStep)[2];
+
+                        imgVecB[8] = (dataPtrCopy + widthStep)[0];
+                        imgVecG[8] = (dataPtrCopy + widthStep)[1];
+                        imgVecR[8] = (dataPtrCopy + widthStep)[2];
+
+                        min = 0;
+                        index = 0;
+                        for (i = 0; i < 9; i++)
+                        {
+                            eucSum = 0;
+                            for (j = 0; j < 9; j++)
+                                eucSum += Math.Abs((imgVecB[i] - imgVecB[j])) + Math.Abs((imgVecG[i] - imgVecG[j])) + Math.Abs((imgVecR[i] - imgVecR[j]));
+                            //eucSum += Math.Sqrt((imgVecB[i] - imgVecB[j]) ^ 2 + (imgVecG[i] - imgVecG[j])^2 + (imgVecR[i] - imgVecR[j])^2);
+
+                            if (i == 0)
+                                min = eucSum;
+
+                            if (eucSum < min)
+                            {
+                                min = eucSum;
+                                index = i;
+                            }
+
+                        }
+                        dataPtr[0] = imgVecB[index];
+                        dataPtr[1] = imgVecG[index];
+                        dataPtr[2] = imgVecR[index];
+
+                        dataPtrCopy += widthStep;
+                        dataPtr += widthStep;
+                    }
+
+                    //processar (N,N)
+
+                    imgVecB[0] = (dataPtrCopy - nChan - widthStep)[0];
+                    imgVecG[0] = (dataPtrCopy - nChan - widthStep)[1];
+                    imgVecR[0] = (dataPtrCopy - nChan - widthStep)[2];
+
+                    imgVecB[1] = (dataPtrCopy - widthStep)[0];
+                    imgVecG[1] = (dataPtrCopy - widthStep)[1];
+                    imgVecR[1] = (dataPtrCopy - widthStep)[2];
+
+                    imgVecB[2] = (dataPtrCopy - widthStep)[0];
+                    imgVecG[2] = (dataPtrCopy - widthStep)[1];
+                    imgVecR[2] = (dataPtrCopy - widthStep)[2];
+
+                    imgVecB[3] = (dataPtrCopy - nChan)[0];
+                    imgVecG[3] = (dataPtrCopy - nChan)[1];
+                    imgVecR[3] = (dataPtrCopy - nChan)[2];
+
+                    imgVecB[4] = (dataPtrCopy)[0];
+                    imgVecG[4] = (dataPtrCopy)[1];
+                    imgVecR[4] = (dataPtrCopy)[2];
+
+                    imgVecB[5] = (dataPtrCopy )[0];
+                    imgVecG[5] = (dataPtrCopy )[1];
+                    imgVecR[5] = (dataPtrCopy )[2];
+
+                    imgVecB[6] = (dataPtrCopy - nChan)[0];
+                    imgVecG[6] = (dataPtrCopy - nChan)[1];
+                    imgVecR[6] = (dataPtrCopy - nChan)[2];
+
+                    imgVecB[7] = (dataPtrCopy )[0];
+                    imgVecG[7] = (dataPtrCopy )[1];
+                    imgVecR[7] = (dataPtrCopy )[2];
+
+                    imgVecB[8] = (dataPtrCopy )[0];
+                    imgVecG[8] = (dataPtrCopy )[1];
+                    imgVecR[8] = (dataPtrCopy )[2];
+
+                    min = 0;
+                    index = 0;
+                    for (i = 0; i < 9; i++)
+                    {
+                        eucSum = 0;
+                        for (j = 0; j < 9; j++)
+                            eucSum += Math.Abs((imgVecB[i] - imgVecB[j])) + Math.Abs((imgVecG[i] - imgVecG[j])) + Math.Abs((imgVecR[i] - imgVecR[j]));
+                        //eucSum += Math.Sqrt((imgVecB[i] - imgVecB[j]) ^ 2 + (imgVecG[i] - imgVecG[j])^2 + (imgVecR[i] - imgVecR[j])^2);
+
+                        if (i == 0)
+                            min = eucSum;
+
+                        if (eucSum < min)
+                        {
+                            min = eucSum;
+                            index = i;
+                        }
+
+                    }
+                    dataPtr[0] = imgVecB[index];
+                    dataPtr[1] = imgVecG[index];
+                    dataPtr[2] = imgVecR[index];
+
+                    dataPtr -= nChan;
+                    dataPtrCopy -= nChan;
+
+
+                    //processar border inferior
+                    for (x = 1; x < width - 1; x++)
+                    {
+                        imgVecB[0] = (dataPtrCopy - nChan - widthStep)[0];
+                        imgVecG[0] = (dataPtrCopy - nChan - widthStep)[1];
+                        imgVecR[0] = (dataPtrCopy - nChan - widthStep)[2];
+
+                        imgVecB[1] = (dataPtrCopy - widthStep)[0];
+                        imgVecG[1] = (dataPtrCopy - widthStep)[1];
+                        imgVecR[1] = (dataPtrCopy - widthStep)[2];
+
+                        imgVecB[2] = (dataPtrCopy - widthStep + nChan)[0];
+                        imgVecG[2] = (dataPtrCopy - widthStep + nChan)[1];
+                        imgVecR[2] = (dataPtrCopy - widthStep + nChan)[2];
+
+                        imgVecB[3] = (dataPtrCopy - nChan)[0];
+                        imgVecG[3] = (dataPtrCopy - nChan)[1];
+                        imgVecR[3] = (dataPtrCopy - nChan)[2];
+
+                        imgVecB[4] = (dataPtrCopy)[0];
+                        imgVecG[4] = (dataPtrCopy)[1];
+                        imgVecR[4] = (dataPtrCopy)[2];
+
+                        imgVecB[5] = (dataPtrCopy + nChan)[0];
+                        imgVecG[5] = (dataPtrCopy + nChan)[1];
+                        imgVecR[5] = (dataPtrCopy + nChan)[2];
+
+                        imgVecB[6] = (dataPtrCopy - nChan)[0];
+                        imgVecG[6] = (dataPtrCopy - nChan)[1];
+                        imgVecR[6] = (dataPtrCopy - nChan)[2];
+
+                        imgVecB[7] = (dataPtrCopy)[0];
+                        imgVecG[7] = (dataPtrCopy)[1];
+                        imgVecR[7] = (dataPtrCopy)[2];
+
+                        imgVecB[8] = (dataPtrCopy + nChan)[0];
+                        imgVecG[8] = (dataPtrCopy + nChan)[1];
+                        imgVecR[8] = (dataPtrCopy + nChan)[2];
+
+                        min = 0;
+                        index = 0;
+                        
+                        for (i = 0; i < 9; i++)
+                        {
+                            eucSum = 0;
+                            for (j = 0; j < 9; j++)
+                                eucSum += Math.Abs((imgVecB[i] - imgVecB[j])) + Math.Abs((imgVecG[i] - imgVecG[j])) + Math.Abs((imgVecR[i] - imgVecR[j]));
+                            //eucSum += Math.Sqrt((imgVecB[i] - imgVecB[j]) ^ 2 + (imgVecG[i] - imgVecG[j])^2 + (imgVecR[i] - imgVecR[j])^2);
+
+                            if (i == 0)
+                                min = eucSum;
+
+                            if (eucSum < min)
+                            {
+                                min = eucSum;
+                                index = i;
+                            }
+
+                        }
+                        dataPtr[0] = imgVecB[index];
+                        dataPtr[1] = imgVecG[index];
+                        dataPtr[2] = imgVecR[index];
+
+                        dataPtr -= nChan;
+                        dataPtrCopy -= nChan;
+                    }
+
+                    //processar pixel (0,N)
+
+                    imgVecB[0] = (dataPtrCopy  - widthStep)[0];
+                    imgVecG[0] = (dataPtrCopy  - widthStep)[1];
+                    imgVecR[0] = (dataPtrCopy  - widthStep)[2];
+
+                    imgVecB[1] = (dataPtrCopy - widthStep)[0];
+                    imgVecG[1] = (dataPtrCopy - widthStep)[1];
+                    imgVecR[1] = (dataPtrCopy - widthStep)[2];
+
+                    imgVecB[2] = (dataPtrCopy - widthStep + nChan)[0];
+                    imgVecG[2] = (dataPtrCopy - widthStep + nChan)[1];
+                    imgVecR[2] = (dataPtrCopy - widthStep + nChan)[2];
+
+                    imgVecB[3] = (dataPtrCopy )[0];
+                    imgVecG[3] = (dataPtrCopy )[1];
+                    imgVecR[3] = (dataPtrCopy )[2];
+
+                    imgVecB[4] = (dataPtrCopy)[0];
+                    imgVecG[4] = (dataPtrCopy)[1];
+                    imgVecR[4] = (dataPtrCopy)[2];
+
+                    imgVecB[5] = (dataPtrCopy + nChan)[0];
+                    imgVecG[5] = (dataPtrCopy + nChan)[1];
+                    imgVecR[5] = (dataPtrCopy + nChan)[2];
+
+                    imgVecB[6] = (dataPtrCopy )[0];
+                    imgVecG[6] = (dataPtrCopy )[1];
+                    imgVecR[6] = (dataPtrCopy )[2];
+
+                    imgVecB[7] = (dataPtrCopy)[0];
+                    imgVecG[7] = (dataPtrCopy)[1];
+                    imgVecR[7] = (dataPtrCopy)[2];
+
+                    imgVecB[8] = (dataPtrCopy + nChan)[0];
+                    imgVecG[8] = (dataPtrCopy + nChan)[1];
+                    imgVecR[8] = (dataPtrCopy + nChan)[2];
+
+                    min = 0;
+                    index = 0;
+                    for (i = 0; i < 9; i++)
+                    {
+                        eucSum = 0;
+                        for (j = 0; j < 9; j++)
+                            eucSum += Math.Abs((imgVecB[i] - imgVecB[j])) + Math.Abs((imgVecG[i] - imgVecG[j])) + Math.Abs((imgVecR[i] - imgVecR[j]));
+                        //eucSum += Math.Sqrt((imgVecB[i] - imgVecB[j]) ^ 2 + (imgVecG[i] - imgVecG[j])^2 + (imgVecR[i] - imgVecR[j])^2);
+
+                        if (i == 0)
+                            min = eucSum;
+
+                        if (eucSum < min)
+                        {
+                            min = eucSum;
+                            index = i;
+                        }
+
+                    }
+                    dataPtr[0] = imgVecB[index];
+                    dataPtr[1] = imgVecG[index];
+                    dataPtr[2] = imgVecR[index];
+
+                    dataPtrCopy -= widthStep;
+                    dataPtr -= widthStep;
+
+                    //processar border esquerda
+                    for (y = 1; y < height - 1; y++)
+                    {
+                        imgVecB[0] = (dataPtrCopy - widthStep)[0];
+                        imgVecG[0] = (dataPtrCopy - widthStep)[1];
+                        imgVecR[0] = (dataPtrCopy - widthStep)[2];
+
+                        imgVecB[1] = (dataPtrCopy - widthStep)[0];
+                        imgVecG[1] = (dataPtrCopy - widthStep)[1];
+                        imgVecR[1] = (dataPtrCopy - widthStep)[2];
+
+                        imgVecB[2] = (dataPtrCopy - widthStep + nChan)[0];
+                        imgVecG[2] = (dataPtrCopy - widthStep + nChan)[1];
+                        imgVecR[2] = (dataPtrCopy - widthStep + nChan)[2];
+
+                        imgVecB[3] = (dataPtrCopy)[0];
+                        imgVecG[3] = (dataPtrCopy)[1];
+                        imgVecR[3] = (dataPtrCopy)[2];
+
+                        imgVecB[4] = (dataPtrCopy)[0];
+                        imgVecG[4] = (dataPtrCopy)[1];
+                        imgVecR[4] = (dataPtrCopy)[2];
+
+                        imgVecB[5] = (dataPtrCopy + nChan)[0];
+                        imgVecG[5] = (dataPtrCopy + nChan)[1];
+                        imgVecR[5] = (dataPtrCopy + nChan)[2];
+
+                        imgVecB[6] = (dataPtrCopy - widthStep)[0];
+                        imgVecG[6] = (dataPtrCopy - widthStep)[1];
+                        imgVecR[6] = (dataPtrCopy - widthStep)[2];
+
+                        imgVecB[7] = (dataPtrCopy - widthStep)[0];
+                        imgVecG[7] = (dataPtrCopy - widthStep)[1];
+                        imgVecR[7] = (dataPtrCopy - widthStep)[2];
+
+                        imgVecB[8] = (dataPtrCopy + nChan - widthStep)[0];
+                        imgVecG[8] = (dataPtrCopy + nChan - widthStep)[1];
+                        imgVecR[8] = (dataPtrCopy + nChan - widthStep)[2];
+
+                        min = 0;
+                        index = 0;
+                        for (i = 0; i < 9; i++)
+                        {
+                            eucSum = 0;
+                            for (j = 0; j < 9; j++)
+                                eucSum += Math.Abs((imgVecB[i] - imgVecB[j])) + Math.Abs((imgVecG[i] - imgVecG[j])) + Math.Abs((imgVecR[i] - imgVecR[j]));
+                            //eucSum += Math.Sqrt((imgVecB[i] - imgVecB[j]) ^ 2 + (imgVecG[i] - imgVecG[j])^2 + (imgVecR[i] - imgVecR[j])^2);
+
+                            if (i == 0)
+                                min = eucSum;
+
+                            if (eucSum < min)
+                            {
+                                min = eucSum;
+                                index = i;
+                            }
+
+                        }
+
+                        dataPtr[0] = imgVecB[index];
+                        dataPtr[1] = imgVecG[index];
+                        dataPtr[2] = imgVecR[index];
+                        dataPtrCopy -= widthStep;
+                        dataPtr -= widthStep;
+                    }
+
+                }
+
+            }
+        }
 
         /// <summary>
         /// Barcode reader - SS final project
