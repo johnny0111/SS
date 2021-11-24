@@ -465,6 +465,42 @@ namespace SS_OpenCV
 
             Cursor = Cursors.Default; // normal cursor
         }
+
+        private void binarizationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (img == null)
+                return;
+            Cursor = Cursors.WaitCursor;
+
+            imgUndo = img.Copy();
+            InputBox form = new InputBox("Threshold? (157)");
+            form.ShowDialog();
+            int threshold = Convert.ToInt32(form.ValueTextBox.Text);
+            
+
+            ImageClass.ConvertToBW(img, threshold);
+            ImageViewer.Image = img.Bitmap;
+            ImageViewer.Refresh();
+
+            Cursor = Cursors.Default;
+        }
+
+        private void otsuToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (img == null) // verify if the image is already opened
+                return;
+            Cursor = Cursors.WaitCursor; // clock cursor 
+
+            //copy Undo Image
+            imgUndo = img.Copy();
+
+            ImageClass.ConvertToBW_Otsu(img);
+
+            ImageViewer.Image = img.Bitmap;
+            ImageViewer.Refresh(); // refresh image on the screen
+
+            Cursor = Cursors.Default; // normal cursor
+        }
     }
 
 
