@@ -2732,16 +2732,22 @@ namespace SS_OpenCV
                 int widthStep = m.widthStep;
                 int x, y;
                 int[] hist = new int[256];
+                float[] sigma = new float[256];
+                float[] prob = new float[256];
                 int nC = m.nChannels;
                 byte blue, green, red, gray;
-                int q1 = 1;
-                int q2 = 1;
-                int variancia, u1, u2, t, i;
+                float q1 = 1;
+                float q2 = 1;
+                float diferenca = 0;
+                double variancia;
+                float u1 = 0;
+                float u2 = 0;
+                int t, i;
                 int ip1 = 0; 
                 int ip2 = 0;
                 int numPix;
                 int sum = 0;
-                int  varMin = int.MaxValue;
+                double  varMax = 0;
                 int threshold = 0;
 
                 numPix = width * height;
@@ -2769,32 +2775,63 @@ namespace SS_OpenCV
                         }
                         dataPtr += padding;
                     }
+                    for (i = 0; i < 256; i++)
+                    {
+                        prob[i] = (float)hist[i] / numPix;
+                    }
 
-                    for(t = 1; t < 255; t++)
+                    for (t = 0; t < 256; t++)
                     {
                         for (i = 1; i <= t; i++) 
                         {
-                            q1 += hist[i]/numPix;
-                            ip1 += i * (hist[i] / numPix);
-                        }
-                            
-                        for (i = t+1; i < 256; i++)
-                        {
-                            q2 += hist[i]/numPix;
-                            ip2 += i * (hist[i] / numPix);
+                            q1 += prob[i];
                         }
 
-                        u1 = ip1 / q1;
-                        u2 = ip2 / q2;
+                        q2 = 1 - q1;
 
-                        variancia = q1 * q2 * (int)Math.Pow((u1 - u2), 2);
+                        for (i = 0; i <= t; i++)
+                        { 
+                            u1 += i * prob[i];
+                        }
 
-                        if (variancia < varMin)
+                        for (i = t + 1; i < 256; i++)
+                        { 
+                            u2 += i * prob[i];
+                        }
+                        if (q1 * q2 != 0)
                         {
+                            diferenca = (u1 / q1) - (u2 / q2);
+                            sigma[t] = q1 * q2 * (diferenca * diferenca);
+                        }
+                        else
+                        {
+                            sigma[t] = 0;
+                        }
+
+                        //reinicialize variables
+                        q1 = 0;
+                        q2 = 0;
+                        u1 = 0;
+                        u2 = 0;
+
+                        //check for max
+                        if (varMax < sigma[t])
+                        {
+                            varMax = sigma[t];
                             threshold = t;
-                            varMin = variancia;
                         }
-                            
+
+
+                        //variancia = q1 * q2 * Math.Pow((u1 - u2), 2);
+
+                        //if (variancia > varMax)
+                        //{
+                        //    threshold = t;
+                        //    varMax = variancia;
+                        //}
+
+
+
                     }
                     dataPtr = dataPtrReset;
                     for (y = 0; y < height; y++)
