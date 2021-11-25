@@ -1907,7 +1907,6 @@ namespace SS_OpenCV
             }
         }
 
-
         public static int[] Histogram_Gray(Emgu.CV.Image<Bgr, byte> img)
         {
             unsafe
@@ -2060,13 +2059,13 @@ namespace SS_OpenCV
                 byte[] imgVecB = new byte[9];
                 byte[] imgVecG = new byte[9];
                 byte[] imgVecR = new byte[9];
-                int   index;
-                double eucSum,min;
+                int index;
+                double eucSum, min;
                 dataPtrCopy += nChan + widthStep;
                 dataPtr += nChan + widthStep;
                 if (nC == 3)
                 {
-                    
+
                     for (y = 1; y < height - 1; y++)
                     {
                         for (x = 1; x < width - 1; x++)
@@ -2114,8 +2113,8 @@ namespace SS_OpenCV
                                 eucSum = 0;
                                 for (j = 0; j < 9; j++)
                                     eucSum += Math.Abs((imgVecB[i] - imgVecB[j])) + Math.Abs((imgVecG[i] - imgVecG[j])) + Math.Abs((imgVecR[i] - imgVecR[j]));
-                                    //eucSum += Math.Sqrt((imgVecB[i] - imgVecB[j]) ^ 2 + (imgVecG[i] - imgVecG[j])^2 + (imgVecR[i] - imgVecR[j])^2);
-
+                                    //eucSum += Math.Sqrt(Math.Pow((imgVecB[i] - imgVecB[j]),2)  + Math.Pow((imgVecG[i] - imgVecG[j]),2) + Math.Pow((imgVecR[i] - imgVecR[j]),2));
+                                
                                 if (i == 0)
                                     min = eucSum;
 
@@ -2127,8 +2126,8 @@ namespace SS_OpenCV
 
                             }
                             dataPtr[0] = imgVecB[index];
-                            dataPtr[1] =  imgVecG[index];
-                            dataPtr[2] =  imgVecR[index];
+                            dataPtr[1] = imgVecG[index];
+                            dataPtr[2] = imgVecR[index];
 
                             dataPtrCopy += nChan;
                             dataPtr += nChan;
@@ -2136,7 +2135,7 @@ namespace SS_OpenCV
                         dataPtrCopy += nChan + padding + nChan;
                         dataPtr += nChan + padding + nChan;
                     }
-
+                    
                     //processar pixel (0,0)
                     dataPtr = resetPtr; // reset ao pointer 
                     dataPtrCopy = resetPtrCopy;
@@ -2660,11 +2659,210 @@ namespace SS_OpenCV
                         dataPtrCopy -= widthStep;
                         dataPtr -= widthStep;
                     }
-
                 }
 
             }
         }
+
+        public static void ConvertToBW(Emgu.CV.Image<Bgr, byte> img, int threshold)
+        {
+            unsafe
+            {
+                ConvertToGray(img);
+                MIplImage m = img.MIplImage;
+                byte* dataPtr = (byte*)m.imageData.ToPointer(); // Pointer to the image
+
+                int width = img.Width;
+                int height = img.Height;
+                int nChan = m.nChannels; // number of channels - 3
+                int padding = m.widthStep - m.nChannels * m.width; // alinhament bytes (padding)
+                int widthStep = m.widthStep;
+                int x, y;
+                int sum = 0;
+                int nC = m.nChannels;
+                byte blue, green, red, gray;
+                
+    
+                if (nC == 3)
+                {
+                    for (y = 0; y < height; y++)
+                    {
+                        for (x = 0; x < width ; x++)
+                        {
+                            blue = dataPtr[0];
+                            green = dataPtr[1];
+                            red = dataPtr[2];
+
+                            // convert to gray
+                            gray = (byte)Math.Round(((int)blue + green + red) / 3.0);
+                            if (gray <= threshold)
+                            {
+                                dataPtr[0] = 0;
+                                dataPtr[1] = 0;
+                                dataPtr[2] = 0;
+                            }
+
+                            else
+                            {
+                                dataPtr[0] = 255;
+                                dataPtr[1] = 255;
+                                dataPtr[2] = 255;
+                            }
+                            dataPtr += nChan;
+                        }
+                        dataPtr +=  padding;
+                    }
+                }
+            }
+        }
+
+        public static void ConvertToBW_Otsu(Emgu.CV.Image<Bgr, byte> img)
+        {
+            unsafe
+            {
+                ConvertToGray(img);
+                MIplImage m = img.MIplImage;
+                byte* dataPtr = (byte*)m.imageData.ToPointer(); // Pointer to the image
+                byte* dataPtrReset = dataPtr;
+
+                int width = img.Width;
+                int height = img.Height;
+                int nChan = m.nChannels; // number of channels - 3
+                int padding = m.widthStep - m.nChannels * m.width; // alinhament bytes (padding)
+                int widthStep = m.widthStep;
+                int x, y;
+                int[] hist = new int[256];
+                float[] sigma = new float[256];
+                float[] prob = new float[256];
+                int nC = m.nChannels;
+                byte blue, green, red, gray;
+                float q1 = 1;
+                float q2 = 1;
+                float diferenca = 0;
+                double variancia;
+                float u1 = 0;
+                float u2 = 0;
+                int t, i;
+                int ip1 = 0; 
+                int ip2 = 0;
+                int numPix;
+                int sum = 0;
+                double  varMax = 0;
+                int threshold = 0;
+
+                numPix = width * height;
+                if (nC == 3)
+                {
+                    for (y = 0; y < height; y++)
+                    {
+                        for (x = 0; x < width; x++)
+                        {                        
+                            blue = dataPtr[0];
+                            green = dataPtr[1];
+                            red = dataPtr[2];
+
+                            // convert to gray
+                            gray = (byte)Math.Round(((int)blue + green + red) / 3.0);
+
+                            //vai ao index do hist que neste caso (int)dataPtr[0] e o valor do pixel 0 a 255
+                            hist[gray]++;
+                            // avança apontador
+                            dataPtr[0] = gray;
+                            dataPtr[1] = gray;
+                            dataPtr[2] = gray;
+
+                            dataPtr += nChan;
+                        }
+                        dataPtr += padding;
+                    }
+                    for (i = 0; i < 256; i++)
+                    {
+                        prob[i] = (float)hist[i] / numPix;
+                    }
+
+                    for (t = 0; t < 256; t++)
+                    {
+                        for (i = 1; i <= t; i++) 
+                        {
+                            q1 += prob[i];
+                        }
+
+                        q2 = 1 - q1;
+
+                        for (i = 0; i <= t; i++)
+                        { 
+                            u1 += i * prob[i];
+                        }
+
+                        for (i = t + 1; i < 256; i++)
+                        { 
+                            u2 += i * prob[i];
+                        }
+                        if (q1 * q2 != 0)
+                        {
+                            diferenca = (u1 / q1) - (u2 / q2);
+                            sigma[t] = q1 * q2 * (diferenca * diferenca);
+                        }
+                        else
+                        {
+                            sigma[t] = 0;
+                        }
+
+                        //reinicialize variables
+                        q1 = 0;
+                        q2 = 0;
+                        u1 = 0;
+                        u2 = 0;
+
+                        //check for max
+                        if (varMax < sigma[t])
+                        {
+                            varMax = sigma[t];
+                            threshold = t;
+                        }
+
+
+                        //variancia = q1 * q2 * Math.Pow((u1 - u2), 2);
+
+                        //if (variancia > varMax)
+                        //{
+                        //    threshold = t;
+                        //    varMax = variancia;
+                        //}
+
+
+
+                    }
+                    dataPtr = dataPtrReset;
+                    for (y = 0; y < height; y++)
+                    {
+                        for (x = 0; x < width; x++)
+                        {
+                            
+                            if (dataPtr[0] <= threshold)
+                            {
+                                dataPtr[0] = 0;
+                                dataPtr[1] = 0;
+                                dataPtr[2] = 0;
+                            }
+
+                            else
+                            {
+                                dataPtr[0] = 255;
+                                dataPtr[1] = 255;
+                                dataPtr[2] = 255;
+                            }
+                            dataPtr += nChan;
+                        }
+                        dataPtr += padding;
+                    }
+
+
+                }
+            }
+
+        }
+
 
         /// <summary>
         /// Barcode reader - SS final project
@@ -2696,7 +2894,7 @@ namespace SS_OpenCV
             bc_centroid2 = Point.Empty;
             bc_size2 = Size.Empty;
             */
-            bc_image2 = "5601212323434";
+                    bc_image2 = "5601212323434";
             bc_number2 = "5601212323434";
             bc_centroid2 = new Point(100, 50);
             bc_size2 = new Size(30, 10);
