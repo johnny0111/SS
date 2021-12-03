@@ -2865,6 +2865,153 @@ namespace SS_OpenCV
 
 
         /// <summary>
+        /// License plate recognition
+        /// </summary>
+        /// <param name="img"></param>
+        /// <param name="imgCopy"></param>
+        /// <param name="difficultyLevel">Difficulty level 1-4</param>
+        /// <param name="Type">LP type (A or B)</param>
+        /// <param name="LP_Location"></param>
+        /// <param name="LP_Chr1"></param>
+        /// <param name="LP_Chr2"></param>
+        /// <param name="LP_Chr3"></param>
+        /// <param name="LP_Chr4"></param>
+        /// <param name="LP_Chr5"></param>
+        /// <param name="LP_Chr6"></param>
+        /// <param name="LP_C1"></param>
+        /// <param name="LP_C2"></param>
+        /// <param name="LP_C3"></param>
+        /// <param name="LP_C4"></param>
+        /// <param name="LP_C5"></param>
+        /// <param name="LP_C6"></param>
+        public static void LP_Recognition(Image<Bgr, byte> img, Image<Bgr, byte> imgCopy,
+            int difficultyLevel,
+            string LPType,
+         out Rectangle LP_Location,
+         out Rectangle LP_Chr1,
+         out Rectangle LP_Chr2,
+         out Rectangle LP_Chr3,
+         out Rectangle LP_Chr4,
+         out Rectangle LP_Chr5,
+         out Rectangle LP_Chr6,
+         out string LP_C1,
+         out string LP_C2,
+         out string LP_C3,
+         out string LP_C4,
+         out string LP_C5,
+         out string LP_C6
+
+      )
+        {
+            unsafe
+            {
+                int i;
+                int compare = 0;
+                List<Image<Bgr, Byte>> symbols = new List<Image<Bgr, byte>>(); 
+
+                LP_Location = new Rectangle(220, 190, 200, 40);
+
+                LP_Chr1 = new Rectangle(340, 190, 30, 40);
+                LP_Chr2 = new Rectangle(360, 190, 30, 40);
+                LP_Chr3 = new Rectangle(380, 190, 30, 40);
+                LP_Chr4 = new Rectangle(400, 190, 30, 40);
+                LP_Chr5 = new Rectangle(420, 190, 30, 40);
+                LP_Chr6 = new Rectangle(440, 190, 30, 40);
+
+                LP_C1 = "1";
+                LP_C2 = "2";
+                LP_C3 = "3";
+                LP_C4 = "4";
+                LP_C5 = "5";
+                LP_C6 = "6";
+
+                
+
+                Image<Bgr, Byte> n0 = new Image<Bgr, Byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\0.bmp");
+                Image<Bgr, Byte> n1 = new Image<Bgr, Byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\1.bmp");
+                Image<Bgr, Byte> n2 = new Image<Bgr, Byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\2.bmp");
+                Image<Bgr, Byte> n3 = new Image<Bgr, Byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\3.bmp");
+                Image<Bgr, Byte> n4 = new Image<Bgr, Byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\4.bmp");
+                Image<Bgr, Byte> n5 = new Image<Bgr, Byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\5.bmp");
+                Image<Bgr, Byte> n6 = new Image<Bgr, Byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\6.bmp");
+                Image<Bgr, Byte> n7 = new Image<Bgr, Byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\7.bmp");
+                Image<Bgr, Byte> n8 = new Image<Bgr, Byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\8.bmp");
+                Image<Bgr, Byte> n9 = new Image<Bgr, Byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\9.bmp");
+                Image<Bgr, Byte> ch = null;
+
+                symbols.Add(n0);
+                symbols.Add(n1);
+                symbols.Add(n2);
+                symbols.Add(n3);
+                symbols.Add(n4);
+                symbols.Add(n5);
+                symbols.Add(n6);
+                symbols.Add(n7);
+                symbols.Add(n8);
+                symbols.Add(n9);
+
+                img.ROI = new Rectangle(1, 1, 70, 70);
+
+                MIplImage m = img.MIplImage;
+                byte* dataPtr = (byte*)m.imageData.ToPointer(); // Pointer to the image
+
+                img.ROI = new Rectangle(10, 0, 70, 180);
+                ch = img.Copy();
+                ch.Resize(m.width, m.height, Emgu.CV.CvEnum.INTER.CV_INTER_LINEAR);
+                for (i = 0; i < symbols.Count; i++)
+                {
+                    compare = Compare_Caracter(ch, symbols[i]);
+                    Console.WriteLine(compare);
+                }
+                    
+
+
+            }
+ 
+
+
+            
+        }
+
+
+        public static int Compare_Caracter(Image<Bgr, byte> img, Image<Bgr, byte> character)
+        {
+
+            unsafe
+            {
+                MIplImage m = img.MIplImage;
+                MIplImage c = character.MIplImage;
+                byte* dataPtr = (byte*)m.imageData.ToPointer(); // Pointer to the image
+                byte* charPtr = (byte*)c.imageData.ToPointer(); // Pointer to the image
+                int height = m.height;
+                int width = m.width;
+                int padding = m.widthStep - m.nChannels * m.width;
+                int nChan = m.nChannels;
+                int x, y;
+                int equal = 0;
+                int size = height * width;
+
+                ConvertToBW_Otsu(img);
+                ConvertToBW_Otsu(character);
+
+                for (y = 0; y < height; y++)
+                {
+                    for (x = 0; x < width; x++)
+                    {
+                        if (dataPtr[0] == charPtr[0])
+                            equal++;
+                        dataPtr += nChan;
+                        charPtr += nChan;
+                      
+                    }
+                    dataPtr += padding;
+                    charPtr += padding;
+                }
+                return equal / size;
+            }
+ 
+        }
+        /// <summary>
         /// Barcode reader - SS final project
         /// </summary>
         /// <param name="img">Original image</param>

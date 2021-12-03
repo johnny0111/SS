@@ -415,7 +415,7 @@ namespace SS_OpenCV
                 return;
 
             Cursor = Cursors.WaitCursor; // clock cursor 
-
+            
             //copy Undo Image
             imgUndo = img.Copy();
 

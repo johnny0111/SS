@@ -242,3 +242,5 @@ C:\Users\mykyt\source\repos\SS\SS_OpenCV_2021_10_05\SS\SS_OpenCV_2021_10_05\SS_O
 C:\Users\mykyt\source\repos\SS\SS_OpenCV_2021_10_05\SS\SS_OpenCV_2021_10_05\SS_OpenCV_Base\SS_OpenCV\obj\Debug\SS_OpenCV.HistogramaAll.resources
 D:\joaom\Documents\Mestrado\SS\SS_OpenCV_2021_10_05\SS_OpenCV_Base\SS_OpenCV\obj\Debug\SS_OpenCV.Histograma.resources
 D:\joaom\Documents\Mestrado\SS\SS_OpenCV_2021_10_05\SS_OpenCV_Base\SS_OpenCV\obj\Debug\SS_OpenCV.HistogramaAll.resources
+D:\joaom\Documents\Mestrado\SS\SS_OpenCV_2021_10_05\SS_OpenCV_Base\SS_OpenCV\bin\Debug\Forms.dll
+D:\joaom\Documents\Mestrado\SS\SS_OpenCV_2021_10_05\SS_OpenCV_Base\SS_OpenCV\bin\Debug\Forms.pdb
