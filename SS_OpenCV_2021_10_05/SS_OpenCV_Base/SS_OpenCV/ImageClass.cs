@@ -3039,35 +3039,5 @@ namespace SS_OpenCV
         /// <param name="bc_image2">output a string containing the second barcode read from the bars. It returns null, if it does not exist.</param>
         /// <param name="bc_number2">output a string containing the second barcode read from the numbers in the bottom. It returns null, if it does not exist.</param>
         /// <returns>image with barcodes detected</returns>
-        public static Image<Bgr, byte> BarCodeReader(Image<Bgr, byte> img, int type,
-    out Point bc_centroid1, out Size bc_size1, out string bc_image1, out string bc_number1,
-    out Point bc_centroid2, out Size bc_size2, out string bc_image2, out string bc_number2)
-        {
-            // first barcode
-            bc_image1 = "5601212323434";
-            bc_number1 = "9780201379624";
-            bc_centroid1 = new Point(130, 60);
-            bc_size1 = new Size(200, 80);
-
-            //second barcode
-            /*bc_image2 = null;
-            bc_number2 = null;
-            bc_centroid2 = Point.Empty;
-            bc_size2 = Size.Empty;
-            */
-            bc_image2 = "5601212323434";
-            bc_number2 = "5601212323434";
-            bc_centroid2 = new Point(100, 50);
-            bc_size2 = new Size(30, 10);
-
-            // draw the rectangle over the destination image 
-            img.Draw(new Rectangle(bc_centroid1.X - bc_size1.Width / 2,
-                                    bc_centroid1.Y - bc_size1.Height / 2,
-                                    bc_size1.Width,
-                                    bc_size1.Height),
-                new Bgr(0, 255, 0), 3);
-
-            return img;
-        }
     }
 }
