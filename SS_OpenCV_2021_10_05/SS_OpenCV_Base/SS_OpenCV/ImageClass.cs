@@ -2908,6 +2908,7 @@ namespace SS_OpenCV
                 int i;
                 int compare = 0;
                 List<Image<Bgr, Byte>> symbols = new List<Image<Bgr, byte>>(); 
+                List< MIplImage> s = new List <MIplImage>();
 
                 LP_Location = new Rectangle(220, 190, 200, 40);
 
@@ -2927,17 +2928,18 @@ namespace SS_OpenCV
 
                 
 
-                Image<Bgr, Byte> n0 = new Image<Bgr, Byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\0.bmp");
-                Image<Bgr, Byte> n1 = new Image<Bgr, Byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\1.bmp");
-                Image<Bgr, Byte> n2 = new Image<Bgr, Byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\2.bmp");
-                Image<Bgr, Byte> n3 = new Image<Bgr, Byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\3.bmp");
-                Image<Bgr, Byte> n4 = new Image<Bgr, Byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\4.bmp");
-                Image<Bgr, Byte> n5 = new Image<Bgr, Byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\5.bmp");
-                Image<Bgr, Byte> n6 = new Image<Bgr, Byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\6.bmp");
-                Image<Bgr, Byte> n7 = new Image<Bgr, Byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\7.bmp");
-                Image<Bgr, Byte> n8 = new Image<Bgr, Byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\8.bmp");
-                Image<Bgr, Byte> n9 = new Image<Bgr, Byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\9.bmp");
-                Image<Bgr, Byte> ch = null;
+                Image<Bgr, byte> n0 = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\0.bmp");
+                Image<Bgr, byte> n1 = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\1.bmp");
+                Image<Bgr, byte> n2 = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\2.bmp");
+                Image<Bgr, byte> n3 = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\3.bmp");
+                Image<Bgr, byte> n4 = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\4.bmp");
+                Image<Bgr, byte> n5 = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\5.bmp");
+                Image<Bgr, byte> n6 = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\6.bmp");
+                Image<Bgr, byte> n7 = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\7.bmp");
+                Image<Bgr, byte> n8 = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\8.bmp");
+                Image<Bgr, byte> n9 = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\9.bmp");
+                Image<Bgr, byte> ch = null;
+                Image<Bgr, byte> ch_1 = null;
 
                 symbols.Add(n0);
                 symbols.Add(n1);
@@ -2950,20 +2952,28 @@ namespace SS_OpenCV
                 symbols.Add(n8);
                 symbols.Add(n9);
 
+                for(i = 0; i < 9;i++)
+                    s.Add(symbols[i].MIplImage);
+                  
+
                 img.ROI = new Rectangle(1, 1, 70, 70);
+
+                
 
                 MIplImage m = img.MIplImage;
                 byte* dataPtr = (byte*)m.imageData.ToPointer(); // Pointer to the image
 
+
                 img.ROI = new Rectangle(10, 0, 70, 180);
                 ch = img.Copy();
-                ch.Resize(m.width, m.height, Emgu.CV.CvEnum.INTER.CV_INTER_LINEAR);
+                MIplImage ch_ = ch.MIplImage;
+                //MIplImage ch_1 = ch.MIplImage;
                 for (i = 0; i < symbols.Count; i++)
                 {
-                    compare = Compare_Caracter(ch, symbols[i]);
+                    ch_1=ch.Resize(s[i].width, s[i].height, Emgu.CV.CvEnum.INTER.CV_INTER_LINEAR);
+                    compare = Compare_Caracter(ch_1, symbols[i]);
                     Console.WriteLine(compare);
                 }
-                    
 
 
             }
@@ -2983,6 +2993,8 @@ namespace SS_OpenCV
                 MIplImage c = character.MIplImage;
                 byte* dataPtr = (byte*)m.imageData.ToPointer(); // Pointer to the image
                 byte* charPtr = (byte*)c.imageData.ToPointer(); // Pointer to the image
+                int heightch = c.height;
+                int widthch = c.width;
                 int height = m.height;
                 int width = m.width;
                 int padding = m.widthStep - m.nChannels * m.width;
@@ -2990,6 +3002,7 @@ namespace SS_OpenCV
                 int x, y;
                 int equal = 0;
                 int size = height * width;
+                int result = 0;
 
                 ConvertToBW_Otsu(img);
                 ConvertToBW_Otsu(character);
@@ -3007,7 +3020,8 @@ namespace SS_OpenCV
                     dataPtr += padding;
                     charPtr += padding;
                 }
-                return equal / size;
+               
+                return equal;
             }
  
         }
