@@ -350,7 +350,7 @@ namespace SS_OpenCV
                             xO = x - dx;
                             yO = y - dy;
 
-                            if (xO > width-1 || yO > height-1 || xO < 0 || yO < 0)
+                            if (xO > width - 1 || yO > height - 1 || xO < 0 || yO < 0)
                             {
                                 blue = 0;
                                 green = 0;
@@ -518,7 +518,7 @@ namespace SS_OpenCV
                 int nC = m.nChannels;
                 int wStep = m.widthStep - m.nChannels * m.width;
                 int mwidthStep = m.widthStep;
-                float w2 = (w/2) / (scaleFactor), h2 = (h /2) /(scaleFactor);
+                float w2 = (w / 2) / (scaleFactor), h2 = (h / 2) / (scaleFactor);
 
                 if (nC == 3)
                 {
@@ -623,13 +623,13 @@ namespace SS_OpenCV
                         dataPtrCopy += nChan + padding + nChan;
                         dataPtr += nChan + padding + nChan;
                     }
-                    
+
                     //processar pixel (0,0)
                     dataPtr = resetPtr; // reset ao pointer 
                     dataPtrBorder = resetPtrCopy;
-                    blueSum = 4*dataPtrBorder[0] + 2*(dataPtrBorder + nChan)[0] + 2*(dataPtrBorder + widthStep)[0] + (dataPtrBorder + nChan + widthStep)[0];
-                    greenSum = 4*dataPtrBorder[1] + 2*(dataPtrBorder + nChan)[1] + 2*(dataPtrBorder + widthStep)[1] + (dataPtrBorder + nChan + widthStep)[1];
-                    redSum = 4*dataPtrBorder[2] + 2*(dataPtrBorder + nChan)[2] + 2*(dataPtrBorder + widthStep)[2] + (dataPtrBorder + nChan + widthStep)[2];
+                    blueSum = 4 * dataPtrBorder[0] + 2 * (dataPtrBorder + nChan)[0] + 2 * (dataPtrBorder + widthStep)[0] + (dataPtrBorder + nChan + widthStep)[0];
+                    greenSum = 4 * dataPtrBorder[1] + 2 * (dataPtrBorder + nChan)[1] + 2 * (dataPtrBorder + widthStep)[1] + (dataPtrBorder + nChan + widthStep)[1];
+                    redSum = 4 * dataPtrBorder[2] + 2 * (dataPtrBorder + nChan)[2] + 2 * (dataPtrBorder + widthStep)[2] + (dataPtrBorder + nChan + widthStep)[2];
 
                     if (Math.Round(blueSum / 9.0) > 255)
                         dataPtr[0] = 255;
@@ -653,13 +653,13 @@ namespace SS_OpenCV
 
                     //processar a border superior a partir do segundo pixel
                     dataPtr += nChan;
-                    dataPtrBorder += nChan; 
-                    for (x = 1; x < width - 1 ; x++)
+                    dataPtrBorder += nChan;
+                    for (x = 1; x < width - 1; x++)
                     {
-                        blueSum = 2*dataPtrBorder[0] + 2*(dataPtrBorder - nChan)[0] + 2*(dataPtrBorder + nChan)[0] + (dataPtrBorder + widthStep)[0] + (dataPtrBorder + nChan + widthStep)[0] + (dataPtrBorder - nChan + widthStep)[0];
-                        greenSum = 2*dataPtrBorder[1] + 2*(dataPtrBorder - nChan)[1] + 2*(dataPtrBorder + nChan)[1] + (dataPtrBorder + widthStep)[1] + (dataPtrBorder + nChan + widthStep)[1] + (dataPtrBorder - nChan + widthStep)[1];
-                        redSum = 2*dataPtrBorder[2] + 2*(dataPtrBorder - nChan)[2] + 2*(dataPtrBorder + nChan)[2] + (dataPtrBorder + widthStep)[2] + (dataPtrBorder + nChan + widthStep)[2] + (dataPtrBorder - nChan + widthStep)[2];
-                        
+                        blueSum = 2 * dataPtrBorder[0] + 2 * (dataPtrBorder - nChan)[0] + 2 * (dataPtrBorder + nChan)[0] + (dataPtrBorder + widthStep)[0] + (dataPtrBorder + nChan + widthStep)[0] + (dataPtrBorder - nChan + widthStep)[0];
+                        greenSum = 2 * dataPtrBorder[1] + 2 * (dataPtrBorder - nChan)[1] + 2 * (dataPtrBorder + nChan)[1] + (dataPtrBorder + widthStep)[1] + (dataPtrBorder + nChan + widthStep)[1] + (dataPtrBorder - nChan + widthStep)[1];
+                        redSum = 2 * dataPtrBorder[2] + 2 * (dataPtrBorder - nChan)[2] + 2 * (dataPtrBorder + nChan)[2] + (dataPtrBorder + widthStep)[2] + (dataPtrBorder + nChan + widthStep)[2] + (dataPtrBorder - nChan + widthStep)[2];
+
                         if (Math.Round(blueSum / 9.0) > 255)
                             dataPtr[0] = 255;
                         else
@@ -686,9 +686,9 @@ namespace SS_OpenCV
                     //dataPtrBorder += nChan;
 
                     //processar pixel (0,N)
-                    blueSum = 4*dataPtrBorder[0] + 2*(dataPtrBorder - nChan)[0] + 2*(dataPtrBorder + widthStep)[0] + (dataPtrBorder - nChan + widthStep)[0];
-                    greenSum = 4*dataPtrBorder[1] + 2*(dataPtrBorder - nChan)[1] + 2*(dataPtrBorder + widthStep)[1] + (dataPtrBorder - nChan + widthStep)[1];
-                    redSum = 4*dataPtrBorder[2] + 2*(dataPtrBorder - nChan)[2] + 2*(dataPtrBorder + widthStep)[2] + (dataPtrBorder - nChan + widthStep)[2];
+                    blueSum = 4 * dataPtrBorder[0] + 2 * (dataPtrBorder - nChan)[0] + 2 * (dataPtrBorder + widthStep)[0] + (dataPtrBorder - nChan + widthStep)[0];
+                    greenSum = 4 * dataPtrBorder[1] + 2 * (dataPtrBorder - nChan)[1] + 2 * (dataPtrBorder + widthStep)[1] + (dataPtrBorder - nChan + widthStep)[1];
+                    redSum = 4 * dataPtrBorder[2] + 2 * (dataPtrBorder - nChan)[2] + 2 * (dataPtrBorder + widthStep)[2] + (dataPtrBorder - nChan + widthStep)[2];
 
                     if (Math.Round(blueSum / 9.0) > 255)
                         dataPtr[0] = 255;
@@ -709,13 +709,13 @@ namespace SS_OpenCV
                     //dataPtr[0] = 255;
                     //dataPtr[1] = 0;
                     //dataPtr[2] = 0;
-                    dataPtrBorder += widthStep ;
-                    dataPtr += widthStep ;
+                    dataPtrBorder += widthStep;
+                    dataPtr += widthStep;
 
                     //processar border direita
                     for (y = 1; y < height - 1; y++)
                     {
-                        blueSum = 2*dataPtrBorder[0] + 2*(dataPtrBorder - widthStep)[0] + 2*(dataPtrBorder + widthStep)[0] + (dataPtrBorder - nChan)[0] + (dataPtrBorder - nChan + widthStep)[0] + (dataPtrBorder - nChan - widthStep)[0];
+                        blueSum = 2 * dataPtrBorder[0] + 2 * (dataPtrBorder - widthStep)[0] + 2 * (dataPtrBorder + widthStep)[0] + (dataPtrBorder - nChan)[0] + (dataPtrBorder - nChan + widthStep)[0] + (dataPtrBorder - nChan - widthStep)[0];
                         greenSum = 2 * dataPtrBorder[1] + 2 * (dataPtrBorder - widthStep)[1] + 2 * (dataPtrBorder + widthStep)[1] + (dataPtrBorder - nChan)[1] + (dataPtrBorder - nChan + widthStep)[1] + (dataPtrBorder - nChan - widthStep)[1];
                         redSum = 2 * dataPtrBorder[2] + 2 * (dataPtrBorder - widthStep)[2] + 2 * (dataPtrBorder + widthStep)[2] + (dataPtrBorder - nChan)[2] + (dataPtrBorder - nChan + widthStep)[2] + (dataPtrBorder - nChan - widthStep)[2];
 
@@ -726,7 +726,7 @@ namespace SS_OpenCV
                         if (Math.Round(greenSum / 9.0) > 255)
                             dataPtr[1] = 255;
                         else
-                            dataPtr[1] =  (byte)Math.Round(greenSum / 9.0);
+                            dataPtr[1] = (byte)Math.Round(greenSum / 9.0);
                         if (Math.Round(redSum / 9.0) > 255)
                             dataPtr[2] = 255;
                         else
@@ -738,8 +738,8 @@ namespace SS_OpenCV
                         //dataPtr[0] = 255;
                         //dataPtr[1] = 0;
                         //dataPtr[2] = 0;
-                        dataPtrBorder += widthStep ;
-                        dataPtr += widthStep ;
+                        dataPtrBorder += widthStep;
+                        dataPtr += widthStep;
                     }
 
                     //processar pixel (N,N)
@@ -758,7 +758,7 @@ namespace SS_OpenCV
                     if (Math.Round(redSum / 9.0) > 255)
                         dataPtr[2] = 255;
                     else
-                        dataPtr[2] =  (byte)Math.Round(redSum / 9.0);
+                        dataPtr[2] = (byte)Math.Round(redSum / 9.0);
 
                     //dataPtr[0] = (byte)Math.Round(blueSum / 9.0);
                     //dataPtr[1] = (byte)Math.Round(greenSum / 9.0);
@@ -767,7 +767,7 @@ namespace SS_OpenCV
                     //dataPtr[1] = 0;
                     //dataPtr[2] = 0;
                     dataPtr -= nChan;
-                    dataPtrBorder -= nChan; 
+                    dataPtrBorder -= nChan;
 
                     //processar border inferior
                     for (x = 1; x < width - 1; x++)
@@ -779,7 +779,7 @@ namespace SS_OpenCV
                         if (Math.Round(blueSum / 9.0) > 255)
                             dataPtr[0] = 255;
                         else
-                            dataPtr[0] =  (byte)Math.Round(blueSum / 9.0);
+                            dataPtr[0] = (byte)Math.Round(blueSum / 9.0);
                         if (Math.Round(greenSum / 9.0) > 255)
                             dataPtr[1] = 255;
                         else
@@ -813,7 +813,7 @@ namespace SS_OpenCV
                     if (Math.Round(greenSum / 9.0) > 255)
                         dataPtr[1] = 255;
                     else
-                        dataPtr[1] =  (byte)Math.Round(greenSum / 9.0);
+                        dataPtr[1] = (byte)Math.Round(greenSum / 9.0);
                     if (Math.Round(redSum / 9.0) > 255)
                         dataPtr[2] = 255;
                     else
@@ -854,8 +854,8 @@ namespace SS_OpenCV
                         //dataPtr[0] = 255;
                         //dataPtr[1] = 0;
                         //dataPtr[2] = 0;
-                        dataPtrBorder -= widthStep  ;
-                        dataPtr -= widthStep ;
+                        dataPtrBorder -= widthStep;
+                        dataPtr -= widthStep;
                     }
 
                     //Image<Bgr, byte> aux = img.SmoothBlur(3, 3);
@@ -1391,7 +1391,7 @@ namespace SS_OpenCV
                             SyRedSum = (dataPtrCopy + widthStep - nChan)[2] + 2 * (dataPtrCopy + widthStep)[2] + (dataPtrCopy + widthStep + nChan)[2] -
                                         (dataPtrCopy - widthStep - nChan)[2] - 2 * (dataPtrCopy - widthStep)[2] - (dataPtrCopy - widthStep + nChan)[2];
 
-                            SBlue = Math.Abs(SxBlueSum)+ Math.Abs(SyBlueSum);
+                            SBlue = Math.Abs(SxBlueSum) + Math.Abs(SyBlueSum);
                             SGreen = Math.Abs(SxGreenSum) + Math.Abs(SyGreenSum);
                             SRed = Math.Abs(SxRedSum) + Math.Abs(SyRedSum);
 
@@ -1410,8 +1410,8 @@ namespace SS_OpenCV
                             else if (SRed < 0)
                                 SRed = 0;
 
-                            
-                            
+
+
                             dataPtr[0] = (byte)SBlue;
                             dataPtr[1] = (byte)SGreen;
                             dataPtr[2] = (byte)SRed;
@@ -1736,7 +1736,7 @@ namespace SS_OpenCV
                             dataPtr += nChan;
                             dataPtrCopy += nChan;
                         }
-                        dataPtrCopy +=  padding + nChan;
+                        dataPtrCopy += padding + nChan;
                         dataPtr += padding + nChan;
                     }
 
@@ -1964,7 +1964,7 @@ namespace SS_OpenCV
                 int x, y;
 
                 byte blue, green, red, gray;
-                int[, ] hist = new int[3,256];
+                int[,] hist = new int[3, 256];
 
                 for (y = 0; y < height; y++)
                 {
@@ -2113,8 +2113,8 @@ namespace SS_OpenCV
                                 eucSum = 0;
                                 for (j = 0; j < 9; j++)
                                     eucSum += Math.Abs((imgVecB[i] - imgVecB[j])) + Math.Abs((imgVecG[i] - imgVecG[j])) + Math.Abs((imgVecR[i] - imgVecR[j]));
-                                    //eucSum += Math.Sqrt(Math.Pow((imgVecB[i] - imgVecB[j]),2)  + Math.Pow((imgVecG[i] - imgVecG[j]),2) + Math.Pow((imgVecR[i] - imgVecR[j]),2));
-                                
+                                //eucSum += Math.Sqrt(Math.Pow((imgVecB[i] - imgVecB[j]),2)  + Math.Pow((imgVecG[i] - imgVecG[j]),2) + Math.Pow((imgVecR[i] - imgVecR[j]),2));
+
                                 if (i == 0)
                                     min = eucSum;
 
@@ -2135,26 +2135,26 @@ namespace SS_OpenCV
                         dataPtrCopy += nChan + padding + nChan;
                         dataPtr += nChan + padding + nChan;
                     }
-                    
+
                     //processar pixel (0,0)
                     dataPtr = resetPtr; // reset ao pointer 
                     dataPtrCopy = resetPtrCopy;
 
-                    imgVecB[0] = (dataPtrCopy )[0];
-                    imgVecG[0] = (dataPtrCopy )[1];
-                    imgVecR[0] = (dataPtrCopy )[2];
+                    imgVecB[0] = (dataPtrCopy)[0];
+                    imgVecG[0] = (dataPtrCopy)[1];
+                    imgVecR[0] = (dataPtrCopy)[2];
 
-                    imgVecB[1] = (dataPtrCopy )[0];
-                    imgVecG[1] = (dataPtrCopy )[1];
-                    imgVecR[1] = (dataPtrCopy )[2];
+                    imgVecB[1] = (dataPtrCopy)[0];
+                    imgVecG[1] = (dataPtrCopy)[1];
+                    imgVecR[1] = (dataPtrCopy)[2];
 
-                    imgVecB[2] = (dataPtrCopy  + nChan)[0];
-                    imgVecG[2] = (dataPtrCopy  + nChan)[1];
-                    imgVecR[2] = (dataPtrCopy  + nChan)[2];
+                    imgVecB[2] = (dataPtrCopy + nChan)[0];
+                    imgVecG[2] = (dataPtrCopy + nChan)[1];
+                    imgVecR[2] = (dataPtrCopy + nChan)[2];
 
-                    imgVecB[3] = (dataPtrCopy )[0];
-                    imgVecG[3] = (dataPtrCopy )[1];
-                    imgVecR[3] = (dataPtrCopy )[2];
+                    imgVecB[3] = (dataPtrCopy)[0];
+                    imgVecG[3] = (dataPtrCopy)[1];
+                    imgVecR[3] = (dataPtrCopy)[2];
 
                     imgVecB[4] = (dataPtrCopy)[0];
                     imgVecG[4] = (dataPtrCopy)[1];
@@ -2195,9 +2195,9 @@ namespace SS_OpenCV
                         }
 
                     }
-                    dataPtr[0] =  imgVecB[index];
-                    dataPtr[1] =  imgVecG[index];
-                    dataPtr[2] =  imgVecR[index];
+                    dataPtr[0] = imgVecB[index];
+                    dataPtr[1] = imgVecG[index];
+                    dataPtr[2] = imgVecR[index];
 
                     //processar a border superior a partir do segundo pixel
                     dataPtr += nChan;
@@ -2278,9 +2278,9 @@ namespace SS_OpenCV
                     imgVecG[1] = (dataPtrCopy)[1];
                     imgVecR[1] = (dataPtrCopy)[2];
 
-                    imgVecB[2] = (dataPtrCopy )[0];
-                    imgVecG[2] = (dataPtrCopy )[1];
-                    imgVecR[2] = (dataPtrCopy )[2];
+                    imgVecB[2] = (dataPtrCopy)[0];
+                    imgVecG[2] = (dataPtrCopy)[1];
+                    imgVecR[2] = (dataPtrCopy)[2];
 
                     imgVecB[3] = (dataPtrCopy - nChan)[0];
                     imgVecG[3] = (dataPtrCopy - nChan)[1];
@@ -2290,9 +2290,9 @@ namespace SS_OpenCV
                     imgVecG[4] = (dataPtrCopy)[1];
                     imgVecR[4] = (dataPtrCopy)[2];
 
-                    imgVecB[5] = (dataPtrCopy )[0];
-                    imgVecG[5] = (dataPtrCopy )[1];
-                    imgVecR[5] = (dataPtrCopy )[2];
+                    imgVecB[5] = (dataPtrCopy)[0];
+                    imgVecG[5] = (dataPtrCopy)[1];
+                    imgVecR[5] = (dataPtrCopy)[2];
 
                     imgVecB[6] = (dataPtrCopy + widthStep - nChan)[0];
                     imgVecG[6] = (dataPtrCopy + widthStep - nChan)[1];
@@ -2302,9 +2302,9 @@ namespace SS_OpenCV
                     imgVecG[7] = (dataPtrCopy + widthStep)[1];
                     imgVecR[7] = (dataPtrCopy + widthStep)[2];
 
-                    imgVecB[8] = (dataPtrCopy + widthStep )[0];
-                    imgVecG[8] = (dataPtrCopy + widthStep )[1];
-                    imgVecR[8] = (dataPtrCopy + widthStep )[2];
+                    imgVecB[8] = (dataPtrCopy + widthStep)[0];
+                    imgVecG[8] = (dataPtrCopy + widthStep)[1];
+                    imgVecR[8] = (dataPtrCopy + widthStep)[2];
 
                     min = 0;
                     index = 0;
@@ -2420,21 +2420,21 @@ namespace SS_OpenCV
                     imgVecG[4] = (dataPtrCopy)[1];
                     imgVecR[4] = (dataPtrCopy)[2];
 
-                    imgVecB[5] = (dataPtrCopy )[0];
-                    imgVecG[5] = (dataPtrCopy )[1];
-                    imgVecR[5] = (dataPtrCopy )[2];
+                    imgVecB[5] = (dataPtrCopy)[0];
+                    imgVecG[5] = (dataPtrCopy)[1];
+                    imgVecR[5] = (dataPtrCopy)[2];
 
                     imgVecB[6] = (dataPtrCopy - nChan)[0];
                     imgVecG[6] = (dataPtrCopy - nChan)[1];
                     imgVecR[6] = (dataPtrCopy - nChan)[2];
 
-                    imgVecB[7] = (dataPtrCopy )[0];
-                    imgVecG[7] = (dataPtrCopy )[1];
-                    imgVecR[7] = (dataPtrCopy )[2];
+                    imgVecB[7] = (dataPtrCopy)[0];
+                    imgVecG[7] = (dataPtrCopy)[1];
+                    imgVecR[7] = (dataPtrCopy)[2];
 
-                    imgVecB[8] = (dataPtrCopy )[0];
-                    imgVecG[8] = (dataPtrCopy )[1];
-                    imgVecR[8] = (dataPtrCopy )[2];
+                    imgVecB[8] = (dataPtrCopy)[0];
+                    imgVecG[8] = (dataPtrCopy)[1];
+                    imgVecR[8] = (dataPtrCopy)[2];
 
                     min = 0;
                     index = 0;
@@ -2504,7 +2504,7 @@ namespace SS_OpenCV
 
                         min = 0;
                         index = 0;
-                        
+
                         for (i = 0; i < 9; i++)
                         {
                             eucSum = 0;
@@ -2532,9 +2532,9 @@ namespace SS_OpenCV
 
                     //processar pixel (0,N)
 
-                    imgVecB[0] = (dataPtrCopy  - widthStep)[0];
-                    imgVecG[0] = (dataPtrCopy  - widthStep)[1];
-                    imgVecR[0] = (dataPtrCopy  - widthStep)[2];
+                    imgVecB[0] = (dataPtrCopy - widthStep)[0];
+                    imgVecG[0] = (dataPtrCopy - widthStep)[1];
+                    imgVecR[0] = (dataPtrCopy - widthStep)[2];
 
                     imgVecB[1] = (dataPtrCopy - widthStep)[0];
                     imgVecG[1] = (dataPtrCopy - widthStep)[1];
@@ -2544,9 +2544,9 @@ namespace SS_OpenCV
                     imgVecG[2] = (dataPtrCopy - widthStep + nChan)[1];
                     imgVecR[2] = (dataPtrCopy - widthStep + nChan)[2];
 
-                    imgVecB[3] = (dataPtrCopy )[0];
-                    imgVecG[3] = (dataPtrCopy )[1];
-                    imgVecR[3] = (dataPtrCopy )[2];
+                    imgVecB[3] = (dataPtrCopy)[0];
+                    imgVecG[3] = (dataPtrCopy)[1];
+                    imgVecR[3] = (dataPtrCopy)[2];
 
                     imgVecB[4] = (dataPtrCopy)[0];
                     imgVecG[4] = (dataPtrCopy)[1];
@@ -2556,9 +2556,9 @@ namespace SS_OpenCV
                     imgVecG[5] = (dataPtrCopy + nChan)[1];
                     imgVecR[5] = (dataPtrCopy + nChan)[2];
 
-                    imgVecB[6] = (dataPtrCopy )[0];
-                    imgVecG[6] = (dataPtrCopy )[1];
-                    imgVecR[6] = (dataPtrCopy )[2];
+                    imgVecB[6] = (dataPtrCopy)[0];
+                    imgVecG[6] = (dataPtrCopy)[1];
+                    imgVecR[6] = (dataPtrCopy)[2];
 
                     imgVecB[7] = (dataPtrCopy)[0];
                     imgVecG[7] = (dataPtrCopy)[1];
@@ -2681,13 +2681,13 @@ namespace SS_OpenCV
                 int sum = 0;
                 int nC = m.nChannels;
                 byte blue, green, red, gray;
-                
-    
+
+
                 if (nC == 3)
                 {
                     for (y = 0; y < height; y++)
                     {
-                        for (x = 0; x < width ; x++)
+                        for (x = 0; x < width; x++)
                         {
                             blue = dataPtr[0];
                             green = dataPtr[1];
@@ -2710,7 +2710,7 @@ namespace SS_OpenCV
                             }
                             dataPtr += nChan;
                         }
-                        dataPtr +=  padding;
+                        dataPtr += padding;
                     }
                 }
             }
@@ -2743,11 +2743,11 @@ namespace SS_OpenCV
                 float u1 = 0;
                 float u2 = 0;
                 int t, i;
-                int ip1 = 0; 
+                int ip1 = 0;
                 int ip2 = 0;
                 int numPix;
                 int sum = 0;
-                double  varMax = 0;
+                double varMax = 0;
                 int threshold = 0;
 
                 numPix = width * height;
@@ -2756,7 +2756,7 @@ namespace SS_OpenCV
                     for (y = 0; y < height; y++)
                     {
                         for (x = 0; x < width; x++)
-                        {                        
+                        {
                             blue = dataPtr[0];
                             green = dataPtr[1];
                             red = dataPtr[2];
@@ -2782,7 +2782,7 @@ namespace SS_OpenCV
 
                     for (t = 0; t < 256; t++)
                     {
-                        for (i = 1; i <= t; i++) 
+                        for (i = 1; i <= t; i++)
                         {
                             q1 += prob[i];
                         }
@@ -2790,12 +2790,12 @@ namespace SS_OpenCV
                         q2 = 1 - q1;
 
                         for (i = 0; i <= t; i++)
-                        { 
+                        {
                             u1 += i * prob[i];
                         }
 
                         for (i = t + 1; i < 256; i++)
-                        { 
+                        {
                             u2 += i * prob[i];
                         }
                         if (q1 * q2 != 0)
@@ -2838,7 +2838,7 @@ namespace SS_OpenCV
                     {
                         for (x = 0; x < width; x++)
                         {
-                            
+
                             if (dataPtr[0] <= threshold)
                             {
                                 dataPtr[0] = 0;
@@ -2907,8 +2907,8 @@ namespace SS_OpenCV
             {
                 int i;
                 int compare = 0;
-                List<Image<Bgr, Byte>> symbols = new List<Image<Bgr, byte>>(); 
-                List< MIplImage> s = new List <MIplImage>();
+                List<Image<Bgr, Byte>> symbols = new List<Image<Bgr, byte>>();
+                List<MIplImage> s = new List<MIplImage>();
 
                 LP_Location = new Rectangle(220, 190, 200, 40);
 
@@ -2926,7 +2926,7 @@ namespace SS_OpenCV
                 LP_C5 = "5";
                 LP_C6 = "6";
 
-                
+
 
                 Image<Bgr, byte> n0 = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\0.bmp");
                 Image<Bgr, byte> n1 = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\1.bmp");
@@ -2952,13 +2952,13 @@ namespace SS_OpenCV
                 symbols.Add(n8);
                 symbols.Add(n9);
 
-                for(i = 0; i < symbols.Count;i++)
+                for (i = 0; i < symbols.Count; i++)
                     s.Add(symbols[i].MIplImage);
-                  
+
 
                 img.ROI = new Rectangle(1, 1, 70, 70);
 
-                
+
 
                 MIplImage m = img.MIplImage;
                 byte* dataPtr = (byte*)m.imageData.ToPointer(); // Pointer to the image
@@ -2970,17 +2970,17 @@ namespace SS_OpenCV
                 //MIplImage ch_1 = ch.MIplImage;
                 for (i = 0; i < symbols.Count; i++)
                 {
-                    ch_1=ch.Resize(s[i].width, s[i].height, Emgu.CV.CvEnum.INTER.CV_INTER_LINEAR);
+                    ch_1 = ch.Resize(s[i].width, s[i].height, Emgu.CV.CvEnum.INTER.CV_INTER_LINEAR);
                     compare = Compare_Caracter(ch_1, symbols[i]);
                     Console.WriteLine(compare);
                 }
 
 
             }
- 
 
 
-            
+
+
         }
 
 
@@ -3015,15 +3015,15 @@ namespace SS_OpenCV
                             equal++;
                         dataPtr += nChan;
                         charPtr += nChan;
-                      
+
                     }
                     dataPtr += padding;
                     charPtr += padding;
                 }
-               
+
                 return equal;
             }
- 
+
         }
         /// <summary>
         /// Barcode reader - SS final project
@@ -3039,15 +3039,15 @@ namespace SS_OpenCV
         /// <param name="bc_image2">output a string containing the second barcode read from the bars. It returns null, if it does not exist.</param>
         /// <param name="bc_number2">output a string containing the second barcode read from the numbers in the bottom. It returns null, if it does not exist.</param>
         /// <returns>image with barcodes detected</returns>
-        public static Image<Bgr, byte> BarCodeReader(Image<Bgr, byte> img, int type, 
-    out Point bc_centroid1, out Size bc_size1,out string bc_image1, out string bc_number1, 
+        public static Image<Bgr, byte> BarCodeReader(Image<Bgr, byte> img, int type,
+    out Point bc_centroid1, out Size bc_size1, out string bc_image1, out string bc_number1,
     out Point bc_centroid2, out Size bc_size2, out string bc_image2, out string bc_number2)
-{
-    // first barcode
-    bc_image1 = "5601212323434";
-    bc_number1 = "9780201379624";
-    bc_centroid1 = new Point(130,60);
-    bc_size1 = new Size(200,80);
+        {
+            // first barcode
+            bc_image1 = "5601212323434";
+            bc_number1 = "9780201379624";
+            bc_centroid1 = new Point(130, 60);
+            bc_size1 = new Size(200, 80);
 
             //second barcode
             /*bc_image2 = null;
@@ -3055,7 +3055,7 @@ namespace SS_OpenCV
             bc_centroid2 = Point.Empty;
             bc_size2 = Size.Empty;
             */
-                    bc_image2 = "5601212323434";
+            bc_image2 = "5601212323434";
             bc_number2 = "5601212323434";
             bc_centroid2 = new Point(100, 50);
             bc_size2 = new Size(30, 10);
@@ -3064,10 +3064,10 @@ namespace SS_OpenCV
             img.Draw(new Rectangle(bc_centroid1.X - bc_size1.Width / 2,
                                     bc_centroid1.Y - bc_size1.Height / 2,
                                     bc_size1.Width,
-                                    bc_size1.Height), 
+                                    bc_size1.Height),
                 new Bgr(0, 255, 0), 3);
 
-    return img;
-}
+            return img;
+        }
     }
 }
