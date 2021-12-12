@@ -24,21 +24,21 @@ namespace SS_OpenCV
         }
 
         #region Windows Form Designer generated code
-        public ProjectionY(int[] array, int width)
+        public ProjectionY(int[] array, int height)
         {
             InitializeComponent();
 
             DataPointCollection list0 = chart1.Series[0].Points;
 
-            for (int i = 0; i < width; i++)
+            for (int i = 0; i < height; i++)
             {
-                list0.AddXY(i, array[i]);
+                list0.AddXY(array[i], i);
             }
 
             chart1.Series[0].Color = Color.Red;
-            chart1.ChartAreas[0].AxisX.Maximum = width;
-            chart1.ChartAreas[0].AxisX.Minimum = 0;
-            chart1.ChartAreas[0].AxisX.Title = "Largura";
+            chart1.ChartAreas[0].AxisY.Maximum = height;
+            chart1.ChartAreas[0].AxisY.Minimum = 0;
+            chart1.ChartAreas[0].AxisX.Title = "Contagem";
             chart1.ChartAreas[0].AxisY.Title = "Intensidade";
             chart1.ResumeLayout();
         }
@@ -58,12 +58,15 @@ namespace SS_OpenCV
             // chart1
             // 
             chartArea1.Name = "ChartArea1";
+            // isReversed vai servir para a direçao dos valores positivos do axis Y ( Ou seja para baixo termos valores positivos)
+            chartArea1.AxisY.IsReversed = true;
             this.chart1.ChartAreas.Add(chartArea1);
             this.chart1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.chart1.Location = new System.Drawing.Point(0, 0);
             this.chart1.Name = "chart1";
             series1.ChartArea = "ChartArea1";
             series1.Name = "Series1";
+            series1.ChartType = SeriesChartType.Line;
             this.chart1.Series.Add(series1);
             this.chart1.Size = new System.Drawing.Size(800, 450);
             this.chart1.TabIndex = 0;

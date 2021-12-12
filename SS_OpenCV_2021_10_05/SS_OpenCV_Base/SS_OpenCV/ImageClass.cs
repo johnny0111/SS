@@ -3051,7 +3051,7 @@ namespace SS_OpenCV
                 int widthStep = m.widthStep;
                 int x, y;
 
-                int[] hist = new int[width];
+                int[] hist = new int[height];
 
                 ConvertToBW_Otsu(img);
 
@@ -3059,13 +3059,13 @@ namespace SS_OpenCV
                 {
                     for (x = 0; x < width; x++)
                     {
-                        hist[x] += dataPtr[0] == 255 ? 1 : 0;
+                        hist[y] += dataPtr[0] == 255 ? 1 : 0;
                         dataPtr += nChan;
                     }
                     dataPtr += padding;
                 }
 
-                ProjectionY projectionY = new ProjectionY(hist, width);
+                ProjectionY projectionY = new ProjectionY(hist, height);
                 projectionY.ShowDialog();
             }
         }
@@ -3085,7 +3085,7 @@ namespace SS_OpenCV
                 int widthStep = m.widthStep;
                 int x, y;
 
-                int[] hist = new int[height];
+                int[] hist = new int[width];
 
                 ConvertToBW_Otsu(img);
 
@@ -3093,13 +3093,13 @@ namespace SS_OpenCV
                 {
                     for (x = 0; x < width; x++)
                     {
-                        hist[y] += dataPtr[0] == 255 ? 1 : 0;
+                        hist[x] += dataPtr[0] == 255 ? 1 : 0;
                         dataPtr += nChan;
                     }
                     dataPtr += padding;
                 }
 
-                ProjectionX projectionX = new ProjectionX(hist, height);
+                ProjectionX projectionX = new ProjectionX(hist, width);
                 projectionX.ShowDialog();
             }
         }

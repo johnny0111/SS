@@ -24,22 +24,22 @@ namespace SS_OpenCV
         }
 
         #region Windows Form Designer generated code
-        public ProjectionX(int[] array, int height)
+        public ProjectionX(int[] array, int width)
         {
             InitializeComponent();
 
             DataPointCollection list0 = chart1.Series[0].Points;
 
-            for (int y = height-1, x = 0 ; y >= 0; y--, x++)
+            for (int i = 0; i < width; i++)
             {
-                list0.AddXY(array[x], y);
+                list0.AddXY(i, array[i]);
             }
 
             chart1.Series[0].Color = Color.Blue;
-            chart1.ChartAreas[0].AxisY.Maximum = height;
-            chart1.ChartAreas[0].AxisY.Minimum = 0;
+            chart1.ChartAreas[0].AxisX.Maximum = width;
+            chart1.ChartAreas[0].AxisX.Minimum = 0;
             chart1.ChartAreas[0].AxisX.Title = "Intensidade";
-            chart1.ChartAreas[0].AxisY.Title = "Altura";
+            chart1.ChartAreas[0].AxisY.Title = "Contagem";
             chart1.ResumeLayout();
         }
 
@@ -64,6 +64,7 @@ namespace SS_OpenCV
             this.chart1.Name = "chart1";
             series1.ChartArea = "ChartArea1";
             series1.Name = "Series1";
+            series1.ChartType = SeriesChartType.Line;
             this.chart1.Series.Add(series1);
             this.chart1.Size = new System.Drawing.Size(800, 450);
             this.chart1.TabIndex = 0;
