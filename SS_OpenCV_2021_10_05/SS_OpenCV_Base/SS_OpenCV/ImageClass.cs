@@ -3059,7 +3059,7 @@ namespace SS_OpenCV
                 {
                     for (x = 0; x < width; x++)
                     {
-                        hist[y] += dataPtr[0] == 255 ? 1 : 0;
+                        hist[y] += dataPtr[0] == 255 ? 0 : 1;
                         dataPtr += nChan;
                     }
                     dataPtr += padding;
@@ -3093,7 +3093,7 @@ namespace SS_OpenCV
                 {
                     for (x = 0; x < width; x++)
                     {
-                        hist[x] += dataPtr[0] == 255 ? 1 : 0;
+                        hist[x] += dataPtr[0] == 255 ? 0 : 1;
                         dataPtr += nChan;
                     }
                     dataPtr += padding;

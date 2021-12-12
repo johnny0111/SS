@@ -38,6 +38,7 @@ namespace SS_OpenCV
             chart1.Series[0].Color = Color.Red;
             chart1.ChartAreas[0].AxisY.Maximum = height;
             chart1.ChartAreas[0].AxisY.Minimum = 0;
+            chart1.ChartAreas[0].AxisX.Minimum = 0;
             chart1.ChartAreas[0].AxisX.Title = "Contagem";
             chart1.ChartAreas[0].AxisY.Title = "Intensidade";
             chart1.ResumeLayout();
