@@ -554,7 +554,7 @@ namespace SS_OpenCV
             //copy Undo Image
             imgUndo = img.Copy();
 
-            ImageClass.LP_Recognition(img, imgUndo,
+            ImageClass.LP_Recognition(imgUndo, imgUndo,
               //int difficultyLevel,
               //string LPType,
               //LP_Location,
