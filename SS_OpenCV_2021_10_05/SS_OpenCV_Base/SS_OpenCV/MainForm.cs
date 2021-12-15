@@ -537,6 +537,54 @@ namespace SS_OpenCV
 
             Cursor = Cursors.Default; // normal cursor
         }
+
+        private void matriculaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+           //LP_Chr1 = new Rectangle(340, 190, 30, 40);
+           //Rectangle LP_Chr2 = new Rectangle(360, 190, 30, 40);
+           //Rectangle LP_Chr3 = new Rectangle(380, 190, 30, 40);
+           //Rectangle LP_Chr4 = new Rectangle(400, 190, 30, 40);
+           //Rectangle LP_Chr5 = new Rectangle(420, 190, 30, 40);
+           //Rectangle LP_Chr6 = new Rectangle(440, 190, 30, 40);
+            if (img == null) // verify if the image is already opened
+                return;
+
+            Cursor = Cursors.WaitCursor; // clock cursor 
+
+            //copy Undo Image
+            imgUndo = img.Copy();
+
+            ImageClass.LP_Recognition(imgUndo, imgUndo,
+              //int difficultyLevel,
+              //string LPType,
+              //LP_Location,
+              out Rectangle LP_Chr1,
+              out Rectangle LP_Chr2,
+              out Rectangle LP_Chr3,
+              out Rectangle LP_Chr4,
+              out Rectangle LP_Chr5,
+              out Rectangle LP_Chr6
+                //out string LP_C1,
+                //out string LP_C2,
+                //out string LP_C3,
+                //out string LP_C4,
+                //out string LP_C5,
+                //out string LP_C6
+
+                );
+            img.Draw(LP_Chr1, new Emgu.CV.Structure.Bgr(Color.Green), 2);
+            img.Draw(LP_Chr2, new Emgu.CV.Structure.Bgr(Color.Green), 2);
+            img.Draw(LP_Chr3, new Emgu.CV.Structure.Bgr(Color.Green), 2);
+            img.Draw(LP_Chr4, new Emgu.CV.Structure.Bgr(Color.Green), 2);
+            img.Draw(LP_Chr5, new Emgu.CV.Structure.Bgr(Color.Green), 2);
+            img.Draw(LP_Chr6, new Emgu.CV.Structure.Bgr(Color.Green), 2);
+
+
+            ImageViewer.Image = img.Bitmap;
+            ImageViewer.Refresh(); // refresh image on the screen
+
+            Cursor = Cursors.Default; // normal cursor
+        }
     }
 
 
