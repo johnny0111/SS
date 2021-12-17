@@ -2944,13 +2944,16 @@ namespace SS_OpenCV
                 int k = 0;
                 int xi = 0;
                 int xf = 0;
+                int yi = 0;
+                int yf = 0;
                 int[] compare = new int[35];
                 MIplImage m = img.MIplImage;
                 bool pos = false;
+                bool posy = false;
                 byte* dataPtr = (byte*)m.imageData.ToPointer(); // Pointer to the image
                 int[] projectionX = new int[m.width + 1];
                 int[] projectionY = new int[m.width + 1];
-                char[] plate = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'B', 'T' };
+                char[] plate = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9','A', 'B', 'T' };
                 //char[] plate = new char[] {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
                 //                           'A','B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K',
                 //                           'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V',
@@ -2959,6 +2962,10 @@ namespace SS_OpenCV
                 List<MIplImage> s = new List<MIplImage>();
                 List<Rectangle> r = new List<Rectangle>();
                 Image<Bgr, byte> ch = null;
+                Image<Bgr, byte> ch_q1 = null;
+                Image<Bgr, byte> ch_q2 = null;
+                Image<Bgr, byte> ch_q3 = null;
+                Image<Bgr, byte> ch_q4 = null;
                 Image<Bgr, byte> ch_1 = null;
                 Image<Bgr, byte> s_ = null;
                 //LP_Location = new Rectangle(220, 190, 200, 40);
@@ -2984,7 +2991,7 @@ namespace SS_OpenCV
                 //LP_C5 = "5";
                 //LP_C6 = "6";
 
-
+                //CvInvoke.cvShowImage()
 
 
                 //Image<Bgr, byte> n0 = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\0.bmp");
@@ -3048,7 +3055,7 @@ namespace SS_OpenCV
                 symbols.Add(n9);
 
 
-                //symbols.Add(na);
+                symbols.Add(na);
                 symbols.Add(nb);
                 //symbols.Add(nc);
                 //symbols.Add(nd);
@@ -3092,6 +3099,30 @@ namespace SS_OpenCV
                 projectionX = ProjectionX(img);
                 projectionY = ProjectionY(img);
                 //img.ROI = new Rectangle(1, 1, 70, 70);
+
+
+                for (i = 0; i < projectionY.Length; i++)
+                {
+                    if (projectionY[i] > 40 && posy == false)
+                    {
+                        posy = true;
+                        yi = i;
+
+                    }
+
+                    if (projectionY[i] < 40 && posy == true)
+                    {
+                        posy = false;
+                        yf = i;
+                        break;
+
+
+                    }
+                }
+
+
+
+
                 for (i = 0; i < projectionX.Length; i++)
                 {
                     if (projectionX[i] > 20 && pos == false)
@@ -3105,19 +3136,27 @@ namespace SS_OpenCV
                     {
                         pos = false;
                         xf = i;
-                        img.ROI = new Rectangle(xi, 20, xf - xi, 145);
+                        img.ROI = new Rectangle(xi, yi, xf - xi, yf-yi);
                         ch = img.Copy();
                         r[k++] = img.ROI;
 
+                        img.ROI = new Rectangle(xi, yi, (xf - xi) / 2, (yf - yi) / 2);
+                        ch_q1 = img.Copy();
+                       
+
+
                         for (int j = 0; j < symbols.Count; j++)
                         {
+                            
                             ch_1 = ch.Resize(s[j].width, s[j].height, Emgu.CV.CvEnum.INTER.CV_INTER_LINEAR);
+                            
                             compare[j] = Compare_Caracter(ch_1, symbols[j]);
+                            ch_1.Save(j.ToString() + ".bmp");
                             //ch_1.Save(j.ToString() + ".bmp");
                             //Console.WriteLine(compare[j]);
                             //ch_1.Save(j.ToString()+ ".bmp");
-                            
-                                
+
+
                         }
                         
                         max = compare.Max();
