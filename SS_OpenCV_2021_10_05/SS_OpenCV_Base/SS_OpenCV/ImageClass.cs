@@ -2953,11 +2953,11 @@ namespace SS_OpenCV
                 byte* dataPtr = (byte*)m.imageData.ToPointer(); // Pointer to the image
                 int[] projectionX = new int[m.width + 1];
                 int[] projectionY = new int[m.width + 1];
-                char[] plate = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9','A', 'B', 'T' };
-                //char[] plate = new char[] {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-                //                           'A','B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K',
-                //                           'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V',
-                //                           'X', 'Z'};
+                //char[] plate = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9','A', 'B','C','D' ,'E','T' };
+                char[] plate = new char[] {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+                                           'A','B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K',
+                                           'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V',
+                                           'X', 'Z'};
                 List<Image<Bgr, Byte>> symbols = new List<Image<Bgr, byte>>();
                 List<MIplImage> s = new List<MIplImage>();
                 List<Rectangle> r = new List<Rectangle>();
@@ -2991,7 +2991,7 @@ namespace SS_OpenCV
                 //LP_C5 = "5";
                 //LP_C6 = "6";
 
-                //CvInvoke.cvShowImage()
+                
 
 
                 //Image<Bgr, byte> n0 = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\0.bmp");
@@ -3038,9 +3038,10 @@ namespace SS_OpenCV
                 Image<Bgr, byte> nv = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\V.bmp");
                 Image<Bgr, byte> nx = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\X.bmp");
                 Image<Bgr, byte> nz = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\Z.bmp");
+                Image<Bgr, byte> diff = null;
+                Image<Bgr, byte> BD = null;
 
 
-                
 
 
                 symbols.Add(n0);
@@ -3057,30 +3058,30 @@ namespace SS_OpenCV
 
                 symbols.Add(na);
                 symbols.Add(nb);
-                //symbols.Add(nc);
-                //symbols.Add(nd);
-                //symbols.Add(ne);
-                //symbols.Add(nf);
-                //symbols.Add(ng);
-                //symbols.Add(nh);
-                //symbols.Add(ni);
-                //symbols.Add(nj);
-                //symbols.Add(nk);
-                //symbols.Add(nl);
-                //symbols.Add(nm);
-                //symbols.Add(nn);
-                //symbols.Add(no);
-                //symbols.Add(np);
-                //symbols.Add(nq);
-                //symbols.Add(nr);
-                //symbols.Add(ns);
+                symbols.Add(nc);
+                symbols.Add(nd);
+                symbols.Add(ne);
+                symbols.Add(nf);
+                symbols.Add(ng);
+                symbols.Add(nh);
+                symbols.Add(ni);
+                symbols.Add(nj);
+                symbols.Add(nk);
+                symbols.Add(nl);
+                symbols.Add(nm);
+                symbols.Add(nn);
+                symbols.Add(no);
+                symbols.Add(np);
+                symbols.Add(nq);
+                symbols.Add(nr);
+                symbols.Add(ns);
                 symbols.Add(nt);
-                //symbols.Add(nu);
-                //symbols.Add(nv);
-                ////symbols.Add(nw);
-                //symbols.Add(nx);
-                ////symbols.Add(ny);
-                //symbols.Add(nz);
+                symbols.Add(nu);
+                symbols.Add(nv);
+                //symbols.Add(nw);
+                symbols.Add(nx);
+                //symbols.Add(ny);
+                symbols.Add(nz);
 
                 //ConvertToBW_Otsu(nc);
 
@@ -3140,18 +3141,20 @@ namespace SS_OpenCV
                         ch = img.Copy();
                         r[k++] = img.ROI;
 
-                        img.ROI = new Rectangle(xi, yi, (xf - xi) / 2, (yf - yi) / 2);
-                        ch_q1 = img.Copy();
-                       
+                        //img.ROI = new Rectangle(xi, yi, (xf - xi) / 2, (yf - yi) / 2);
+                        //ch_q1 = img.Copy();
+
 
 
                         for (int j = 0; j < symbols.Count; j++)
                         {
-                            
-                            ch_1 = ch.Resize(s[j].width, s[j].height, Emgu.CV.CvEnum.INTER.CV_INTER_LINEAR);
-                            
-                            compare[j] = Compare_Caracter(ch_1, symbols[j]);
-                            ch_1.Save(j.ToString() + ".bmp");
+                            BD = symbols[j].Resize(ch.Width, ch.Height, Emgu.CV.CvEnum.INTER.CV_INTER_CUBIC);
+                            //ch_1 = ch.Resize(symbols[j].Width, symbols[j].Height, Emgu.CV.CvEnum.INTER.CV_INTER_LINEAR);
+                            //diff = ch_1 - symbols[10];
+                           // CvInvoke.cvShowImage("A", diff);
+                            //compare[j] = Compare_Caracter(ch_1, symbols[j]);
+                            compare[j] = Compare_Caracter(ch, BD);
+                            //ch_1.Save(j.ToString() + ".bmp");
                             //ch_1.Save(j.ToString() + ".bmp");
                             //Console.WriteLine(compare[j]);
                             //ch_1.Save(j.ToString()+ ".bmp");
@@ -3162,6 +3165,7 @@ namespace SS_OpenCV
                         max = compare.Max();
                         index = Array.IndexOf(compare, max);
                         Console.WriteLine(plate[index]);
+                        Array.Clear(compare, 0, compare.Length);
 
 
                     }
