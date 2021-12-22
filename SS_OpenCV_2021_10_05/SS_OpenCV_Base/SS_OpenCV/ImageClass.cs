@@ -2961,6 +2961,7 @@ namespace SS_OpenCV
                 List<Image<Bgr, Byte>> symbols = new List<Image<Bgr, byte>>();
                 List<MIplImage> s = new List<MIplImage>();
                 List<Rectangle> r = new List<Rectangle>();
+                Image<Bgr, byte> img_type2 = null;
                 Image<Bgr, byte> ch = null;
                 Image<Bgr, byte> ch_q1 = null;
                 Image<Bgr, byte> ch_q2 = null;
@@ -2984,6 +2985,8 @@ namespace SS_OpenCV
                 r.Add(LP_Chr5);
                 r.Add(LP_Chr6);
 
+                img_type2 = img.Copy();
+
                 //LP_C1 = "1";
                 //LP_C2 = "2";
                 //LP_C3 = "3";
@@ -2991,7 +2994,7 @@ namespace SS_OpenCV
                 //LP_C5 = "5";
                 //LP_C6 = "6";
 
-                
+
 
 
                 //Image<Bgr, byte> n0 = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\0.bmp");
@@ -3040,7 +3043,7 @@ namespace SS_OpenCV
                 Image<Bgr, byte> nz = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\Z.bmp");
                 Image<Bgr, byte> diff = null;
                 Image<Bgr, byte> BD = null;
-
+                
 
 
 
@@ -3097,6 +3100,10 @@ namespace SS_OpenCV
                     ConvertToBW_Otsu(symbols[i]);
                 ConvertToBW_Otsu(img);
 
+                ConvertToGray(img_type2);
+                Sobel(img_type2,img_type2.Copy());
+                //xf = ContrastLineX(img_type2, 20);
+
                 projectionX = ProjectionX(img);
                 projectionY = ProjectionY(img);
                 //img.ROI = new Rectangle(1, 1, 70, 70);
@@ -3142,7 +3149,7 @@ namespace SS_OpenCV
                         r[k++] = img.ROI;
 
                         //img.ROI = new Rectangle(xi, yi, (xf - xi) / 2, (yf - yi) / 2);
-                        //ch_q1 = img.Copy();
+                        
 
 
 
@@ -3184,6 +3191,82 @@ namespace SS_OpenCV
 
         }
 
+        public static int ContrastLineX(Emgu.CV.Image<Bgr, byte> img)
+        {
+
+            unsafe
+            {
+                MIplImage m = img.MIplImage;
+                byte* dataPtr = (byte*)m.imageData.ToPointer(); // Pointer to the image
+
+                int width = img.Width;
+                int height = img.Height;
+                int nChan = m.nChannels; // number of channels - 3
+                int padding = m.widthStep - m.nChannels * m.width; // alinhament bytes (padding)
+                int widthStep = m.widthStep;
+                int x, y;
+                int[] hist = new int[width];
+                int count = 0;
+                bool toggle = false;
+
+                for (y = 0; y < height; y++)
+                {
+                    for (x = 0; x < width; x++)
+                    {
+                        if (toggle && dataPtr[0] < 20)
+                        {
+                            hist[x]++;
+                            toggle = false;
+                        }
+                        if (!toggle && dataPtr[0] > 200)
+                            toggle = true;
+
+                        dataPtr += nChan;
+                    }
+                    dataPtr += padding;
+                }
+                ProjectionX projectionX = new ProjectionX(hist, width);
+                projectionX.ShowDialog();
+
+                return count;
+
+            }
+        }
+
+        public static int ContrastLineY(Emgu.CV.Image<Bgr, byte> img, int line)
+        {
+
+            unsafe
+            {
+                MIplImage m = img.MIplImage;
+                byte* dataPtr = (byte*)m.imageData.ToPointer(); // Pointer to the image
+
+                int width = img.Width;
+                int height = img.Height;
+                int nChan = m.nChannels; // number of channels - 3
+                int padding = m.widthStep - m.nChannels * m.width; // alinhament bytes (padding)
+                int widthStep = m.widthStep;
+                int x, y;
+                int count = 0;
+                bool toggle = false;
+
+                for (y = 0; y < height; y++)
+                {
+                    if (toggle && dataPtr[0] == 0)
+                    {
+                        count++;
+                        toggle = false;
+                    }
+                    if (!toggle && dataPtr[0] == 255)
+                        toggle = true;
+                    
+                    dataPtr += padding;
+                }
+
+                return count;
+
+            }
+        }
 
         public static int Compare_Caracter(Image<Bgr, byte> img, Image<Bgr, byte> character)
         {
@@ -3227,7 +3310,6 @@ namespace SS_OpenCV
 
         }
 
-        // tem de retornar alguma coisa ou deixar como void????
         public static int[] ProjectionY(Emgu.CV.Image<Bgr, byte> img)
         {
             unsafe
@@ -3295,6 +3377,58 @@ namespace SS_OpenCV
                 projectionX.ShowDialog();
 
                 return hist;
+            }
+        }
+
+        public static void ColorFilter(Image<Bgr, byte> img)
+        {
+            unsafe
+            {
+                // direct access to the image memory(sequencial)
+                // direcion top left -> bottom right
+
+                MIplImage m = img.MIplImage;
+                byte* dataPtr = (byte*)m.imageData.ToPointer(); // Pointer to the image
+                byte blue, green, red;
+
+                int width = img.Width;
+                int height = img.Height;
+                int nChan = m.nChannels; // number of channels - 3
+                int padding = m.widthStep - m.nChannels * m.width; // alinhament bytes (padding)
+                int x, y;
+                int threshold = 30;
+
+
+
+                if (nChan == 3) // image in RGB
+                {
+                    for (y = 0; y < height; y++)
+                    {
+                        for (x = 0; x < width; x++)
+                        {
+                            //retrive 3 colour components
+                            blue = dataPtr[0];
+                            green = dataPtr[1];
+                            red = dataPtr[2];
+
+                            if ((Math.Abs(blue - green) + Math.Abs(blue - red) + Math.Abs(green - red)) > threshold)
+                            {
+                                dataPtr[0] = 0;
+                                dataPtr[1] = 0;
+                                dataPtr[2] = 0;
+
+                            }
+
+
+
+                            // advance the pointer to the next pixel
+                            dataPtr += nChan;
+                        }
+
+                        //at the end of the line advance the pointer by the aligment bytes (padding)
+                        dataPtr += padding;
+                    }
+                }
             }
         }
         /// <summary>
