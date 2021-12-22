@@ -555,7 +555,7 @@ namespace SS_OpenCV
             imgUndo = img.Copy();
 
             ImageClass.LP_Recognition(imgUndo, imgUndo,
-              //int difficultyLevel,
+              2,
               //string LPType,
               //LP_Location,
               out Rectangle LP_Chr1,
@@ -633,6 +633,24 @@ namespace SS_OpenCV
             imgUndo = img.Copy();
 
             ImageClass.ColorFilter(img);
+
+            ImageViewer.Image = img.Bitmap;
+            ImageViewer.Refresh(); // refresh image on the screen
+
+            Cursor = Cursors.Default; // normal cursor
+        }
+
+        private void contrastYToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (img == null) // verify if the image is already opened
+                return;
+
+            Cursor = Cursors.WaitCursor; // clock cursor 
+
+            //copy Undo Image
+            imgUndo = img.Copy();
+
+            ImageClass.ContrastLineY(img);
 
             ImageViewer.Image = img.Bitmap;
             ImageViewer.Refresh(); // refresh image on the screen

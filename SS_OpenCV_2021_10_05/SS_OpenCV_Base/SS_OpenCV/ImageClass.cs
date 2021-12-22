@@ -2920,7 +2920,7 @@ namespace SS_OpenCV
         /// <param name="LP_C5"></param>
         /// <param name="LP_C6"></param>
         public static void LP_Recognition(Image<Bgr, byte> img, Image<Bgr, byte> imgCopy,
-            //int difficultyLevel,
+        int difficultyLevel,
            //string LPType,
          //out Rectangle LP_Location,
          out Rectangle LP_Chr1,
@@ -2946,13 +2946,19 @@ namespace SS_OpenCV
                 int xf = 0;
                 int yi = 0;
                 int yf = 0;
+                int yiCi = 0;
+                int yiCf = 0;
                 int[] compare = new int[35];
                 MIplImage m = img.MIplImage;
                 bool pos = false;
                 bool posy = false;
+                bool posCY = false;
                 byte* dataPtr = (byte*)m.imageData.ToPointer(); // Pointer to the image
                 int[] projectionX = new int[m.width + 1];
-                int[] projectionY = new int[m.width + 1];
+                int[] projectionY = new int[m.height + 1];
+                int[] contrastX = new int[m.width];
+                int[] contrastY = new int[m.height];
+                float[,] nonUniformMatrix = new float[3, 3];
                 //char[] plate = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9','A', 'B','C','D' ,'E','T' };
                 char[] plate = new char[] {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
                                            'A','B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K',
@@ -2962,6 +2968,7 @@ namespace SS_OpenCV
                 List<MIplImage> s = new List<MIplImage>();
                 List<Rectangle> r = new List<Rectangle>();
                 Image<Bgr, byte> img_type2 = null;
+                Image<Bgr, byte> img_typeCopy = null;
                 Image<Bgr, byte> ch = null;
                 Image<Bgr, byte> ch_q1 = null;
                 Image<Bgr, byte> ch_q2 = null;
@@ -2985,7 +2992,7 @@ namespace SS_OpenCV
                 r.Add(LP_Chr5);
                 r.Add(LP_Chr6);
 
-                img_type2 = img.Copy();
+
 
                 //LP_C1 = "1";
                 //LP_C2 = "2";
@@ -3043,7 +3050,7 @@ namespace SS_OpenCV
                 Image<Bgr, byte> nz = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\Z.bmp");
                 Image<Bgr, byte> diff = null;
                 Image<Bgr, byte> BD = null;
-                
+
 
 
 
@@ -3090,7 +3097,20 @@ namespace SS_OpenCV
 
                 //nc.Save("C.bmp");
 
+                nonUniformMatrix[0, 0] = 0;
+                nonUniformMatrix[0, 1] = 0;
+                nonUniformMatrix[0, 2] = 0;
+                nonUniformMatrix[1, 0] = -1;
+                nonUniformMatrix[1, 1] = 2;
+                nonUniformMatrix[1, 2] = -1;
+                nonUniformMatrix[2, 0] = 0;
+                nonUniformMatrix[2, 1] = 0;
+                nonUniformMatrix[2, 2] = 0;
 
+                img_type2 = img.Copy();
+                img_typeCopy = img_type2.Copy();
+                NonUniform(img_type2, img_typeCopy, nonUniformMatrix, 1, 0) ;
+                img_type2.Save("nonuniform.bmp");
 
                 // guarda na lista s, a MIplImage de cada numero de matricula possivel
                 for (i = 0; i < symbols.Count; i++)
@@ -3098,14 +3118,49 @@ namespace SS_OpenCV
 
                 for (i = 0; i < symbols.Count; i++)
                     ConvertToBW_Otsu(symbols[i]);
-                ConvertToBW_Otsu(img);
 
-                ConvertToGray(img_type2);
-                Sobel(img_type2,img_type2.Copy());
+
+                //ConvertToGray(img_type2);
+                //Sobel(img_type2,img_type2.Copy());
                 //xf = ContrastLineX(img_type2, 20);
 
-                projectionX = ProjectionX(img);
-                projectionY = ProjectionY(img);
+                //projectionX = ProjectionX(img);
+                //projectionY = ProjectionY(img);
+
+
+                if(difficultyLevel == 2)
+                {
+
+
+                    contrastY = ContrastLineY(img_type2);
+                    for (i = 0; i < contrastY.Length; i++)
+                    {
+                        if (contrastY[i] > 5 && posCY == false)
+                        {
+                            posCY = true;
+                            yiCi = i;
+
+                        }
+
+                        if (contrastY[i] < 2 && posCY == true)
+                        {
+                            posCY = false;
+                            yiCf = i;
+                            break;
+
+
+                        }
+                    }
+                    img_type2.Save("type2.bmp");
+                    img_type2.ROI = new Rectangle(0, yiCi, img_type2.Width, yiCf - yiCi);
+                    img.ROI = new Rectangle(0, yiCi, img_type2.Width, yiCf - yiCi);
+                    //img_type2.Save("type2_roi.bmp");
+                    img.Save("img_original.bmp");
+
+
+                }
+                ConvertToBW_Otsu(img);
+
                 //img.ROI = new Rectangle(1, 1, 70, 70);
 
 
@@ -3127,8 +3182,6 @@ namespace SS_OpenCV
 
                     }
                 }
-
-
 
 
                 for (i = 0; i < projectionX.Length; i++)
@@ -3196,6 +3249,7 @@ namespace SS_OpenCV
 
             unsafe
             {
+
                 MIplImage m = img.MIplImage;
                 byte* dataPtr = (byte*)m.imageData.ToPointer(); // Pointer to the image
 
@@ -3205,6 +3259,7 @@ namespace SS_OpenCV
                 int padding = m.widthStep - m.nChannels * m.width; // alinhament bytes (padding)
                 int widthStep = m.widthStep;
                 int x, y;
+                //int[] hist = new int[height];
                 int[] hist = new int[width];
                 int count = 0;
                 bool toggle = false;
@@ -3213,18 +3268,21 @@ namespace SS_OpenCV
                 {
                     for (x = 0; x < width; x++)
                     {
-                        if (toggle && dataPtr[0] < 20)
+                        if (toggle && dataPtr[0] > 20)
                         {
+                            //hist[y]++;
                             hist[x]++;
                             toggle = false;
                         }
-                        if (!toggle && dataPtr[0] > 200)
+                        if (!toggle && dataPtr[0] > 100)
                             toggle = true;
 
                         dataPtr += nChan;
                     }
                     dataPtr += padding;
                 }
+                //ProjectionY projectionY = new ProjectionY(hist, height);
+                //projectionY.ShowDialog();
                 ProjectionX projectionX = new ProjectionX(hist, width);
                 projectionX.ShowDialog();
 
@@ -3233,37 +3291,52 @@ namespace SS_OpenCV
             }
         }
 
-        public static int ContrastLineY(Emgu.CV.Image<Bgr, byte> img, int line)
+        public static int[] ContrastLineY(Emgu.CV.Image<Bgr, byte> img)
         {
 
             unsafe
             {
-                MIplImage m = img.MIplImage;
+                Image<Bgr, byte> imgCopy = null;
+                imgCopy = img.Copy();
+                imgCopy.ROI = new Rectangle(0, (imgCopy.Height) / 5, imgCopy.Width, (imgCopy.Height) * 3 / 5);
+
+                MIplImage m = imgCopy.MIplImage;
                 byte* dataPtr = (byte*)m.imageData.ToPointer(); // Pointer to the image
 
-                int width = img.Width;
-                int height = img.Height;
+                int width = imgCopy.Width;
+                int height = imgCopy.Height;
                 int nChan = m.nChannels; // number of channels - 3
                 int padding = m.widthStep - m.nChannels * m.width; // alinhament bytes (padding)
                 int widthStep = m.widthStep;
                 int x, y;
+                int[] hist = new int[height];
+                //hist.Initialize();
+
                 int count = 0;
                 bool toggle = false;
 
                 for (y = 0; y < height; y++)
                 {
-                    if (toggle && dataPtr[0] == 0)
+                    for (x = 0; x < width; x++)
                     {
-                        count++;
-                        toggle = false;
+                        if (toggle && dataPtr[0] > 20)
+                        {
+                            hist[y]++;
+
+                            toggle = false;
+                        }
+                        if (!toggle && dataPtr[0] > 100)
+                            toggle = true;
+
+                        dataPtr += nChan;
                     }
-                    if (!toggle && dataPtr[0] == 255)
-                        toggle = true;
-                    
                     dataPtr += padding;
                 }
+                ProjectionY projectionY = new ProjectionY(hist, height);
+                projectionY.ShowDialog();
 
-                return count;
+
+                return hist;
 
             }
         }
@@ -3368,6 +3441,76 @@ namespace SS_OpenCV
                     for (x = 0; x < width; x++)
                     {
                         hist[x] += dataPtr[0] == 255 ? 0 : 1;
+                        dataPtr += nChan;
+                    }
+                    dataPtr += padding;
+                }
+
+                ProjectionX projectionX = new ProjectionX(hist, width);
+                projectionX.ShowDialog();
+
+                return hist;
+            }
+        }
+
+        public static int[] ProjectionYWhite(Emgu.CV.Image<Bgr, byte> img)
+        {
+            unsafe
+            {
+                MIplImage m = img.MIplImage;
+                byte* dataPtr = (byte*)m.imageData.ToPointer(); // Pointer to the image
+
+                int width = img.Width;
+                int height = img.Height;
+                int nChan = m.nChannels; // number of channels - 3
+                int padding = m.widthStep - m.nChannels * m.width; // alinhament bytes (padding)
+                int widthStep = m.widthStep;
+                int x, y;
+
+                int[] hist = new int[height];
+
+                //ConvertToBW_Otsu(img);
+
+                for (y = 0; y < height; y++)
+                {
+                    for (x = 0; x < width; x++)
+                    {
+                        hist[y] += dataPtr[0] == 0 ? 0 : 1;
+                        dataPtr += nChan;
+                    }
+                    dataPtr += padding;
+                }
+
+                ProjectionY projectionY = new ProjectionY(hist, height);
+                projectionY.ShowDialog();
+                return hist;
+            }
+        }
+
+        // tem de retornar alguma coisa ou deixar como void????
+        public static int[] ProjectionXWhite(Emgu.CV.Image<Bgr, byte> img)
+        {
+            unsafe
+            {
+                MIplImage m = img.MIplImage;
+                byte* dataPtr = (byte*)m.imageData.ToPointer(); // Pointer to the image
+
+                int width = img.Width;
+                int height = img.Height;
+                int nChan = m.nChannels; // number of channels - 3
+                int padding = m.widthStep - m.nChannels * m.width; // alinhament bytes (padding)
+                int widthStep = m.widthStep;
+                int x, y;
+
+                int[] hist = new int[width];
+
+                //ConvertToBW_Otsu(img);
+
+                for (y = 0; y < height; y++)
+                {
+                    for (x = 0; x < width; x++)
+                    {
+                        hist[x] += dataPtr[0] == 0 ? 0 : 1;
                         dataPtr += nChan;
                     }
                     dataPtr += padding;
