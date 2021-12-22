@@ -3132,8 +3132,7 @@ namespace SS_OpenCV
                 //Sobel(img_type2,img_type2.Copy());
                 //xf = ContrastLineX(img_type2, 20);
 
-                //projectionX = ProjectionX(img);
-                //projectionY = ProjectionY(img);
+
 
 
                 if (difficultyLevel == 2)
@@ -3188,14 +3187,17 @@ namespace SS_OpenCV
                     img_type2X.Save("PIROCA.bmp");
                     img.ROI = new Rectangle(xiCi, yiCi, xiCf - xiCi, yiCf - yiCi);
                     img.Save("CONA.bmp");
-                    img_type1 = img.Copy();
+                    img_type1= img.Copy();
+
                 }
 
 
 
 
-                ConvertToBW_Otsu(img);
-
+                ConvertToBW_Otsu(img_type1);
+                img_type1.Save("fgdgdf.bmp");
+                projectionX = ProjectionX(img_type1);
+                projectionY = ProjectionY(img_type1);
                 //img.ROI = new Rectangle(1, 1, 70, 70);
 
 
@@ -3208,7 +3210,8 @@ namespace SS_OpenCV
 
                     }
 
-                    if (projectionY[i] < 40 && posy == true)
+                    //if (projectionY[i] < 40 && posy == true)
+                    if (projectionY[i] < 140 && posy == true)
                     {
                         posy = false;
                         yf = i;
@@ -3232,9 +3235,9 @@ namespace SS_OpenCV
                     {
                         pos = false;
                         xf = i;
-                        img.ROI = new Rectangle(xi, yi, xf - xi, yf-yi);
-                        ch = img.Copy();
-                        r[k++] = img.ROI;
+                        img_type1.ROI = new Rectangle(xi, yi, xf - xi, yf-yi);
+                        ch = img_type1.Copy();
+                        r[k++] = img_type1.ROI;
 
                         //img.ROI = new Rectangle(xi, yi, (xf - xi) / 2, (yf - yi) / 2);
                         

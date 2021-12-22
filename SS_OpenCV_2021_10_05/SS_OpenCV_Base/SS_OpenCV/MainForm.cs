@@ -555,7 +555,7 @@ namespace SS_OpenCV
             imgUndo = img.Copy();
 
             ImageClass.LP_Recognition(imgUndo, imgUndo,
-              1,
+              2,
               //string LPType,
               //LP_Location,
               out Rectangle LP_Chr1,
