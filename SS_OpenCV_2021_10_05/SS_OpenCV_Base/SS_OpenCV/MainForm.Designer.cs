@@ -71,6 +71,7 @@
             this.ImageViewer = new System.Windows.Forms.PictureBox();
             this.contrastXToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.colorToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.contrastYToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ImageViewer)).BeginInit();
@@ -161,7 +162,8 @@
             this.histogramAllToolStripMenuItem,
             this.testProjectionXToolStripMenuItem,
             this.testProjectionYToolStripMenuItem,
-            this.contrastXToolStripMenuItem});
+            this.contrastXToolStripMenuItem,
+            this.contrastYToolStripMenuItem});
             this.imageToolStripMenuItem.Name = "imageToolStripMenuItem";
             this.imageToolStripMenuItem.Size = new System.Drawing.Size(65, 24);
             this.imageToolStripMenuItem.Text = "Image";
@@ -415,6 +417,13 @@
             this.colorToolStripMenuItem1.Text = "Color";
             this.colorToolStripMenuItem1.Click += new System.EventHandler(this.colorToolStripMenuItem1_Click);
             // 
+            // contrastYToolStripMenuItem
+            // 
+            this.contrastYToolStripMenuItem.Name = "contrastYToolStripMenuItem";
+            this.contrastYToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.contrastYToolStripMenuItem.Text = "contrastY";
+            this.contrastYToolStripMenuItem.Click += new System.EventHandler(this.contrastYToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -481,6 +490,7 @@
         private System.Windows.Forms.ToolStripMenuItem sobelToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem contrastXToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem colorToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem contrastYToolStripMenuItem;
     }
 }
 
