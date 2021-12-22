@@ -2948,14 +2948,18 @@ namespace SS_OpenCV
                 int yf = 0;
                 int yiCi = 0;
                 int yiCf = 0;
+                int xiCi = 0;
+                int xiCf = 0;
                 int[] compare = new int[35];
                 MIplImage m = img.MIplImage;
                 bool pos = false;
                 bool posy = false;
                 bool posCY = false;
+                bool posCX = false;
                 byte* dataPtr = (byte*)m.imageData.ToPointer(); // Pointer to the image
                 int[] projectionX = new int[m.width + 1];
                 int[] projectionY = new int[m.height + 1];
+                int[] projectionXWhite = new int[m.width + 1];
                 int[] contrastX = new int[m.width];
                 int[] contrastY = new int[m.height];
                 float[,] nonUniformMatrix = new float[3, 3];
@@ -2967,8 +2971,12 @@ namespace SS_OpenCV
                 List<Image<Bgr, Byte>> symbols = new List<Image<Bgr, byte>>();
                 List<MIplImage> s = new List<MIplImage>();
                 List<Rectangle> r = new List<Rectangle>();
-                Image<Bgr, byte> img_type2 = null;
-                Image<Bgr, byte> img_typeCopy = null;
+                Image<Bgr, byte> img_type1 = null;
+                Image<Bgr, byte> img_type2Y = null;
+                Image<Bgr, byte> img_type2X = null;
+                Image<Bgr, byte> img_type2YCopy = null;
+                Image<Bgr, byte> img_type2XCopy = null;
+
                 Image<Bgr, byte> ch = null;
                 Image<Bgr, byte> ch_q1 = null;
                 Image<Bgr, byte> ch_q2 = null;
@@ -3107,10 +3115,10 @@ namespace SS_OpenCV
                 nonUniformMatrix[2, 1] = 0;
                 nonUniformMatrix[2, 2] = 0;
 
-                img_type2 = img.Copy();
-                img_typeCopy = img_type2.Copy();
-                NonUniform(img_type2, img_typeCopy, nonUniformMatrix, 1, 0) ;
-                img_type2.Save("nonuniform.bmp");
+                img_type2Y = img.Copy();
+                img_type2YCopy = img_type2Y.Copy();
+                NonUniform(img_type2Y, img_type2YCopy, nonUniformMatrix, 1, 0) ;
+                img_type2Y.Save("nonuniform.bmp");
 
                 // guarda na lista s, a MIplImage de cada numero de matricula possivel
                 for (i = 0; i < symbols.Count; i++)
@@ -3128,11 +3136,11 @@ namespace SS_OpenCV
                 //projectionY = ProjectionY(img);
 
 
-                if(difficultyLevel == 2)
+                if (difficultyLevel == 2)
                 {
 
 
-                    contrastY = ContrastLineY(img_type2);
+                    contrastY = ContrastLineY(img_type2Y);
                     for (i = 0; i < contrastY.Length; i++)
                     {
                         if (contrastY[i] > 5 && posCY == false)
@@ -3151,14 +3159,41 @@ namespace SS_OpenCV
 
                         }
                     }
-                    img_type2.Save("type2.bmp");
-                    img_type2.ROI = new Rectangle(0, yiCi, img_type2.Width, yiCf - yiCi);
-                    img.ROI = new Rectangle(0, yiCi, img_type2.Width, yiCf - yiCi);
+                    //img_type2.Save("type2.bmp");
+                    img_type2Y.ROI = new Rectangle(0, yiCi, img_type2Y.Width, yiCf - yiCi);
+                    img.ROI = new Rectangle(0, yiCi, img_type2Y.Width, yiCf - yiCi);
                     //img_type2.Save("type2_roi.bmp");
-                    img.Save("img_original.bmp");
+                    img.Save("img_originalY.bmp");
 
+                    img_type2X = img.Copy();
+                    img_type2XCopy = img_type2X.Copy();
+                    Diferentiation(img_type2X, img_type2XCopy);
+                    ColorFilter(img_type2X);
+                    img_type2X.Save("Diferentiation.bmp");
+                    //contrastX = ContrastLineX(img_type2X);
+                    projectionXWhite = ProjectionXWhite(img_type2X);
+                    for (i = 0; i < contrastX.Length; i++)
+                    {
+                        if (!posCX && projectionXWhite[i] > 20)
+                        {
+                            posCX = true;
+                            xiCi = i;
+                        }
 
+                        if (posCX && projectionXWhite[i] > 20)
+                            xiCf = i;
+                    }
+
+                    img_type2X.ROI = new Rectangle(xiCi, 0, xiCf - xiCi, img_type2X.Height);
+                    img_type2X.Save("PIROCA.bmp");
+                    img.ROI = new Rectangle(xiCi, yiCi, xiCf - xiCi, yiCf - yiCi);
+                    img.Save("CONA.bmp");
+                    img_type1 = img.Copy();
                 }
+
+
+
+
                 ConvertToBW_Otsu(img);
 
                 //img.ROI = new Rectangle(1, 1, 70, 70);
@@ -3244,17 +3279,20 @@ namespace SS_OpenCV
 
         }
 
-        public static int ContrastLineX(Emgu.CV.Image<Bgr, byte> img)
+        public static int []ContrastLineX(Emgu.CV.Image<Bgr, byte> img)
         {
 
             unsafe
             {
+                Image<Bgr, byte> imgCopy = null;
+                imgCopy = img.Copy();
+                imgCopy.ROI = new Rectangle(0, (imgCopy.Height) / 5, imgCopy.Width, (imgCopy.Height) * 3 / 5);
 
-                MIplImage m = img.MIplImage;
+                MIplImage m = imgCopy.MIplImage;
                 byte* dataPtr = (byte*)m.imageData.ToPointer(); // Pointer to the image
 
-                int width = img.Width;
-                int height = img.Height;
+                int width = imgCopy.Width;
+                int height = imgCopy.Height;
                 int nChan = m.nChannels; // number of channels - 3
                 int padding = m.widthStep - m.nChannels * m.width; // alinhament bytes (padding)
                 int widthStep = m.widthStep;
@@ -3286,7 +3324,7 @@ namespace SS_OpenCV
                 ProjectionX projectionX = new ProjectionX(hist, width);
                 projectionX.ShowDialog();
 
-                return count;
+                return hist;
 
             }
         }
@@ -3510,7 +3548,7 @@ namespace SS_OpenCV
                 {
                     for (x = 0; x < width; x++)
                     {
-                        hist[x] += dataPtr[0] == 0 ? 0 : 1;
+                        hist[x] += dataPtr[0] < 50 ? 0 : 1;
                         dataPtr += nChan;
                     }
                     dataPtr += padding;

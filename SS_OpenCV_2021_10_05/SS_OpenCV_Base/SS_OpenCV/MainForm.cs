@@ -555,7 +555,7 @@ namespace SS_OpenCV
             imgUndo = img.Copy();
 
             ImageClass.LP_Recognition(imgUndo, imgUndo,
-              2,
+              1,
               //string LPType,
               //LP_Location,
               out Rectangle LP_Chr1,
@@ -651,6 +651,24 @@ namespace SS_OpenCV
             imgUndo = img.Copy();
 
             ImageClass.ContrastLineY(img);
+
+            ImageViewer.Image = img.Bitmap;
+            ImageViewer.Refresh(); // refresh image on the screen
+
+            Cursor = Cursors.Default; // normal cursor
+        }
+
+        private void projectionXWhiteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (img == null) // verify if the image is already opened
+                return;
+
+            Cursor = Cursors.WaitCursor; // clock cursor 
+
+            //copy Undo Image
+            imgUndo = img.Copy();
+
+            ImageClass.ProjectionXWhite(img);
 
             ImageViewer.Image = img.Bitmap;
             ImageViewer.Refresh(); // refresh image on the screen
