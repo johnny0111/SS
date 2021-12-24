@@ -3339,7 +3339,7 @@ namespace SS_OpenCV
 
                 ConvertToBW_Otsu(img_plate);
                 img_plate.Save("fgdgdf.bmp");
-                projectionX = ProjectionX(img_plate);
+                projectionX = ProjectionX(img_plate,15);
                 projectionY = ProjectionY(img_plate);
                 //img.ROI = new Rectangle(1, 1, 70, 70);
 
@@ -3607,7 +3607,7 @@ namespace SS_OpenCV
         }
 
         // tem de retornar alguma coisa ou deixar como void????
-        public static int[] ProjectionX(Emgu.CV.Image<Bgr, byte> img)
+        public static int[] ProjectionX(Emgu.CV.Image<Bgr, byte> img, int treshold)
         {
             unsafe
             {
@@ -3638,7 +3638,7 @@ namespace SS_OpenCV
 
                 for(x = 0; x < hist.Length; x++)
                 {
-                    if (hist[x] < 15)
+                    if (hist[x] < treshold)
                         hist[x] = 0;
                 }
 

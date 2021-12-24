@@ -512,7 +512,7 @@ namespace SS_OpenCV
             //copy Undo Image
             imgUndo = img.Copy();
 
-            ImageClass.ProjectionX(imgUndo);
+            ImageClass.ProjectionX(imgUndo,0);
 
             ImageViewer.Image = img.Bitmap;
             ImageViewer.Refresh(); // refresh image on the screen
