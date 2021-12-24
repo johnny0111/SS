@@ -3332,6 +3332,8 @@ namespace SS_OpenCV
                     LP_Location = img.ROI;
 
 
+                }else if(difficultyLevel == 1){
+                    img_plate = img.Copy();
                 }
 
 
@@ -3339,9 +3341,12 @@ namespace SS_OpenCV
 
                 ConvertToBW_Otsu(img_plate);
                 img_plate.Save("fgdgdf.bmp");
-                projectionX = ProjectionX(img_plate,15);
+                if(difficultyLevel == 1)
+                    projectionX = ProjectionX(img_plate, 21); //dificult lvl 1
+                else if(difficultyLevel == 2)
+                    projectionX = ProjectionX(img_plate, 15); //dificult lvl 2
+
                 projectionY = ProjectionY(img_plate);
-                //img.ROI = new Rectangle(1, 1, 70, 70);
 
 
                 for (i = 0; i < projectionY.Length; i++)
@@ -3353,7 +3358,6 @@ namespace SS_OpenCV
 
                     }
 
-                    //if (projectionY[i] < 40 && posy == true)
                     if (projectionY[i] < 50 && posy == true)
                     {
                         posy = false;
@@ -3383,33 +3387,20 @@ namespace SS_OpenCV
                         img.Save("ch.bmp");
                         ch = img.Copy();
                         ConvertToBW_Otsu(ch);
+                        ch.Save("ch.bmp");
                         r.Add ( img.ROI);
-
-
-                        //img.ROI = new Rectangle(xi, yi, (xf - xi) / 2, (yf - yi) / 2);
-
-
 
 
                         for (int j = 0; j < symbols.Count; j++)
                         {
                             BD = symbols[j].Resize(ch.Width, ch.Height, Emgu.CV.CvEnum.INTER.CV_INTER_CUBIC);
-                            //ch_1 = ch.Resize(symbols[j].Width, symbols[j].Height, Emgu.CV.CvEnum.INTER.CV_INTER_LINEAR);
-                            //diff = ch_1 - symbols[10];
-                           // CvInvoke.cvShowImage("A", diff);
-                            //compare[j] = Compare_Caracter(ch_1, symbols[j]);
                             compare[j] = Compare_Caracter(ch, BD);
-                            //ch_1.Save(j.ToString() + ".bmp");
-                            //ch_1.Save(j.ToString() + ".bmp");
-                            //Console.WriteLine(compare[j]);
-                            //ch_1.Save(j.ToString()+ ".bmp");
-
-
                         }
                         
                         max = compare.Max();
                         index = Array.IndexOf(compare, max);
                         Console.WriteLine(plate[index]);
+                       
                         Array.Clear(compare, 0, compare.Length);
 
 
@@ -3471,9 +3462,9 @@ namespace SS_OpenCV
                     dataPtr += padding;
                 }
                 //ProjectionY projectionY = new ProjectionY(hist, height);
-                //projectionY.ShowDialog();
-                ProjectionX projectionX = new ProjectionX(hist, width);
-                projectionX.ShowDialog();
+                ////projectionY.ShowDialog();
+                //ProjectionX projectionX = new ProjectionX(hist, width);
+                //projectionX.ShowDialog();
 
                 return hist;
 
@@ -3521,8 +3512,8 @@ namespace SS_OpenCV
                     }
                     dataPtr += padding;
                 }
-                ProjectionY projectionY = new ProjectionY(hist, height);
-                projectionY.ShowDialog();
+                //ProjectionY projectionY = new ProjectionY(hist, height);
+                //projectionY.ShowDialog();
 
 
                 return hist;
@@ -3600,8 +3591,8 @@ namespace SS_OpenCV
                     dataPtr += padding;
                 }
 
-                ProjectionY projectionY = new ProjectionY(hist, height);
-                projectionY.ShowDialog();
+                //ProjectionY projectionY = new ProjectionY(hist, height);
+                //projectionY.ShowDialog();
                 return hist;
             }
         }
@@ -3642,8 +3633,8 @@ namespace SS_OpenCV
                         hist[x] = 0;
                 }
 
-                ProjectionX projectionX = new ProjectionX(hist, width);
-                projectionX.ShowDialog();
+                //ProjectionX projectionX = new ProjectionX(hist, width);
+                //projectionX.ShowDialog();
 
                 return hist;
             }
@@ -3677,8 +3668,8 @@ namespace SS_OpenCV
                     dataPtr += padding;
                 }
 
-                ProjectionY projectionY = new ProjectionY(hist, height);
-                projectionY.ShowDialog();
+                //ProjectionY projectionY = new ProjectionY(hist, height);
+                //projectionY.ShowDialog();
                 return hist;
             }
         }
@@ -3712,8 +3703,8 @@ namespace SS_OpenCV
                     dataPtr += padding;
                 }
 
-                ProjectionX projectionX = new ProjectionX(hist, width);
-                projectionX.ShowDialog();
+                //ProjectionX projectionX = new ProjectionX(hist, width);
+                //projectionX.ShowDialog();
 
                 return hist;
             }

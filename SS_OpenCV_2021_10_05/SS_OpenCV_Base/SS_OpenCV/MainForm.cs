@@ -554,9 +554,11 @@ namespace SS_OpenCV
 
             //copy Undo Image
             imgUndo = img.Copy();
-
+            InputBox form = new InputBox("Difficult Level?");
+            form.ShowDialog();
+            int df = Convert.ToInt32(form.ValueTextBox.Text);
             ImageClass.LP_Recognition(imgUndo, imgUndo,
-              2,
+              df,
               //string LPType,
               out Rectangle LP_Location,
               out Rectangle LP_Chr1,
