@@ -3276,11 +3276,11 @@ namespace SS_OpenCV
                 {
                     img_type2Y = img.Copy();
                     img_type2YCopy = img_type2Y.Copy();
-                    NonUniform(img_type2Y, img_type2YCopy, nonUniformMatrix, 1, 0);
+                    NonUniform(img_type2Y, img_type2YCopy, nonUniformMatrix, 1, 0); //aplicação de filtro nao uniforme
                     img_type2Y.Save("nonuniform.bmp");
 
 
-                    contrastY = ContrastLineY(img_type2Y);
+                    contrastY = ContrastLineY(img_type2Y); //vector de contrastes entre pretos e brancos
                     for (i = 0; i < contrastY.Length; i++)
                     {
                         if (contrastY[i] > 5 && posCY == false)
@@ -3288,7 +3288,7 @@ namespace SS_OpenCV
                             posCY = true;
                             yiPlate = i;
 
-                        }
+                        }                                               //limites da matricula em Y
 
                         if (contrastY[i] < 2 && posCY == true)
                         {
@@ -3302,23 +3302,23 @@ namespace SS_OpenCV
                     yiPlate -= 10;
                     yPlateDiff = yfPlate - yiPlate;
                     yPlateDiff += 10;
-                    img.ROI = new Rectangle(0, yiPlate, img_type2Y.Width, yPlateDiff);
+                    img.ROI = new Rectangle(0, yiPlate, img_type2Y.Width, yPlateDiff);  //recorte e Y
                     img.Save("plate_corteY.bmp");
 
 
-                    img_type2X = img.Copy();
-                    img_type2XCopy = img_type2X.Copy();
-                    Diferentiation(img_type2X, img_type2XCopy);
-                    ColorFilter(img_type2X);
+                    img_type2X = img.Copy();  //passagem da regiao de intresse para uma nova imagem em que se realizara o recorte em x
+                    img_type2XCopy = img_type2X.Copy(); 
+                    Diferentiation(img_type2X, img_type2XCopy);    // diferenciacao
+                    ColorFilter(img_type2X);                        //filtro de cor
                     img_type2X.Save("Diferentiation.bmp");
-                    projectionXWhite = ProjectionXWhite(img_type2X);
+                    projectionXWhite = ProjectionXWhite(img_type2X);    //projecao do numero de pixeis brancos
                     for (i = 0; i < contrastX.Length; i++)
                     {
                         if (!posCX && projectionXWhite[i] > 20)
                         {
                             posCX = true;
                             xiPlate = i;
-                        }
+                        }                                               //limites em X
 
                         if (posCX && projectionXWhite[i] > 20)
                             xfPlate = i;
@@ -3326,23 +3326,24 @@ namespace SS_OpenCV
                     xPlateDiff = xfPlate - xiPlate;
                     xPlateDiff += 10;
                     xiPlate -= 10;
-                    img.ROI = new Rectangle(xiPlate, yiPlate, xPlateDiff, yPlateDiff);
-                    img_plate = img.Copy();
-                    img.Save("Plate.bmp");
-                    LP_Location = img.ROI;
+                    img.ROI = new Rectangle(xiPlate, yiPlate, xPlateDiff, yPlateDiff);  //recorte em x e em Y
+                    img_plate = img.Copy();                 //passagem da regiao de interesse para uma nova imagem que so contém a matricula
+                    img.Save("Plate.bmp");  
+                    LP_Location = img.ROI;              
 
 
                 }else if(difficultyLevel == 1){
-                    img_plate = img.Copy();
+                    img_plate = img.Copy();         //se a imagem for de dif. 1, a regiao de interesse da matricula é a imagem completa
                 }
 
 
 
 
-                ConvertToBW_Otsu(img_plate);
+                ConvertToBW_Otsu(img_plate);        //binarizacao da imagem da matricula
                 img_plate.Save("fgdgdf.bmp");
                 if(difficultyLevel == 1)
-                    projectionX = ProjectionX(img_plate, 21); //dificult lvl 1
+                    projectionX = ProjectionX(img_plate, 21); //dificult lvl 1          a nova funcao mete a zero tudo abaixo do threshold
+                                                                                       //para ser mais fácil de processar no codigo abaixo
                 else if(difficultyLevel == 2)
                     projectionX = ProjectionX(img_plate, 15); //dificult lvl 2
 
@@ -3357,7 +3358,7 @@ namespace SS_OpenCV
                         yi = i;
 
                     }
-
+                                                                        //recorte do caractere i em Y
                     if (projectionY[i] < 50 && posy == true)
                     {
                         posy = false;
@@ -3378,12 +3379,14 @@ namespace SS_OpenCV
 
                     }
 
-                    if ((projectionX[i] == 0 || i==(projectionX.Length)-1) && pos == true)
+                    if ((projectionX[i] == 0 || i==(projectionX.Length)-1) && pos == true)      //recorte do caractere i em x
+                                                                                               //se for zero ou se chegar ao fim do vector, pq muitas vezes o vectr nao acaba em zero e da erro de acesso a memoria
                     {
                         pos = false;
                         xf = i;
 
-                        img.ROI = new Rectangle(xiPlate + xi, yiPlate + yi, xf - xi, yf - yi);
+                        img.ROI = new Rectangle(xiPlate + xi, yiPlate + yi, xf - xi, yf - yi); //recorte do caractere em coordenadas da imagem original
+                                                                                               //no caso de dif 1 fica sem efeito pq a xiPlate é inicializado a zero
                         img.Save("ch.bmp");
                         ch = img.Copy();
                         ConvertToBW_Otsu(ch);
@@ -3393,7 +3396,7 @@ namespace SS_OpenCV
 
                         for (int j = 0; j < symbols.Count; j++)
                         {
-                            BD = symbols[j].Resize(ch.Width, ch.Height, Emgu.CV.CvEnum.INTER.CV_INTER_CUBIC);
+                            BD = symbols[j].Resize(ch.Width, ch.Height, Emgu.CV.CvEnum.INTER.CV_INTER_CUBIC);  //comparacao
                             compare[j] = Compare_Caracter(ch, BD);
                         }
                         
