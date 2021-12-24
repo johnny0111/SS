@@ -3405,10 +3405,7 @@ namespace SS_OpenCV
                         Console.WriteLine(plate[index]);
                        
                         Array.Clear(compare, 0, compare.Length);
-
-
                     }
-
 
                 }
 
