@@ -2898,6 +2898,157 @@ namespace SS_OpenCV
 
         }
 
+        public static void Mean_solutionB(Image<Bgr, byte> img, Image<Bgr, byte> imgCopy)
+        {
+            unsafe
+            {
+                // direct access to the image memory(sequencial)
+                // direcion top left -> bottom right
+
+                MIplImage m = img.MIplImage;
+                MIplImage mCopy = imgCopy.MIplImage;
+
+                byte* dataPtr = (byte*)m.imageData.ToPointer(); // Pointer to the image
+                byte* dataPtrCopy = (byte*)mCopy.imageData.ToPointer();//Pointer to the image
+
+                int width = img.Width;
+                int height = img.Height;
+                int nChan = m.nChannels; // number of channels - 3
+                int padding = m.widthStep - m.nChannels * m.width; // alinhament bytes (padding)
+                int widthStep = m.widthStep;
+                int x, y;
+                int FirstBlueSum = 0, FirstGreenSum = 0, FirstRedSum = 0;
+                int sumBlue = 0;
+                int sumGreen = 0;
+                int sumRed = 0;
+
+                int nC = m.nChannels;
+                if (nC == 3)//image in RGB
+                {
+                    for (y = 0; y < height; y++)
+                    {
+                        for (x = 0; x < width; x++)
+                        {
+                            if (x == 0 && y == 0)
+                            { //top left corner--------------------------------
+                                sumBlue = ((int)dataPtrCopy[0] * 4 + (dataPtrCopy + nC)[0] * 2 + (dataPtrCopy + widthStep)[0] * 2 + (dataPtrCopy + widthStep + nC)[0]);
+                                sumGreen = ((int)dataPtrCopy[1] * 4 + (dataPtrCopy + nC)[1] * 2 + (dataPtrCopy + widthStep)[1] * 2 + (dataPtrCopy + widthStep + nC)[1]);
+                                sumRed = ((int)dataPtrCopy[2] * 4 + (dataPtrCopy + nC)[2] * 2 + (dataPtrCopy + widthStep)[2] * 2 + (dataPtrCopy + widthStep + nC)[2]);
+
+
+                                FirstBlueSum = sumBlue;
+                                FirstGreenSum = sumGreen;
+                                FirstRedSum = sumRed;
+                            }
+                            //top margin pixel after left corner OK
+                            //retiramos 2 vezes os pixeis que anteriormente estavam a ser usados usando duplicação de margens e substituimos pelos adjacentes agora usados
+                            //---------------------------------------------------------------------------
+                            else if (x == 1 && y == 0)
+                            {
+                                sumBlue = sumBlue - (dataPtrCopy - nC)[0] * 2 - (dataPtrCopy - nC + widthStep)[0] + (dataPtrCopy + nC)[0] * 2 + (dataPtrCopy + nC + widthStep)[0];
+                                sumGreen = sumGreen - (dataPtrCopy - nC)[1] * 2 - (dataPtrCopy - nC + widthStep)[1] + (dataPtrCopy + nC)[1] * 2 + (dataPtrCopy + nC + widthStep)[1];
+                                sumRed = sumRed - (dataPtrCopy - nC)[2] * 2 - (dataPtrCopy - nC + widthStep)[2] + (dataPtrCopy + nC)[2] * 2 + (dataPtrCopy + nC + widthStep)[2];
+                            }
+                            //top right corner OK
+                            else if (x == width - 1 && y == 0)
+                            {
+                                sumBlue = sumBlue - (dataPtrCopy - 2 * nC)[0] * 2 - (dataPtrCopy - 2 * nC + widthStep)[0] + dataPtrCopy[0] * 2 + (dataPtrCopy + widthStep)[0];
+                                sumGreen = sumGreen - (dataPtrCopy - 2 * nC)[1] * 2 - (dataPtrCopy - 2 * nC + widthStep)[1] + dataPtrCopy[1] * 2 + (dataPtrCopy + widthStep)[1];
+                                sumRed = sumRed - (dataPtrCopy - 2 * nC)[2] * 2 - (dataPtrCopy - 2 * nC + widthStep)[2] + dataPtrCopy[2] * 2 + (dataPtrCopy + widthStep)[2];
+                            }
+                            //bot left corner OK
+                            else if (x == 0 && y == height - 1)
+                            {
+                                sumBlue = FirstBlueSum - (dataPtrCopy - 2 * widthStep)[0] * 2 - (dataPtrCopy - 2 * widthStep + nC)[0] + dataPtrCopy[0] * 2 + (dataPtrCopy + nC)[0];
+                                sumGreen = FirstGreenSum - (dataPtrCopy - 2 * widthStep)[1] * 2 - (dataPtrCopy - 2 * widthStep + nC)[1] + dataPtrCopy[1] * 2 + (dataPtrCopy + nC)[1];
+                                sumRed = FirstRedSum - (dataPtrCopy - 2 * widthStep)[2] * 2 - (dataPtrCopy - 2 * widthStep + nC)[2] + dataPtrCopy[2] * 2 + (dataPtrCopy + nC)[2];
+                            }
+                            //bot margin pixel after left corner OK
+                            else if (x == 1 && y == height - 1)
+                            {
+                                sumBlue = sumBlue - (dataPtrCopy - nC)[0] * 2 - (dataPtrCopy - widthStep - nC)[0] + (dataPtrCopy - widthStep + nC)[0] + (dataPtrCopy + nC)[0] * 2;
+                                sumGreen = sumGreen - (dataPtrCopy - nC)[1] * 2 - (dataPtrCopy - widthStep - nC)[1] + (dataPtrCopy - widthStep + nC)[1] + (dataPtrCopy + nC)[1] * 2;
+                                sumRed = sumRed - (dataPtrCopy - nC)[2] * 2 - (dataPtrCopy - widthStep - nC)[2] + (dataPtrCopy - widthStep + nC)[2] + (dataPtrCopy + nC)[2] * 2;
+                            }
+                            //bot right corner OK
+                            else if (x == width - 1 && y == height - 1)
+                            {
+                                sumBlue = sumBlue - (dataPtrCopy - 2 * nC)[0] * 2 - (dataPtrCopy - widthStep - 2 * nC)[0] + (dataPtrCopy)[0] * 2 + (dataPtrCopy - widthStep)[0];
+                                sumGreen = sumGreen - (dataPtrCopy - 2 * nC)[1] * 2 - (dataPtrCopy - widthStep - 2 * nC)[1] + (dataPtrCopy)[1] * 2 + (dataPtrCopy - widthStep)[1];
+                                sumRed = sumRed - (dataPtrCopy - 2 * nC)[2] * 2 - (dataPtrCopy - widthStep - 2 * nC)[2] + (dataPtrCopy)[2] * 2 + (dataPtrCopy - widthStep)[2];
+                            }
+                            //left margin pixel after top left corner OK
+                            else if (x == 0 && y == 1)
+                            {
+                                sumBlue = FirstBlueSum - (dataPtrCopy - widthStep)[0] * 2 - (dataPtrCopy - widthStep + nC)[0] + (dataPtrCopy + widthStep)[0] * 2 + (dataPtrCopy + widthStep + nC)[0];
+                                sumGreen = FirstGreenSum - (dataPtrCopy - widthStep)[1] * 2 - (dataPtrCopy - widthStep + nC)[1] + (dataPtrCopy + widthStep)[1] * 2 + (dataPtrCopy + widthStep + nC)[1];
+                                sumRed = FirstRedSum - (dataPtrCopy - widthStep)[2] * 2 - (dataPtrCopy - widthStep + nC)[2] + (dataPtrCopy + widthStep)[2] * 2 + (dataPtrCopy + widthStep + nC)[2];
+
+                                FirstBlueSum = sumBlue;
+                                FirstGreenSum = sumGreen;
+                                FirstRedSum = sumRed;
+                            }
+                            //top margin OK
+                            else if (y == 0)
+                            {
+                                sumBlue = sumBlue - (dataPtrCopy - 2 * nC)[0] * 2 - (dataPtrCopy - 2 * nC + widthStep)[0] + (dataPtrCopy + nC)[0] * 2 + (dataPtrCopy + nC + widthStep)[0];
+                                sumGreen = sumGreen - (dataPtrCopy - 2 * nC)[1] * 2 - (dataPtrCopy - 2 * nC + widthStep)[1] + (dataPtrCopy + nC)[1] * 2 + (dataPtrCopy + nC + widthStep)[1];
+                                sumRed = sumRed - (dataPtrCopy - 2 * nC)[2] * 2 - (dataPtrCopy - 2 * nC + widthStep)[2] + (dataPtrCopy + nC)[2] * 2 + (dataPtrCopy + nC + widthStep)[2];
+                            }
+                            //bottom margin OK
+                            else if (y == height - 1)
+                            {
+                                sumBlue = sumBlue - (dataPtrCopy - 2 * nC)[0] * 2 - (dataPtrCopy - 2 * nC - widthStep)[0] + (dataPtrCopy + nC)[0] * 2 + (dataPtrCopy + nC - widthStep)[0];
+                                sumGreen = sumGreen - (dataPtrCopy - 2 * nC)[1] * 2 - (dataPtrCopy - 2 * nC - widthStep)[1] + (dataPtrCopy + nC)[1] * 2 + (dataPtrCopy + nC - widthStep)[1];
+                                sumRed = sumRed - (dataPtrCopy - 2 * nC)[2] * 2 - (dataPtrCopy - 2 * nC - widthStep)[2] + (dataPtrCopy + nC)[2] * 2 + (dataPtrCopy + nC - widthStep)[2];
+                            }
+                            //left margin
+                            else if (x == 0)
+                            {
+                                sumBlue = FirstBlueSum - (dataPtrCopy - 2 * widthStep)[0] * 2 - (dataPtrCopy - 2 * widthStep + nC)[0] + (dataPtrCopy + widthStep)[0] * 2 + (dataPtrCopy + widthStep + nC)[0];
+                                sumGreen = FirstGreenSum - (dataPtrCopy - 2 * widthStep)[1] * 2 - (dataPtrCopy - 2 * widthStep + nC)[1] + (dataPtrCopy + widthStep)[1] * 2 + (dataPtrCopy + widthStep + nC)[1];
+                                sumRed = FirstRedSum - (dataPtrCopy - 2 * widthStep)[2] * 2 - (dataPtrCopy - 2 * widthStep + nC)[2] + (dataPtrCopy + widthStep)[2] * 2 + (dataPtrCopy + widthStep + nC)[2];
+
+                                FirstBlueSum = sumBlue;
+                                FirstGreenSum = sumGreen;
+                                FirstRedSum = sumRed;
+                            }
+                            //right margin
+                            else if (x == width - 1)
+                            {
+                                sumBlue = sumBlue - (dataPtrCopy - 2 * nC - widthStep)[0] - (dataPtrCopy - 2 * nC)[0] - (dataPtrCopy - 2 * nC + widthStep)[0] + (dataPtrCopy - widthStep)[0] + dataPtrCopy[0] + (dataPtrCopy + widthStep)[0];
+                                sumGreen = sumGreen - (dataPtrCopy - 2 * nC - widthStep)[1] - (dataPtrCopy - 2 * nC)[1] - (dataPtrCopy - 2 * nC + widthStep)[1] + (dataPtrCopy - widthStep)[1] + dataPtrCopy[1] + (dataPtrCopy + widthStep)[1];
+                                sumRed = sumRed - (dataPtrCopy - 2 * nC - widthStep)[2] - (dataPtrCopy - 2 * nC)[2] - (dataPtrCopy - 2 * nC + widthStep)[2] + (dataPtrCopy - widthStep)[2] + dataPtrCopy[2] + (dataPtrCopy + widthStep)[2];
+                            }
+                            //second collumn
+                            else if (x == 1)
+                            {
+                                sumBlue = sumBlue - (dataPtrCopy - nC - widthStep)[0] - (dataPtrCopy - nC)[0] - (dataPtrCopy - nC + widthStep)[0] + (dataPtrCopy + nC - widthStep)[0] + (dataPtrCopy + nC)[0] + (dataPtrCopy + nC + widthStep)[0];
+                                sumGreen = sumGreen - (dataPtrCopy - nC - widthStep)[1] - (dataPtrCopy - nC)[1] - (dataPtrCopy - nC + widthStep)[1] + (dataPtrCopy + nC - widthStep)[1] + (dataPtrCopy + nC)[1] + (dataPtrCopy + nC + widthStep)[1];
+                                sumRed = sumRed - (dataPtrCopy - nC - widthStep)[2] - (dataPtrCopy - nC)[2] - (dataPtrCopy - nC + widthStep)[2] + (dataPtrCopy + nC - widthStep)[2] + (dataPtrCopy + nC)[2] + (dataPtrCopy + nC + widthStep)[2];
+                            }
+                            //center pixels
+                            else
+                            {
+                                sumBlue = sumBlue - (dataPtrCopy - 2 * nC - widthStep)[0] - (dataPtrCopy - 2 * nC)[0] - (dataPtrCopy - 2 * nC + widthStep)[0] + (dataPtrCopy + nC - widthStep)[0] + (dataPtrCopy + nC)[0] + (dataPtrCopy + nC + widthStep)[0];
+                                sumGreen = sumGreen - (dataPtrCopy - 2 * nC - widthStep)[1] - (dataPtrCopy - 2 * nC)[1] - (dataPtrCopy - 2 * nC + widthStep)[1] + (dataPtrCopy + nC - widthStep)[1] + (dataPtrCopy + nC)[1] + (dataPtrCopy + nC + widthStep)[1];
+                                sumRed = sumRed - (dataPtrCopy - 2 * nC - widthStep)[2] - (dataPtrCopy - 2 * nC)[2] - (dataPtrCopy - 2 * nC + widthStep)[2] + (dataPtrCopy + nC - widthStep)[2] + (dataPtrCopy + nC)[2] + (dataPtrCopy + nC + widthStep)[2];
+                            }
+                            dataPtr[0] = (byte)(Math.Round(sumBlue / 9.0));
+                            dataPtr[1] = (byte)(Math.Round(sumGreen / 9.0));
+                            dataPtr[2] = (byte)(Math.Round(sumRed / 9.0));
+
+                            dataPtrCopy += nChan;
+                            dataPtr += nChan;
+                        }
+                        dataPtrCopy += padding;
+                        dataPtr += padding;
+                    }
+                }
+
+            }
+        }
+
 
         /// <summary>
         /// License plate recognition
@@ -2921,8 +3072,8 @@ namespace SS_OpenCV
         /// <param name="LP_C6"></param>
         public static void LP_Recognition(Image<Bgr, byte> img, Image<Bgr, byte> imgCopy,
         int difficultyLevel,
-           //string LPType,
-         //out Rectangle LP_Location,
+         //string LPType,
+         out Rectangle LP_Location,
          out Rectangle LP_Chr1,
          out Rectangle LP_Chr2,
          out Rectangle LP_Chr3,
@@ -2946,10 +3097,12 @@ namespace SS_OpenCV
                 int xf = 0;
                 int yi = 0;
                 int yf = 0;
-                int yiCi = 0;
-                int yiCf = 0;
-                int xiCi = 0;
-                int xiCf = 0;
+                int yiPlate = 0;
+                int yfPlate = 0;
+                int xiPlate = 0;
+                int xfPlate = 0;
+                int yPlateDiff = 0;
+                int xPlateDiff = 0;
                 int[] compare = new int[35];
                 MIplImage m = img.MIplImage;
                 bool pos = false;
@@ -2976,15 +3129,13 @@ namespace SS_OpenCV
                 Image<Bgr, byte> img_type2X = null;
                 Image<Bgr, byte> img_type2YCopy = null;
                 Image<Bgr, byte> img_type2XCopy = null;
-
+                Image<Bgr, byte> img_plate = null;
                 Image<Bgr, byte> ch = null;
-                Image<Bgr, byte> ch_q1 = null;
-                Image<Bgr, byte> ch_q2 = null;
-                Image<Bgr, byte> ch_q3 = null;
-                Image<Bgr, byte> ch_q4 = null;
-                Image<Bgr, byte> ch_1 = null;
-                Image<Bgr, byte> s_ = null;
-                //LP_Location = new Rectangle(220, 190, 200, 40);
+
+
+
+
+                LP_Location = new Rectangle(220, 190, 200, 40);
 
                 LP_Chr1 = new Rectangle(340, 190, 30, 40);
                 LP_Chr2 = new Rectangle(360, 190, 30, 40);
@@ -2993,12 +3144,12 @@ namespace SS_OpenCV
                 LP_Chr5 = new Rectangle(420, 190, 30, 40);
                 LP_Chr6 = new Rectangle(440, 190, 30, 40);
 
-                r.Add(LP_Chr1);
-                r.Add(LP_Chr2);
-                r.Add(LP_Chr3);
-                r.Add(LP_Chr4);
-                r.Add(LP_Chr5);
-                r.Add(LP_Chr6);
+                //r.Add(LP_Chr1);
+                //r.Add(LP_Chr2);
+                //r.Add(LP_Chr3);
+                //r.Add(LP_Chr4);
+                //r.Add(LP_Chr5);
+                //r.Add(LP_Chr6);
 
 
 
@@ -3096,14 +3247,9 @@ namespace SS_OpenCV
                 symbols.Add(nt);
                 symbols.Add(nu);
                 symbols.Add(nv);
-                //symbols.Add(nw);
                 symbols.Add(nx);
-                //symbols.Add(ny);
                 symbols.Add(nz);
 
-                //ConvertToBW_Otsu(nc);
-
-                //nc.Save("C.bmp");
 
                 nonUniformMatrix[0, 0] = 0;
                 nonUniformMatrix[0, 1] = 0;
@@ -3115,10 +3261,7 @@ namespace SS_OpenCV
                 nonUniformMatrix[2, 1] = 0;
                 nonUniformMatrix[2, 2] = 0;
 
-                img_type2Y = img.Copy();
-                img_type2YCopy = img_type2Y.Copy();
-                NonUniform(img_type2Y, img_type2YCopy, nonUniformMatrix, 1, 0) ;
-                img_type2Y.Save("nonuniform.bmp");
+
 
                 // guarda na lista s, a MIplImage de cada numero de matricula possivel
                 for (i = 0; i < symbols.Count; i++)
@@ -3128,15 +3271,13 @@ namespace SS_OpenCV
                     ConvertToBW_Otsu(symbols[i]);
 
 
-                //ConvertToGray(img_type2);
-                //Sobel(img_type2,img_type2.Copy());
-                //xf = ContrastLineX(img_type2, 20);
-
-
-
 
                 if (difficultyLevel == 2)
                 {
+                    img_type2Y = img.Copy();
+                    img_type2YCopy = img_type2Y.Copy();
+                    NonUniform(img_type2Y, img_type2YCopy, nonUniformMatrix, 1, 0);
+                    img_type2Y.Save("nonuniform.bmp");
 
 
                     contrastY = ContrastLineY(img_type2Y);
@@ -3145,65 +3286,67 @@ namespace SS_OpenCV
                         if (contrastY[i] > 5 && posCY == false)
                         {
                             posCY = true;
-                            yiCi = i;
+                            yiPlate = i;
 
                         }
 
                         if (contrastY[i] < 2 && posCY == true)
                         {
                             posCY = false;
-                            yiCf = i;
+                            yfPlate = i;
                             break;
 
 
                         }
                     }
-                    //img_type2.Save("type2.bmp");
-                    img_type2Y.ROI = new Rectangle(0, yiCi, img_type2Y.Width, yiCf - yiCi);
-                    img.ROI = new Rectangle(0, yiCi, img_type2Y.Width, yiCf - yiCi);
-                    //img_type2.Save("type2_roi.bmp");
-                    img.Save("img_originalY.bmp");
+                    yiPlate -= 10;
+                    yPlateDiff = yfPlate - yiPlate;
+                    yPlateDiff += 10;
+                    img.ROI = new Rectangle(0, yiPlate, img_type2Y.Width, yPlateDiff);
+                    img.Save("plate_corteY.bmp");
+
 
                     img_type2X = img.Copy();
                     img_type2XCopy = img_type2X.Copy();
                     Diferentiation(img_type2X, img_type2XCopy);
                     ColorFilter(img_type2X);
                     img_type2X.Save("Diferentiation.bmp");
-                    //contrastX = ContrastLineX(img_type2X);
                     projectionXWhite = ProjectionXWhite(img_type2X);
                     for (i = 0; i < contrastX.Length; i++)
                     {
                         if (!posCX && projectionXWhite[i] > 20)
                         {
                             posCX = true;
-                            xiCi = i;
+                            xiPlate = i;
                         }
 
                         if (posCX && projectionXWhite[i] > 20)
-                            xiCf = i;
+                            xfPlate = i;
                     }
+                    xPlateDiff = xfPlate - xiPlate;
+                    xPlateDiff += 10;
+                    xiPlate -= 10;
+                    img.ROI = new Rectangle(xiPlate, yiPlate, xPlateDiff, yPlateDiff);
+                    img_plate = img.Copy();
+                    img.Save("Plate.bmp");
+                    LP_Location = img.ROI;
 
-                    img_type2X.ROI = new Rectangle(xiCi, 0, xiCf - xiCi, img_type2X.Height);
-                    img_type2X.Save("PIROCA.bmp");
-                    img.ROI = new Rectangle(xiCi, yiCi, xiCf - xiCi, yiCf - yiCi);
-                    img.Save("CONA.bmp");
-                    img_type1= img.Copy();
 
                 }
 
 
 
 
-                ConvertToBW_Otsu(img_type1);
-                img_type1.Save("fgdgdf.bmp");
-                projectionX = ProjectionX(img_type1);
-                projectionY = ProjectionY(img_type1);
+                ConvertToBW_Otsu(img_plate);
+                img_plate.Save("fgdgdf.bmp");
+                projectionX = ProjectionX(img_plate);
+                projectionY = ProjectionY(img_plate);
                 //img.ROI = new Rectangle(1, 1, 70, 70);
 
 
                 for (i = 0; i < projectionY.Length; i++)
                 {
-                    if (projectionY[i] > 40 && posy == false)
+                    if (projectionY[i] > 50 && posy == false)
                     {
                         posy = true;
                         yi = i;
@@ -3211,7 +3354,7 @@ namespace SS_OpenCV
                     }
 
                     //if (projectionY[i] < 40 && posy == true)
-                    if (projectionY[i] < 140 && posy == true)
+                    if (projectionY[i] < 50 && posy == true)
                     {
                         posy = false;
                         yf = i;
@@ -3224,23 +3367,27 @@ namespace SS_OpenCV
 
                 for (i = 0; i < projectionX.Length; i++)
                 {
-                    if (projectionX[i] > 20 && pos == false)
+                    if (projectionX[i] > 0 && pos == false)
                     {
                         pos = true;
                         xi = i;
 
                     }
 
-                    if (projectionX[i] < 20 && pos == true)
+                    if ((projectionX[i] == 0 || i==(projectionX.Length)-1) && pos == true)
                     {
                         pos = false;
                         xf = i;
-                        img_type1.ROI = new Rectangle(xi, yi, xf - xi, yf-yi);
-                        ch = img_type1.Copy();
-                        r[k++] = img_type1.ROI;
+
+                        img.ROI = new Rectangle(xiPlate + xi, yiPlate + yi, xf - xi, yf - yi);
+                        img.Save("ch.bmp");
+                        ch = img.Copy();
+                        ConvertToBW_Otsu(ch);
+                        r.Add ( img.ROI);
+
 
                         //img.ROI = new Rectangle(xi, yi, (xf - xi) / 2, (yf - yi) / 2);
-                        
+
 
 
 
@@ -3270,6 +3417,7 @@ namespace SS_OpenCV
 
 
                 }
+
 
                 LP_Chr1 = r[0];
                 LP_Chr2 = r[1];
@@ -3463,6 +3611,7 @@ namespace SS_OpenCV
         {
             unsafe
             {
+
                 MIplImage m = img.MIplImage;
                 byte* dataPtr = (byte*)m.imageData.ToPointer(); // Pointer to the image
 
@@ -3485,6 +3634,12 @@ namespace SS_OpenCV
                         dataPtr += nChan;
                     }
                     dataPtr += padding;
+                }
+
+                for(x = 0; x < hist.Length; x++)
+                {
+                    if (hist[x] < 15)
+                        hist[x] = 0;
                 }
 
                 ProjectionX projectionX = new ProjectionX(hist, width);

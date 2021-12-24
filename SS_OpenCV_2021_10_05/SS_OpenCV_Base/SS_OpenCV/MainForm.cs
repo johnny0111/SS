@@ -540,12 +540,13 @@ namespace SS_OpenCV
 
         private void matriculaToolStripMenuItem_Click(object sender, EventArgs e)
         {
-           //LP_Chr1 = new Rectangle(340, 190, 30, 40);
-           //Rectangle LP_Chr2 = new Rectangle(360, 190, 30, 40);
-           //Rectangle LP_Chr3 = new Rectangle(380, 190, 30, 40);
-           //Rectangle LP_Chr4 = new Rectangle(400, 190, 30, 40);
-           //Rectangle LP_Chr5 = new Rectangle(420, 190, 30, 40);
-           //Rectangle LP_Chr6 = new Rectangle(440, 190, 30, 40);
+            //LP_Chr1 = new Rectangle(340, 190, 30, 40);
+            //Rectangle LP_Chr2 = new Rectangle(360, 190, 30, 40);
+            //Rectangle LP_Chr3 = new Rectangle(380, 190, 30, 40);
+            //Rectangle LP_Chr4 = new Rectangle(400, 190, 30, 40);
+            //Rectangle LP_Chr5 = new Rectangle(420, 190, 30, 40);
+            //Rectangle LP_Chr6 = new Rectangle(440, 190, 30, 40);
+
             if (img == null) // verify if the image is already opened
                 return;
 
@@ -557,7 +558,7 @@ namespace SS_OpenCV
             ImageClass.LP_Recognition(imgUndo, imgUndo,
               2,
               //string LPType,
-              //LP_Location,
+              out Rectangle LP_Location,
               out Rectangle LP_Chr1,
               out Rectangle LP_Chr2,
               out Rectangle LP_Chr3,
@@ -578,6 +579,7 @@ namespace SS_OpenCV
             img.Draw(LP_Chr4, new Emgu.CV.Structure.Bgr(Color.Green), 2);
             img.Draw(LP_Chr5, new Emgu.CV.Structure.Bgr(Color.Green), 2);
             img.Draw(LP_Chr6, new Emgu.CV.Structure.Bgr(Color.Green), 2);
+            img.Draw(LP_Location, new Emgu.CV.Structure.Bgr(Color.Green), 2);
 
 
             ImageViewer.Image = img.Bitmap;
