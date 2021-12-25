@@ -67,12 +67,15 @@
             this.testProjectionYToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contrastXToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contrastYToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.projectionXWhiteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.autoresToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.evalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.matriculaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1 = new System.Windows.Forms.Panel();
             this.ImageViewer = new System.Windows.Forms.PictureBox();
-            this.projectionXWhiteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.projectionYWhiteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.detectPlateYToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.dilatacaoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ImageViewer)).BeginInit();
@@ -165,7 +168,10 @@
             this.testProjectionYToolStripMenuItem,
             this.contrastXToolStripMenuItem,
             this.contrastYToolStripMenuItem,
-            this.projectionXWhiteToolStripMenuItem});
+            this.projectionXWhiteToolStripMenuItem,
+            this.projectionYWhiteToolStripMenuItem,
+            this.detectPlateYToolStripMenuItem,
+            this.dilatacaoToolStripMenuItem});
             this.imageToolStripMenuItem.Name = "imageToolStripMenuItem";
             this.imageToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
             this.imageToolStripMenuItem.Text = "Image";
@@ -384,6 +390,13 @@
             this.contrastYToolStripMenuItem.Text = "contrastY";
             this.contrastYToolStripMenuItem.Click += new System.EventHandler(this.contrastYToolStripMenuItem_Click);
             // 
+            // projectionXWhiteToolStripMenuItem
+            // 
+            this.projectionXWhiteToolStripMenuItem.Name = "projectionXWhiteToolStripMenuItem";
+            this.projectionXWhiteToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.projectionXWhiteToolStripMenuItem.Text = "ProjectionXWhite";
+            this.projectionXWhiteToolStripMenuItem.Click += new System.EventHandler(this.projectionXWhiteToolStripMenuItem_Click);
+            // 
             // autoresToolStripMenuItem
             // 
             this.autoresToolStripMenuItem.Name = "autoresToolStripMenuItem";
@@ -424,12 +437,19 @@
             this.ImageViewer.TabIndex = 6;
             this.ImageViewer.TabStop = false;
             // 
-            // projectionXWhiteToolStripMenuItem
+            // projectionYWhiteToolStripMenuItem
             // 
-            this.projectionXWhiteToolStripMenuItem.Name = "projectionXWhiteToolStripMenuItem";
-            this.projectionXWhiteToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.projectionXWhiteToolStripMenuItem.Text = "ProjectionXWhite";
-            this.projectionXWhiteToolStripMenuItem.Click += new System.EventHandler(this.projectionXWhiteToolStripMenuItem_Click);
+            this.projectionYWhiteToolStripMenuItem.Name = "projectionYWhiteToolStripMenuItem";
+            this.projectionYWhiteToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.projectionYWhiteToolStripMenuItem.Text = "ProjectionYWhite";
+            this.projectionYWhiteToolStripMenuItem.Click += new System.EventHandler(this.projectionYWhiteToolStripMenuItem_Click);
+            // 
+            // detectPlateYToolStripMenuItem
+            // 
+            this.detectPlateYToolStripMenuItem.Name = "detectPlateYToolStripMenuItem";
+            this.detectPlateYToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.detectPlateYToolStripMenuItem.Text = "DetectPlateY";
+            this.detectPlateYToolStripMenuItem.Click += new System.EventHandler(this.detectPlateYToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -498,6 +518,9 @@
         private System.Windows.Forms.ToolStripMenuItem colorToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem contrastYToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem projectionXWhiteToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem projectionYWhiteToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem detectPlateYToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem dilatacaoToolStripMenuItem;
     }
 }
 

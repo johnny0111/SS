@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.Linq;
 using System.Windows.Forms.DataVisualization.Charting;
 
 namespace SS_OpenCV
@@ -29,13 +30,18 @@ namespace SS_OpenCV
             InitializeComponent();
 
             DataPointCollection list0 = chart1.Series[0].Points;
+            DataPointCollection list1 = chart1.Series[1].Points;
+
+            int avg = (int)array.Average();
 
             for (int i = 0; i < width; i++)
             {
                 list0.AddXY(i, array[i]);
+                list1.AddXY(i, avg);
             }
 
             chart1.Series[0].Color = Color.Blue;
+            chart1.Series[1].Color = Color.Red;
             chart1.ChartAreas[0].AxisX.Maximum = width;
             chart1.ChartAreas[0].AxisX.Minimum = 0;
             chart1.ChartAreas[0].AxisY.Minimum = 0;
@@ -51,6 +57,7 @@ namespace SS_OpenCV
         private void InitializeComponent()
         {
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series0 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
@@ -63,9 +70,13 @@ namespace SS_OpenCV
             this.chart1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.chart1.Location = new System.Drawing.Point(0, 0);
             this.chart1.Name = "chart1";
+            series0.ChartArea = "ChartArea1";
             series1.ChartArea = "ChartArea1";
+            series0.Name = "Series0";
             series1.Name = "Series1";
+            series0.ChartType = SeriesChartType.Line;
             series1.ChartType = SeriesChartType.Line;
+            this.chart1.Series.Add(series0);
             this.chart1.Series.Add(series1);
             this.chart1.Size = new System.Drawing.Size(800, 450);
             this.chart1.TabIndex = 0;
