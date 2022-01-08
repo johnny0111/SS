@@ -3540,7 +3540,7 @@ namespace SS_OpenCV
                     }
                 }
 
-                img.Save("afterEffectsypilaaaaa" + imgCounter.ToString() + ".bmp");
+                img.Save("afterEffectsyexeee" + imgCounter.ToString() + ".bmp");
 
                 img_type2X = img.Copy();
                 img_type2XCopy = img_type2X.Copy();
