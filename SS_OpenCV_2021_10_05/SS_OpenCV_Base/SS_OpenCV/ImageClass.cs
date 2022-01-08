@@ -3551,11 +3551,13 @@ namespace SS_OpenCV
 
                 Mean(img_type2X, img_type2XCopy);
 
-                ColorFilter(img_type2X);
-
                 img_type2XCopy = img_type2X.Copy();
 
                 Sobel(img_type2X, img_type2XCopy);
+
+                img_type2XCopy = img_type2X.Copy();
+
+                ColorFilter(img_type2X);
 
                 img_type2XCopy = img_type2X.Copy();
 
@@ -3571,28 +3573,64 @@ namespace SS_OpenCV
                 tresh = (int)histx.Average();
                 imgCounter = 0;
 
+                //for (int i = 0; i < histx.Length; i++)
+                //{
+                //    if (histx[i] > tresh && posCX == false)
+                //    {
+                //        posCX = true;
+                //        xiPlate = i;
+
+                //    }                                               //limites da matricula em Y
+                //    if (histx[i] < tresh && posCX == true)
+                //    {
+                //        posCX = false;
+                //        xfPlate = i;
+                //        xPlateDiff = xfPlate - xiPlate;
+                //        xiPlate -= 10;
+                //        xPlateDiff += 10;
+                //        if(xPlateDiff > 50)
+                //        {
+                //            aux.ROI = new Rectangle(xiPlate, yiPlateAux, xPlateDiff, yPlateDiffAux);
+                //            aux.Save("afterEffectsx" + imgCounter.ToString() + ".bmp");
+                //            imgCounter++;
+                //        }
+                //    }
+                //}
+
+                int xfFinal = 0, xiFinal = 0;
+
                 for (int i = 0; i < histx.Length; i++)
                 {
                     if (histx[i] > tresh && posCX == false)
                     {
-                        posCX = true;
-                        xiPlate = i;
-
+                        if(i-xfPlate < 20 && i != 0)
+                        {
+                            posCX = true;
+                        }
+                        else
+                        {
+                            xiPlate = i;
+                            posCX = true;
+                        }
                     }                                               //limites da matricula em Y
-                    if (histx[i] < tresh && posCX == true && (i- xiPlate) > 200)
+                    if (histx[i] < tresh && posCX == true)
                     {
                         posCX = false;
                         xfPlate = i;
-                        xPlateDiff = xfPlate - xiPlate;
-                        xiPlate -= 10;
-                        xPlateDiff += 10;
-                        if(xPlateDiff > 50)
+
+                        if (xfPlate - xiPlate > 150)
                         {
-                            aux.ROI = new Rectangle(xiPlate, yiPlateAux, xPlateDiff, yPlateDiffAux);
-                            aux.Save("afterEffectsx" + imgCounter.ToString() + ".bmp");
-                            imgCounter++;
+                            xfFinal = xfPlate;
+                            xiFinal = xiPlate;
                         }
                     }
+                }
+
+                xPlateDiff = xfFinal - xiFinal;
+                if (xPlateDiff > 50)
+                {
+                    img.ROI = new Rectangle(xiFinal, yiPlateAux, xPlateDiff, yPlateDiffAux);
+                    img.Save("afterEffectsx" + imgCounter.ToString() + ".bmp");
                 }
             }
         }
