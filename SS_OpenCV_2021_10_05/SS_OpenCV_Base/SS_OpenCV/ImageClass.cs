@@ -3115,6 +3115,7 @@ namespace SS_OpenCV
                 int[] projectionXWhite = new int[m.width + 1];
                 int[] contrastX = new int[m.width];
                 int[] contrastY = new int[m.height];
+                int[] coordinates = new int[4];
                 float[,] nonUniformMatrix = new float[3, 3];
                 //char[] plate = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9','A', 'B','C','D' ,'E','T' };
                 char[] plate = new char[] {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
@@ -3130,6 +3131,7 @@ namespace SS_OpenCV
                 Image<Bgr, byte> img_type2YCopy = null;
                 Image<Bgr, byte> img_type2XCopy = null;
                 Image<Bgr, byte> img_plate = null;
+                Image<Bgr, byte> img_aux = null;
                 Image<Bgr, byte> ch = null;
 
 
@@ -3163,74 +3165,74 @@ namespace SS_OpenCV
 
 
 
-                Image<Bgr, byte> n0 = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\0.bmp");
-                Image<Bgr, byte> n1 = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\1.bmp");
-                Image<Bgr, byte> n2 = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\2.bmp");
-                Image<Bgr, byte> n3 = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\3.bmp");
-                Image<Bgr, byte> n4 = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\4.bmp");
-                Image<Bgr, byte> n5 = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\5.bmp");
-                Image<Bgr, byte> n6 = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\6.bmp");
-                Image<Bgr, byte> n7 = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\7.bmp");
-                Image<Bgr, byte> n8 = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\8.bmp");
-                Image<Bgr, byte> n9 = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\9.bmp");
-                Image<Bgr, byte> na = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\A.bmp");
-                Image<Bgr, byte> nb = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\B.bmp");
-                Image<Bgr, byte> nc = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\C.bmp");
-                Image<Bgr, byte> nd = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\D.bmp");
-                Image<Bgr, byte> ne = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\E.bmp");
-                Image<Bgr, byte> nf = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\F.bmp");
-                Image<Bgr, byte> ng = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\G.bmp");
-                Image<Bgr, byte> nh = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\H.bmp");
-                Image<Bgr, byte> ni = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\I.bmp");
-                Image<Bgr, byte> nj = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\J.bmp");
-                Image<Bgr, byte> nk = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\K.bmp");
-                Image<Bgr, byte> nl = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\L.bmp");
-                Image<Bgr, byte> nm = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\M.bmp");
-                Image<Bgr, byte> nn = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\N.bmp");
-                Image<Bgr, byte> no = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\O.bmp");
-                Image<Bgr, byte> np = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\P.bmp");
-                Image<Bgr, byte> nq = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\Q.bmp");
-                Image<Bgr, byte> nr = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\R.bmp");
-                Image<Bgr, byte> ns = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\S.bmp");
-                Image<Bgr, byte> nt = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\T.bmp");
-                Image<Bgr, byte> nu = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\U.bmp");
-                Image<Bgr, byte> nv = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\V.bmp");
-                Image<Bgr, byte> nx = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\X.bmp");
-                Image<Bgr, byte> nz = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\Z.bmp");
-                //Image<Bgr, byte> n0 = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\0.bmp");
-                //Image<Bgr, byte> n1 = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\1.bmp");
-                //Image<Bgr, byte> n2 = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\2.bmp");
-                //Image<Bgr, byte> n3 = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\3.bmp");
-                //Image<Bgr, byte> n4 = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\4.bmp");
-                //Image<Bgr, byte> n5 = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\5.bmp");
-                //Image<Bgr, byte> n6 = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\6.bmp");
-                //Image<Bgr, byte> n7 = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\7.bmp");
-                //Image<Bgr, byte> n8 = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\8.bmp");
-                //Image<Bgr, byte> n9 = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\9.bmp");
-                //Image<Bgr, byte> na = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\A.bmp");
-                //Image<Bgr, byte> nb = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\B.bmp");
-                //Image<Bgr, byte> nc = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\C.bmp");
-                //Image<Bgr, byte> nd = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\D.bmp");
-                //Image<Bgr, byte> ne = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\E.bmp");
-                //Image<Bgr, byte> nf = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\F.bmp");
-                //Image<Bgr, byte> ng = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\G.bmp");
-                //Image<Bgr, byte> nh = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\H.bmp");
-                //Image<Bgr, byte> ni = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\I.bmp");
-                //Image<Bgr, byte> nj = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\J.bmp");
-                //Image<Bgr, byte> nk = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\K.bmp");
-                //Image<Bgr, byte> nl = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\L.bmp");
-                //Image<Bgr, byte> nm = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\M.bmp");
-                //Image<Bgr, byte> nn = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\N.bmp");
-                //Image<Bgr, byte> no = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\O.bmp");
-                //Image<Bgr, byte> np = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\P.bmp");
-                //Image<Bgr, byte> nq = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\Q.bmp");
-                //Image<Bgr, byte> nr = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\R.bmp");
-                //Image<Bgr, byte> ns = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\S.bmp");
-                //Image<Bgr, byte> nt = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\T.bmp");
-                //Image<Bgr, byte> nu = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\U.bmp");
-                //Image<Bgr, byte> nv = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\V.bmp");
-                //Image<Bgr, byte> nx = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\X.bmp");
-                //Image<Bgr, byte> nz = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\Z.bmp");
+                //Image<Bgr, byte> n0 = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\0.bmp");
+                //Image<Bgr, byte> n1 = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\1.bmp");
+                //Image<Bgr, byte> n2 = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\2.bmp");
+                //Image<Bgr, byte> n3 = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\3.bmp");
+                //Image<Bgr, byte> n4 = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\4.bmp");
+                //Image<Bgr, byte> n5 = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\5.bmp");
+                //Image<Bgr, byte> n6 = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\6.bmp");
+                //Image<Bgr, byte> n7 = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\7.bmp");
+                //Image<Bgr, byte> n8 = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\8.bmp");
+                //Image<Bgr, byte> n9 = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\9.bmp");
+                //Image<Bgr, byte> na = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\A.bmp");
+                //Image<Bgr, byte> nb = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\B.bmp");
+                //Image<Bgr, byte> nc = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\C.bmp");
+                //Image<Bgr, byte> nd = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\D.bmp");
+                //Image<Bgr, byte> ne = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\E.bmp");
+                //Image<Bgr, byte> nf = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\F.bmp");
+                //Image<Bgr, byte> ng = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\G.bmp");
+                //Image<Bgr, byte> nh = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\H.bmp");
+                //Image<Bgr, byte> ni = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\I.bmp");
+                //Image<Bgr, byte> nj = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\J.bmp");
+                //Image<Bgr, byte> nk = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\K.bmp");
+                //Image<Bgr, byte> nl = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\L.bmp");
+                //Image<Bgr, byte> nm = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\M.bmp");
+                //Image<Bgr, byte> nn = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\N.bmp");
+                //Image<Bgr, byte> no = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\O.bmp");
+                //Image<Bgr, byte> np = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\P.bmp");
+                //Image<Bgr, byte> nq = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\Q.bmp");
+                //Image<Bgr, byte> nr = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\R.bmp");
+                //Image<Bgr, byte> ns = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\S.bmp");
+                //Image<Bgr, byte> nt = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\T.bmp");
+                //Image<Bgr, byte> nu = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\U.bmp");
+                //Image<Bgr, byte> nv = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\V.bmp");
+                //Image<Bgr, byte> nx = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\X.bmp");
+                //Image<Bgr, byte> nz = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\Z.bmp");
+                Image<Bgr, byte> n0 = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\0.bmp");
+                Image<Bgr, byte> n1 = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\1.bmp");
+                Image<Bgr, byte> n2 = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\2.bmp");
+                Image<Bgr, byte> n3 = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\3.bmp");
+                Image<Bgr, byte> n4 = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\4.bmp");
+                Image<Bgr, byte> n5 = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\5.bmp");
+                Image<Bgr, byte> n6 = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\6.bmp");
+                Image<Bgr, byte> n7 = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\7.bmp");
+                Image<Bgr, byte> n8 = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\8.bmp");
+                Image<Bgr, byte> n9 = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\9.bmp");
+                Image<Bgr, byte> na = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\A.bmp");
+                Image<Bgr, byte> nb = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\B.bmp");
+                Image<Bgr, byte> nc = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\C.bmp");
+                Image<Bgr, byte> nd = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\D.bmp");
+                Image<Bgr, byte> ne = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\E.bmp");
+                Image<Bgr, byte> nf = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\F.bmp");
+                Image<Bgr, byte> ng = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\G.bmp");
+                Image<Bgr, byte> nh = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\H.bmp");
+                Image<Bgr, byte> ni = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\I.bmp");
+                Image<Bgr, byte> nj = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\J.bmp");
+                Image<Bgr, byte> nk = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\K.bmp");
+                Image<Bgr, byte> nl = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\L.bmp");
+                Image<Bgr, byte> nm = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\M.bmp");
+                Image<Bgr, byte> nn = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\N.bmp");
+                Image<Bgr, byte> no = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\O.bmp");
+                Image<Bgr, byte> np = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\P.bmp");
+                Image<Bgr, byte> nq = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\Q.bmp");
+                Image<Bgr, byte> nr = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\R.bmp");
+                Image<Bgr, byte> ns = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\S.bmp");
+                Image<Bgr, byte> nt = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\T.bmp");
+                Image<Bgr, byte> nu = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\U.bmp");
+                Image<Bgr, byte> nv = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\V.bmp");
+                Image<Bgr, byte> nx = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\X.bmp");
+                Image<Bgr, byte> nz = new Image<Bgr, byte>("D:\\joaom\\Documents\\Mestrado\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\Z.bmp");
                 Image<Bgr, byte> diff = null;
                 Image<Bgr, byte> BD = null;
 
@@ -3295,104 +3297,160 @@ namespace SS_OpenCV
                     ConvertToBW_Otsu(symbols[i]);
 
 
-
                 if (difficultyLevel == 2)
                 {
-                    img_type2Y = img.Copy();
-                    img_type2YCopy = img_type2Y.Copy();
-                    NonUniform(img_type2Y, img_type2YCopy, nonUniformMatrix, 1, 0); //aplicação de filtro nao uniforme
-                    img_type2Y.Save("nonuniform.bmp");
+                    //img_type2Y = img.Copy();
+                    //img_type2YCopy = img_type2Y.Copy();
+                    //NonUniform(img_type2Y, img_type2YCopy, nonUniformMatrix, 1, 0); //aplicação de filtro nao uniforme
+                    //img_type2Y.Save("nonuniform.bmp");
 
 
-                    contrastY = ContrastLineY(img_type2Y); //vector de contrastes entre pretos e brancos
-                    for (i = 0; i < contrastY.Length; i++)
-                    {
-                        if (contrastY[i] > 5 && posCY == false)
-                        {
-                            posCY = true;
-                            yiPlate = i;
+                    //contrastY = ContrastLineY(img_type2Y); //vector de contrastes entre pretos e brancos
+                    //for (i = 0; i < contrastY.Length; i++)
+                    //{
+                    //    if (contrastY[i] > 5 && posCY == false)
+                    //    {
+                    //        posCY = true;
+                    //        yiPlate = i;
 
-                        }                                               //limites da matricula em Y
+                    //    }                                               //limites da matricula em Y
 
-                        if (contrastY[i] < 2 && posCY == true)
-                        {
-                            posCY = false;
-                            yfPlate = i;
-                            break;
-
-
-                        }
-                    }
-                    yiPlate -= 10;
-                    yPlateDiff = yfPlate - yiPlate;
-                    yPlateDiff += 10;
-                    img.ROI = new Rectangle(0, yiPlate, img_type2Y.Width, yPlateDiff);  //recorte e Y
-                    img.Save("plate_corteY.bmp");
+                    //    if (contrastY[i] < 2 && posCY == true)
+                    //    {
+                    //        posCY = false;
+                    //        yfPlate = i;
+                    //        break;
 
 
-                    img_type2X = img.Copy();  //passagem da regiao de intresse para uma nova imagem em que se realizara o recorte em x
-                    img_type2XCopy = img_type2X.Copy(); 
-                    Diferentiation(img_type2X, img_type2XCopy);    // diferenciacao
-                    ColorFilter(img_type2X);                        //filtro de cor
-                    img_type2X.Save("Diferentiation.bmp");
-                    projectionXWhite = ProjectionXWhite(img_type2X);    //projecao do numero de pixeis brancos
-                    for (i = 0; i < contrastX.Length; i++)
-                    {
-                        if (!posCX && projectionXWhite[i] > 20)
-                        {
-                            posCX = true;
-                            xiPlate = i;
-                        }                                               //limites em X
-
-                        if (posCX && projectionXWhite[i] > 20)
-                            xfPlate = i;
-                    }
-                    xPlateDiff = xfPlate - xiPlate;
-                    xPlateDiff += 10;
-                    xiPlate -= 10;
-                    img.ROI = new Rectangle(xiPlate, yiPlate, xPlateDiff, yPlateDiff);  //recorte em x e em Y
-                    img_plate = img.Copy();                 //passagem da regiao de interesse para uma nova imagem que so contém a matricula
-                    img.Save("Plate.bmp");  
-                    LP_Location = img.ROI;              
+                    //    }
+                    //}
+                    //yiPlate -= 10;
+                    //yPlateDiff = yfPlate - yiPlate;
+                    //yPlateDiff += 10;
+                    //img.ROI = new Rectangle(0, yiPlate, img_type2Y.Width, yPlateDiff);  //recorte e Y
+                    //img.Save("plate_corteY.bmp");
 
 
-                }else if(difficultyLevel == 1){
+                    //img_type2X = img.Copy();  //passagem da regiao de intresse para uma nova imagem em que se realizara o recorte em x
+                    //img_type2XCopy = img_type2X.Copy();
+                    //Diferentiation(img_type2X, img_type2XCopy);    // diferenciacao
+                    //ColorFilter(img_type2X);                        //filtro de cor
+                    //img_type2X.Save("Diferentiation.bmp");
+                    //projectionXWhite = ProjectionXWhite(img_type2X);    //projecao do numero de pixeis brancos
+                    //for (i = 0; i < contrastX.Length; i++)
+                    //{
+                    //    if (!posCX && projectionXWhite[i] > 20)
+                    //    {
+                    //        posCX = true;
+                    //        xiPlate = i;
+                    //    }                                               //limites em X
+
+                    //    if (posCX && projectionXWhite[i] > 20)
+                    //        xfPlate = i;
+                    //}
+                    //xPlateDiff = xfPlate - xiPlate;
+                    //xPlateDiff += 10;
+                    //xiPlate -= 10;
+                    //img.ROI = new Rectangle(xiPlate, yiPlate, xPlateDiff, yPlateDiff);  //recorte em x e em Y
+                    //img_plate = img.Copy();                 //passagem da regiao de interesse para uma nova imagem que so contém a matricula
+                    //img.Save("Plate.bmp");
+                    //LP_Location = img.ROI;
+
+                    coordinates = DetectPlateY(img);
+                    xiPlate = coordinates[0];
+                    yiPlate = coordinates[1];
+                    xPlateDiff = coordinates[2];
+                    yPlateDiff = coordinates[3];
+                    img.ROI = new Rectangle(xiPlate, yiPlate, xPlateDiff, yPlateDiff);
+                    img_plate = img.Copy();
+                    LP_Location = img.ROI;
+
+                } else if (difficultyLevel == 1) {
                     img_plate = img.Copy();         //se a imagem for de dif. 1, a regiao de interesse da matricula é a imagem completa
+
+                    img_plate.Save("plateResice.bmp");
+                }
+                else if (difficultyLevel == 3)
+                {
+                    coordinates = DetectPlateY(img);
+                    xiPlate = coordinates[0];
+                    yiPlate = coordinates[1];
+                    xPlateDiff = coordinates[2];
+                    yPlateDiff = coordinates[3];
+                    img.ROI = new Rectangle(xiPlate, yiPlate, xPlateDiff, yPlateDiff);
+                    img_plate = img.Copy();
+                    LP_Location = img.ROI;
                 }
 
 
 
 
                 ConvertToBW_Otsu(img_plate);        //binarizacao da imagem da matricula
-                img_plate.Save("fgdgdf.bmp");
-                if(difficultyLevel == 1)
-                    projectionX = ProjectionX(img_plate, 21); //dificult lvl 1          a nova funcao mete a zero tudo abaixo do threshold
-                                                                                       //para ser mais fácil de processar no codigo abaixo
-                else if(difficultyLevel == 2)
+                img_plate.Save("type3.bmp");
+                if (difficultyLevel == 1)
+                    projectionX = ProjectionX(img_plate,5); //dificult lvl 1          a nova funcao mete a zero tudo abaixo do threshold 21
+                                                              //para ser mais fácil de processar no codigo abaixo
+                else if (difficultyLevel == 2)
                     projectionX = ProjectionX(img_plate, 15); //dificult lvl 2
-
+                else if (difficultyLevel == 3)
+                    projectionX = ProjectionX(img_plate, 20);
                 projectionY = ProjectionY(img_plate);
 
 
-                for (i = 0; i < projectionY.Length; i++)
-                {
-                    if (projectionY[i] > 50 && posy == false)
+
+                //if(difficultyLevel == 3)
+                //{
+                    yf = 0;
+                    do
                     {
-                        posy = true;
-                        yi = i;
+                        for (i = yf; i < projectionY.Length; i++)
+                        {
+                            if (projectionY[i] > 20 && posy == false)
+                            {
+                                posy = true;
+                                yi = i;
 
-                    }
-                                                                        //recorte do caractere i em Y
-                    if (projectionY[i] < 50 && posy == true)
-                    {
-                        posy = false;
-                        yf = i;
-                        break;
+                            }
+                            //recorte do caractere i em Y
+                            if (projectionY[i] < 20 && posy == true)
+                            {
+                                posy = false;
+                                yf = i;
+                                break;
 
 
-                    }
-                }
+                            }
+                        }
+                    } while (yf - yi < 30);
+                //}
+                //else
+                //{
+                //    for (i = 0; i < projectionY.Length; i++)
+                //    {
+                //        if (projectionY[i] > 50 && posy == false)
+                //        {
+                //            posy = true;
+                //            yi = i;
 
+                //        }
+                //        //recorte do caractere i em Y
+                //        if (projectionY[i] < 50 && posy == true)
+                //        {
+                //            posy = false;
+                //            yf = i;
+                //            break;
+
+
+                //        }
+                //    }
+                //}
+
+
+                int len = 0;
+                if (img.Width > 700)
+                    len = 19;
+                else if (img.Width < 700)
+                    len = 16;
 
                 for (i = 0; i < projectionX.Length; i++)
                 {
@@ -3408,31 +3466,32 @@ namespace SS_OpenCV
                     {
                         pos = false;
                         xf = i;
-
-                        img.ROI = new Rectangle(xiPlate + xi, yiPlate + yi, xf - xi, yf - yi); //recorte do caractere em coordenadas da imagem original
-                                                                                               //no caso de dif 1 fica sem efeito pq a xiPlate é inicializado a zero
-                        img.Save("ch.bmp");
-                        ch = img.Copy();
-                        ConvertToBW_Otsu(ch);
-                        ch.Save("ch.bmp");
-                        r.Add ( img.ROI);
-
-
-                        for (int j = 0; j < symbols.Count; j++)
+                        if(xf-xi > len)
                         {
-                            BD = symbols[j].Resize(ch.Width, ch.Height, Emgu.CV.CvEnum.INTER.CV_INTER_CUBIC);  //comparacao
-                            compare[j] = Compare_Caracter(ch, BD);
+                            img.ROI = new Rectangle(xiPlate + xi, yiPlate + yi, xf - xi, yf - yi); //recorte do caractere em coordenadas da imagem original
+                                                                                                   //no caso de dif 1 fica sem efeito pq a xiPlate é inicializado a zero
+                            img.Save("ch.bmp");
+                            ch = img.Copy();
+                            ConvertToBW_Otsu(ch);
+                            ch.Save("ch.bmp");
+                            r.Add(img.ROI);
+
+                            for (int j = 0; j < symbols.Count; j++)
+                            {
+                                BD = symbols[j].Resize(ch.Width, ch.Height, Emgu.CV.CvEnum.INTER.CV_INTER_CUBIC);  //comparacao
+                                compare[j] = Compare_Caracter(ch, BD);
+                            }
+
+                            max = compare.Max();
+                            index = Array.IndexOf(compare, max);
+                            Console.WriteLine(plate[index]);
+
+                            Array.Clear(compare, 0, compare.Length);
                         }
-                        
-                        max = compare.Max();
-                        index = Array.IndexOf(compare, max);
-                        Console.WriteLine(plate[index]);
-                       
-                        Array.Clear(compare, 0, compare.Length);
+
                     }
 
                 }
-
 
                 LP_Chr1 = r[0];
                 LP_Chr2 = r[1];
@@ -3444,7 +3503,7 @@ namespace SS_OpenCV
             }
         }
 
-        public static void DetectPlateY(Emgu.CV.Image<Bgr, byte> img)
+        public static int[] DetectPlateY(Emgu.CV.Image<Bgr, byte> img)
         {
 
             unsafe
@@ -3453,6 +3512,7 @@ namespace SS_OpenCV
 
                 float[,] nonUniformMatrix = new float[3, 3];
                 float[,] nonUniformMatrix2 = new float[3, 3];
+                int[] coordinates = new int[4];
 
                 Image<Bgr, byte> img_type1 = null;
                 Image<Bgr, byte> img_type2Y = null;
@@ -3631,7 +3691,14 @@ namespace SS_OpenCV
                 {
                     img.ROI = new Rectangle(xiFinal, yiPlateAux, xPlateDiff, yPlateDiffAux);
                     img.Save("afterEffectsx" + imgCounter.ToString() + ".bmp");
+                    img_plate = img.Copy();
+                    coordinates[0] = xiFinal;
+                    coordinates[1] = yiPlateAux;
+                    coordinates[2] = xPlateDiff;
+                    coordinates[3] = yPlateDiffAux;
+                    return coordinates;
                 }
+                return null;
             }
         }
 
@@ -3642,7 +3709,7 @@ namespace SS_OpenCV
             {
                 Image<Bgr, byte> imgCopy = null;
                 imgCopy = img.Copy();
-                imgCopy.ROI = new Rectangle(0, (imgCopy.Height) / 5, imgCopy.Width, (imgCopy.Height) * 3 / 5);
+                //imgCopy.ROI = new Rectangle(0, (imgCopy.Height) / 5, imgCopy.Width, (imgCopy.Height) * 3 / 5);
 
                 MIplImage m = imgCopy.MIplImage;
                 byte* dataPtr = (byte*)m.imageData.ToPointer(); // Pointer to the image
@@ -3692,7 +3759,7 @@ namespace SS_OpenCV
             {
                 Image<Bgr, byte> imgCopy = null;
                 imgCopy = img.Copy();
-                imgCopy.ROI = new Rectangle(0, (imgCopy.Height) / 5, imgCopy.Width, (imgCopy.Height) * 3 / 5);
+                //imgCopy.ROI = new Rectangle(0, (imgCopy.Height) / 5, imgCopy.Width, (imgCopy.Height) * 3 / 5);
 
                 MIplImage m = imgCopy.MIplImage;
                 byte* dataPtr = (byte*)m.imageData.ToPointer(); // Pointer to the image
