@@ -557,9 +557,12 @@ namespace SS_OpenCV
             InputBox form = new InputBox("Difficult Level?");
             form.ShowDialog();
             int df = Convert.ToInt32(form.ValueTextBox.Text);
+            InputBox form2 = new InputBox("Plate type?");
+            form.ShowDialog();
+            String LPType = Convert.ToString(form.ValueTextBox.Text);
             ImageClass.LP_Recognition(imgUndo, imgUndo,
               df,
-              //string LPType,
+               LPType,
               out Rectangle LP_Location,
               out Rectangle LP_Chr1,
               out Rectangle LP_Chr2,
@@ -709,6 +712,24 @@ namespace SS_OpenCV
             imgUndo = img.Copy();
 
             ImageClass.DetectPlateY(img);
+
+            ImageViewer.Image = img.Bitmap;
+            ImageViewer.Refresh(); // refresh image on the screen
+
+            Cursor = Cursors.Default; // normal cursor
+        }
+
+        private void equializationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (img == null) // verify if the image is already opened
+                return;
+
+            Cursor = Cursors.WaitCursor; // clock cursor 
+
+            //copy Undo Image
+            imgUndo = img.Copy();
+
+            ImageClass.Equalization(img);
 
             ImageViewer.Image = img.Bitmap;
             ImageViewer.Refresh(); // refresh image on the screen

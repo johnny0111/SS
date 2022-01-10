@@ -93,7 +93,7 @@
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(38, 13);
             this.label5.TabIndex = 4;
-            this.label5.Text = "Autor3";
+            this.label5.Text = "Bernardo Marta";
             // 
             // AuthorsForm
             // 
