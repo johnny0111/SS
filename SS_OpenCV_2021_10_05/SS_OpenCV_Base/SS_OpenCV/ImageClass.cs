@@ -3299,36 +3299,48 @@ namespace SS_OpenCV
 
                 if (difficultyLevel == 2)
                 {
-                    //img_type2Y = img.Copy();
-                    //img_type2YCopy = img_type2Y.Copy();
-                    //NonUniform(img_type2Y, img_type2YCopy, nonUniformMatrix, 1, 0); //aplicação de filtro nao uniforme
+                    img_type2Y = img.Copy();
+                    img_type2YCopy = img_type2Y.Copy();
+                    NonUniform(img_type2Y, img_type2YCopy, nonUniformMatrix, 1, 0); //aplicação de filtro nao uniforme
                     //img_type2Y.Save("nonuniform.bmp");
 
 
-                    //contrastY = ContrastLineY(img_type2Y); //vector de contrastes entre pretos e brancos
-                    //for (i = 0; i < contrastY.Length; i++)
-                    //{
-                    //    if (contrastY[i] > 5 && posCY == false)
-                    //    {
-                    //        posCY = true;
-                    //        yiPlate = i;
+                    contrastY = ContrastLineY(img_type2Y); //vector de contrastes entre pretos e brancos
 
-                    //    }                                               //limites da matricula em Y
+                    for (i = 0; i < contrastY.Length; i++)
+                    {
+                        if (contrastY[i] > 5 && posCY == false)
+                        {
+                            posCY = true;
+                            yiPlate = i;
 
-                    //    if (contrastY[i] < 2 && posCY == true)
-                    //    {
-                    //        posCY = false;
-                    //        yfPlate = i;
-                    //        break;
+                        }                                               //limites da matricula em Y
+
+                        if (contrastY[i] < 2 && posCY == true)
+                        {
+                            posCY = false;
+                            yfPlate = i;
+                            //break
+                            //yiPlate -= 10;
+                            yPlateDiff = yfPlate - yiPlate;
+                            //yPlateDiff += 10;
+                            if (yPlateDiff > 30)
+                            {
+
+                                img.ROI = new Rectangle(0, yiPlate, img_type2Y.Width, yPlateDiff);  //recorte e Y
+                                img.Save(i + ".bmp");
+
+                                img_plate = img.Copy();                 //passagem da regiao de interesse para uma nova imagem que so contém a matricula
+                                img.Save("Plate.bmp");
+                                LP_Location = img.ROI;
+
+                            }
+                        }
 
 
-                    //    }
-                    //}
-                    //yiPlate -= 10;
-                    //yPlateDiff = yfPlate - yiPlate;
-                    //yPlateDiff += 10;
-                    //img.ROI = new Rectangle(0, yiPlate, img_type2Y.Width, yPlateDiff);  //recorte e Y
-                    //img.Save("plate_corteY.bmp");
+
+                    }
+
 
 
                     //img_type2X = img.Copy();  //passagem da regiao de intresse para uma nova imagem em que se realizara o recorte em x
@@ -3356,14 +3368,17 @@ namespace SS_OpenCV
                     //img.Save("Plate.bmp");
                     //LP_Location = img.ROI;
 
-                    coordinates = DetectPlateY(img);
-                    xiPlate = coordinates[0];
-                    yiPlate = coordinates[1];
-                    xPlateDiff = coordinates[2];
-                    yPlateDiff = coordinates[3];
-                    img.ROI = new Rectangle(xiPlate, yiPlate, xPlateDiff, yPlateDiff);
-                    img_plate = img.Copy();
-                    LP_Location = img.ROI;
+
+
+
+                    //coordinates = DetectPlateY(img);
+                    //xiPlate = coordinates[0];
+                    //yiPlate = coordinates[1];
+                    //xPlateDiff = coordinates[2];
+                    //yPlateDiff = coordinates[3];
+                    //img.ROI = new Rectangle(xiPlate, yiPlate, xPlateDiff, yPlateDiff);
+                    //img_plate = img.Copy();
+                    //LP_Location = img.ROI;
 
                 } else if (difficultyLevel == 1) {
                     img_plate = img.Copy();         //se a imagem for de dif. 1, a regiao de interesse da matricula é a imagem completa
