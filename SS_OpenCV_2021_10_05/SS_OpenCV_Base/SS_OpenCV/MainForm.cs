@@ -540,7 +540,7 @@ namespace SS_OpenCV
 
         private void matriculaToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //LP_Chr1 = new Rectangle(340, 190, 30, 40);
+            //Rectangle LP_Chr1 = new Rectangle(340, 190, 30, 40);
             //Rectangle LP_Chr2 = new Rectangle(360, 190, 30, 40);
             //Rectangle LP_Chr3 = new Rectangle(380, 190, 30, 40);
             //Rectangle LP_Chr4 = new Rectangle(400, 190, 30, 40);
@@ -569,13 +569,13 @@ namespace SS_OpenCV
               out Rectangle LP_Chr3,
               out Rectangle LP_Chr4,
               out Rectangle LP_Chr5,
-              out Rectangle LP_Chr6
-                //out string LP_C1,
-                //out string LP_C2,
-                //out string LP_C3,
-                //out string LP_C4,
-                //out string LP_C5,
-                //out string LP_C6
+              out Rectangle LP_Chr6,
+                out string LP_C1,
+                out string LP_C2,
+                out string LP_C3,
+                out string LP_C4,
+                out string LP_C5,
+                out string LP_C6
 
                 );
             img.Draw(LP_Chr1, new Emgu.CV.Structure.Bgr(Color.Green), 2);
@@ -586,6 +586,8 @@ namespace SS_OpenCV
             img.Draw(LP_Chr6, new Emgu.CV.Structure.Bgr(Color.Green), 2);
             img.Draw(LP_Location, new Emgu.CV.Structure.Bgr(Color.Green), 2);
 
+            string text = LP_C1+" " + LP_C2 + " " + LP_C3 + " " + LP_C4 + " " + LP_C5 + " " + LP_C6 + " ";
+            MessageBox.Show(text);
 
             ImageViewer.Image = img.Bitmap;
             ImageViewer.Refresh(); // refresh image on the screen

@@ -3079,13 +3079,13 @@ namespace SS_OpenCV
          out Rectangle LP_Chr3,
          out Rectangle LP_Chr4,
          out Rectangle LP_Chr5,
-         out Rectangle LP_Chr6
-         //out string LP_C1,
-         //out string LP_C2,
-         //out string LP_C3,
-         //out string LP_C4,
-         //out string LP_C5,
-         //out string LP_C6
+         out Rectangle LP_Chr6,
+         out string LP_C1,
+         out string LP_C2,
+         out string LP_C3,
+         out string LP_C4,
+         out string LP_C5,
+         out string LP_C6
 
       )
         {
@@ -3105,6 +3105,9 @@ namespace SS_OpenCV
                 int xPlateDiff = 0;
                 int yiPlateAux = 0, yPlateDiffAux = 0;
                 int xfFinal = 0, xiFinal = 0;
+                int recorte_letras_manhosas = 0;
+                int xInicio = 0;
+                int xFinalY = 0;
                 int[] compare = new int[35];
                 MIplImage m = img.MIplImage;
                 bool pos = false;
@@ -3127,6 +3130,7 @@ namespace SS_OpenCV
                 List<Image<Bgr, Byte>> symbols = new List<Image<Bgr, byte>>();
                 List<MIplImage> s = new List<MIplImage>();
                 List<Rectangle> r = new List<Rectangle>();
+                List<String> LpOut = new List<String>();
                 Image<Bgr, byte> img_type1 = null;
                 Image<Bgr, byte> img_type2Y = null;
                 Image<Bgr, byte> img_type2X = null;
@@ -3299,7 +3303,7 @@ namespace SS_OpenCV
                     ConvertToBW_Otsu(symbols[i]);
 
 
-                if (difficultyLevel == 2)
+                if (difficultyLevel == 2 || difficultyLevel == 3 || difficultyLevel == 4)
                 {
                     img_type2Y = img.Copy();
                     img_type2YCopy = img_type2Y.Copy();
@@ -3395,7 +3399,59 @@ namespace SS_OpenCV
                         LP_Location = img.ROI;
 
                     }
+                    if(difficultyLevel == 3 || difficultyLevel == 4)
+                    {
+                        int[] projectionBlue = ProjectionXBlue(img_plate, 0);
+                        int[] projectionYellow = ProjectionXYellow(img_plate, 0);
+                        bool toggle = false;
 
+                        for (int j = 0; j < projectionBlue.Length; j++)
+                        {
+                            if (projectionBlue[j] > 30 && !toggle)
+                                toggle = true;
+                            if(projectionBlue[j] < 30 && toggle)
+                            {
+                                toggle = false;
+                                xInicio = j;
+                            }
+                        }
+
+                        for (int ii = 0; ii< projectionYellow.Length; ii++)
+                        {
+                            if (projectionYellow[ii] >5)
+                            {
+                                
+                                xFinalY = (projectionYellow.Length)-ii;
+                                break;
+                            }
+
+                        } 
+                        img.ROI = new Rectangle(xiFinal + xInicio, yiPlateAux, xPlateDiff-xInicio- xFinalY, yPlateDiffAux);
+                        img.Save("PlateXX.bmp");
+
+                        img_aux = img.Copy();
+                        ConvertToBW_Otsu(img_aux);
+                        int[] projectionYY;
+
+                        projectionYY = ProjectionY(img_aux);
+
+                        for (int iii = 0; iii< projectionYY.Length; iii++)
+                        {
+                            if (projectionYY[iii] > 200)
+                            {
+
+                                recorte_letras_manhosas = (projectionYY.Length) - iii;
+                                break;
+                            }
+                        }
+
+                        img.ROI = new Rectangle(xiFinal + xInicio, yiPlateAux, xPlateDiff - xInicio - xFinalY, yPlateDiffAux-recorte_letras_manhosas);
+                        img.Save("PlateXX.bmp");
+                        img_plate = img.Copy();
+                        LP_Location = img.ROI;
+                    }
+
+                        
                     //img_type2X = img.Copy();  //passagem da regiao de intresse para uma nova imagem em que se realizara o recorte em x
                     //img_type2XCopy = img_type2X.Copy();
                     //Diferentiation(img_type2X, img_type2XCopy);    // diferenciacao
@@ -3433,35 +3489,36 @@ namespace SS_OpenCV
                     //img_plate = img.Copy();
                     //LP_Location = img.ROI;
 
-                } else if (difficultyLevel == 1) {
+                }
+                else if (difficultyLevel == 1) {
                     img_plate = img.Copy();         //se a imagem for de dif. 1, a regiao de interesse da matricula é a imagem completa
 
                     img_plate.Save("plateResice.bmp");
                 }
-                else if (difficultyLevel == 3)
-                {
-                    coordinates = DetectPlateY(img);
-                    xiPlate = coordinates[0];
-                    yiPlate = coordinates[1];
-                    xPlateDiff = coordinates[2];
-                    yPlateDiff = coordinates[3];
-                    img.ROI = new Rectangle(xiPlate, yiPlate, xPlateDiff, yPlateDiff);
-                    img_plate = img.Copy();
-                    LP_Location = img.ROI;
-                }
 
+                //else if (difficultyLevel == 3)
+                //{
+                //    coordinates = DetectPlateY(img);
+                //    xiPlate = coordinates[0];
+                //    yiPlate = coordinates[1];
+                //    xPlateDiff = coordinates[2];
+                //    yPlateDiff = coordinates[3];
+                //    img.ROI = new Rectangle(xiPlate, yiPlate, xPlateDiff, yPlateDiff);
+                //    img_plate = img.Copy();
+                //    LP_Location = img.ROI;
+                //}
 
                 //-------------------------------------------------------------RECORTE DAS LETRAS-------------------------------------------------------------------------------
-
+                Median(img_plate, img_plate);
                 ConvertToBW_Otsu(img_plate);        //binarizacao da imagem da matricula
                 img_plate.Save("type3.bmp");
                 if (difficultyLevel == 1)
                     projectionX = ProjectionX(img_plate,5); //dificult lvl 1          a nova funcao mete a zero tudo abaixo do threshold 21
                                                               //para ser mais fácil de processar no codigo abaixo
                 else if (difficultyLevel == 2)
-                    projectionX = ProjectionX(img_plate, 0); //dificult lvl 2
-                else if (difficultyLevel == 3)
-                    projectionX = ProjectionX(img_plate, 20);
+                    projectionX = ProjectionX(img_plate, 3); //dificult lvl 2
+                else if (difficultyLevel == 3 || difficultyLevel == 4)
+                    projectionX = ProjectionX(img_plate, 3);
                 projectionY = ProjectionY(img_plate);
 
 
@@ -3515,12 +3572,28 @@ namespace SS_OpenCV
 
 
                 int len = 0;
-                if(String.Equals("A", LPType)){
-                    if (img.Width > 700)
-                        len = 19;
-                    else if (img.Width < 700)
-                        len = 16;
+                if (difficultyLevel == 1)
+                {
+                    if (String.Equals("A", (LPType.ToUpper())))
+                    {
+                        if (img.Width > 700)
+                            len = 19;
+                        else if (img.Width < 700)
+                            len = 16;
+                    }
                 }
+                    
+                else
+                {
+                    if (String.Equals("A", (LPType.ToUpper())))
+                    {
+                        if (img.Width > 300)
+                            len = 17;
+                        else if (img.Width < 300)
+                            len = 12;
+                    }
+                }
+  
 
 
                 for (i = 0; i < projectionX.Length; i++)
@@ -3539,8 +3612,9 @@ namespace SS_OpenCV
                         xf = i;
                         if(xf-xi > len)
                         {
-                            img.ROI = new Rectangle(xiFinal + xi, yiPlateAux + yi, xf - xi, yf - yi); //recorte do caractere em coordenadas da imagem original
-                                                                                                   //no caso de dif 1 fica sem efeito pq a xiPlate é inicializado a zero
+                            img.ROI = new Rectangle(xiFinal + xi + xInicio, yiPlateAux + yi, xf - xi, yf - yi ); //recorte do caractere em coordenadas da imagem original
+                                                                                                        //no caso de dif 1 fica sem efeito pq a xiPlate é inicializado a zero
+                           // xiFinal + xInicio, yiPlateAux, xPlateDiff - xInicio - xFinalY, yPlateDiffAux - recorte_letras_manhosas
                             img.Save("ch.bmp");
                             ch = img.Copy();
                             ConvertToBW_Otsu(ch);
@@ -3556,7 +3630,7 @@ namespace SS_OpenCV
                             max = compare.Max();
                             index = Array.IndexOf(compare, max);
                             Console.WriteLine(plate[index]);
-
+                            LpOut.Add(plate[index].ToString());
                             Array.Clear(compare, 0, compare.Length);
                             if (r.Count == 6)
                                 break;
@@ -3572,6 +3646,14 @@ namespace SS_OpenCV
                 LP_Chr4 = r[3];
                 LP_Chr5 = r[4];
                 LP_Chr6 = r[5];
+
+                LP_C1 = LpOut[0];
+                LP_C2 = LpOut[1];
+                LP_C3 = LpOut[2];
+                LP_C4 = LpOut[3];
+                LP_C5 = LpOut[4];
+                LP_C6 = LpOut[5];
+
 
             }
         }
@@ -3817,8 +3899,8 @@ namespace SS_OpenCV
                 }
                 //ProjectionY projectionY = new ProjectionY(hist, height);
                 ////projectionY.ShowDialog();
-                //ProjectionX projectionX = new ProjectionX(hist, width);
-                //projectionX.ShowDialog();
+                ProjectionX projectionX = new ProjectionX(hist, width);
+                projectionX.ShowDialog();
 
                 return hist;
 
@@ -3866,8 +3948,8 @@ namespace SS_OpenCV
                     }
                     dataPtr += padding;
                 }
-                //ProjectionY projectionY = new ProjectionY(hist, height);
-                //projectionY.ShowDialog();
+                ProjectionY projectionY = new ProjectionY(hist, height);
+                projectionY.ShowDialog();
 
 
                 return hist;
@@ -3994,6 +4076,91 @@ namespace SS_OpenCV
             }
         }
 
+        public static int[] ProjectionXBlue(Emgu.CV.Image<Bgr, byte> img, int treshold)
+        {
+            unsafe
+            {
+
+                MIplImage m = img.MIplImage;
+                byte* dataPtr = (byte*)m.imageData.ToPointer(); // Pointer to the image
+
+                int width = img.Width;
+                int height = img.Height;
+                int nChan = m.nChannels; // number of channels - 3
+                int padding = m.widthStep - m.nChannels * m.width; // alinhament bytes (padding)
+                int widthStep = m.widthStep;
+                int x, y;
+
+                int[] hist = new int[width];
+
+                //ConvertToBW_Otsu(img);
+
+                for (y = 0; y < height; y++)
+                {
+                    for (x = 0; x < width; x++)
+                    {
+                        if (dataPtr[0] > 150 && dataPtr[1] < 150 && dataPtr[2] < 150)
+                            hist[x]++;
+                        dataPtr += nChan;
+                    }
+                    dataPtr += padding;
+                }
+
+                for (x = 0; x < hist.Length; x++)
+                {
+                    if (hist[x] < treshold)
+                        hist[x] = 0;
+                }
+
+                ProjectionX projectionX = new ProjectionX(hist, width);
+                projectionX.ShowDialog();
+
+                return hist;
+            }
+        }
+
+        public static int[] ProjectionXYellow(Emgu.CV.Image<Bgr, byte> img, int treshold)
+        {
+            unsafe
+            {
+
+                MIplImage m = img.MIplImage;
+                byte* dataPtr = (byte*)m.imageData.ToPointer(); // Pointer to the image
+
+                int width = img.Width;
+                int height = img.Height;
+                int nChan = m.nChannels; // number of channels - 3
+                int padding = m.widthStep - m.nChannels * m.width; // alinhament bytes (padding)
+                int widthStep = m.widthStep;
+                int x, y;
+
+                int[] hist = new int[width];
+
+                //ConvertToBW_Otsu(img);
+
+                for (y = 0; y < height; y++)
+                {
+                    for (x = 0; x < width; x++)
+                    {
+                        if (dataPtr[0] <50 && dataPtr[1] > 100 && dataPtr[2] > 100)
+                            hist[x]++;
+                        dataPtr += nChan;
+                    }
+                    dataPtr += padding;
+                }
+
+                for (x = 0; x < hist.Length; x++)
+                {
+                    if (hist[x] < treshold)
+                        hist[x] = 0;
+                }
+
+                ProjectionX projectionX = new ProjectionX(hist, width);
+                projectionX.ShowDialog();
+
+                return hist;
+            }
+        }
         public static int[] ProjectionYWhite(Emgu.CV.Image<Bgr, byte> img)
         {
             unsafe

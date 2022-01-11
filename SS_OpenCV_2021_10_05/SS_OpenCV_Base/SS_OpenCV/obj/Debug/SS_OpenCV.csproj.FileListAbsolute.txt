@@ -211,8 +211,6 @@ C:\Users\mykyt\Documents\Faculdade\SS\SS_OpenCV_2021_10_05\SS_OpenCV_Base\SS_Ope
 D:\joaom\Documents\Mestrado\SS\SS_OpenCV_2021_10_05\SS_OpenCV_Base\SS_OpenCV\bin\Debug\SS_OpenCV.exe.config
 D:\joaom\Documents\Mestrado\SS\SS_OpenCV_2021_10_05\SS_OpenCV_Base\SS_OpenCV\bin\Debug\SS_OpenCV.exe
 D:\joaom\Documents\Mestrado\SS\SS_OpenCV_2021_10_05\SS_OpenCV_Base\SS_OpenCV\bin\Debug\SS_OpenCV.pdb
-D:\joaom\Documents\Mestrado\SS\SS_OpenCV_2021_10_05\SS_OpenCV_Base\SS_OpenCV\bin\Debug\SS_Eval.pdb
-D:\joaom\Documents\Mestrado\SS\SS_OpenCV_2021_10_05\SS_OpenCV_Base\SS_OpenCV\obj\Debug\SS_OpenCV.csprojAssemblyReference.cache
 D:\joaom\Documents\Mestrado\SS\SS_OpenCV_2021_10_05\SS_OpenCV_Base\SS_OpenCV\obj\Debug\SS_OpenCV.AuthorsForm.resources
 D:\joaom\Documents\Mestrado\SS\SS_OpenCV_2021_10_05\SS_OpenCV_Base\SS_OpenCV\obj\Debug\SS_OpenCV.InputBox.resources
 D:\joaom\Documents\Mestrado\SS\SS_OpenCV_2021_10_05\SS_OpenCV_Base\SS_OpenCV\obj\Debug\SS_OpenCV.MainForm.resources
@@ -242,8 +240,6 @@ C:\Users\mykyt\source\repos\SS\SS_OpenCV_2021_10_05\SS\SS_OpenCV_2021_10_05\SS_O
 C:\Users\mykyt\source\repos\SS\SS_OpenCV_2021_10_05\SS\SS_OpenCV_2021_10_05\SS_OpenCV_Base\SS_OpenCV\obj\Debug\SS_OpenCV.HistogramaAll.resources
 D:\joaom\Documents\Mestrado\SS\SS_OpenCV_2021_10_05\SS_OpenCV_Base\SS_OpenCV\obj\Debug\SS_OpenCV.Histograma.resources
 D:\joaom\Documents\Mestrado\SS\SS_OpenCV_2021_10_05\SS_OpenCV_Base\SS_OpenCV\obj\Debug\SS_OpenCV.HistogramaAll.resources
-D:\joaom\Documents\Mestrado\SS\SS_OpenCV_2021_10_05\SS_OpenCV_Base\SS_OpenCV\bin\Debug\Forms.dll
-D:\joaom\Documents\Mestrado\SS\SS_OpenCV_2021_10_05\SS_OpenCV_Base\SS_OpenCV\bin\Debug\Forms.pdb
 C:\Users\mykyt\source\repos\SS\SS_OpenCV_2021_10_05\SS\SS_OpenCV_2021_10_05\SS_OpenCV_Base\SS_OpenCV\bin\Debug\Forms.dll
 C:\Users\mykyt\source\repos\SS\SS_OpenCV_2021_10_05\SS\SS_OpenCV_2021_10_05\SS_OpenCV_Base\SS_OpenCV\bin\Debug\Forms.pdb
 C:\Users\mykyt\source\repos\SS\SS_OpenCV_2021_10_05\SS\SS_OpenCV_2021_10_05\SS_OpenCV_Base\SS_OpenCV\obj\Debug\SS_OpenCV.ProjectionX.resources
@@ -271,3 +267,4 @@ D:\joaom\Documents\Mestrado\SS_fase2\SS_OpenCV_2021_10_05\SS_OpenCV_Base\SS_Open
 D:\joaom\Documents\Mestrado\SS_fase2\SS_OpenCV_2021_10_05\SS_OpenCV_Base\SS_OpenCV\obj\Debug\SS_OpenCV.csproj.CopyComplete
 D:\joaom\Documents\Mestrado\SS\SS_OpenCV_2021_10_05\SS_OpenCV_Base\SS_OpenCV\obj\Debug\SS_OpenCV.ProjectionX.resources
 D:\joaom\Documents\Mestrado\SS\SS_OpenCV_2021_10_05\SS_OpenCV_Base\SS_OpenCV\obj\Debug\SS_OpenCV.ProjectionY.resources
+D:\joaom\Documents\Mestrado\SS\SS_OpenCV_2021_10_05\SS_OpenCV_Base\SS_OpenCV\obj\Debug\SS_OpenCV.csprojAssemblyReference.cache
