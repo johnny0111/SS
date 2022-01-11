@@ -3122,7 +3122,6 @@ namespace SS_OpenCV
                 int[] contrastY = new int[m.height];
                 int[] coordinates = new int[4];
                 float[,] nonUniformMatrix = new float[3, 3];
-                //char[] plate = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9','A', 'B','C','D' ,'E','T' };
                 char[] plate = new char[] {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
                                            'A','B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K',
                                            'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V',
@@ -3140,9 +3139,6 @@ namespace SS_OpenCV
                 Image<Bgr, byte> img_aux = null;
                 Image<Bgr, byte> ch = null;
 
-
-
-
                 LP_Location = new Rectangle(220, 190, 200, 40);
 
                 LP_Chr1 = new Rectangle(340, 190, 30, 40);
@@ -3151,25 +3147,6 @@ namespace SS_OpenCV
                 LP_Chr4 = new Rectangle(400, 190, 30, 40);
                 LP_Chr5 = new Rectangle(420, 190, 30, 40);
                 LP_Chr6 = new Rectangle(440, 190, 30, 40);
-
-                //r.Add(LP_Chr1);
-                //r.Add(LP_Chr2);
-                //r.Add(LP_Chr3);
-                //r.Add(LP_Chr4);
-                //r.Add(LP_Chr5);
-                //r.Add(LP_Chr6);
-
-
-
-                //LP_C1 = "1";
-                //LP_C2 = "2";
-                //LP_C3 = "3";
-                //LP_C4 = "4";
-                //LP_C5 = "5";
-                //LP_C6 = "6";
-
-
-
 
                 //Image<Bgr, byte> n0 = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\0.bmp");
                 //Image<Bgr, byte> n1 = new Image<Bgr, byte>("C:\\Users\\mykyt\\source\\repos\\SS\\SS_OpenCV_2021_10_05\\SS\\SS_OpenCV_2021_10_05\\SS_OpenCV_Base\\BD\\1.bmp");
@@ -3242,9 +3219,6 @@ namespace SS_OpenCV
                 Image<Bgr, byte> diff = null;
                 Image<Bgr, byte> BD = null;
 
-
-
-
                 symbols.Add(n0);
                 symbols.Add(n1);
                 symbols.Add(n2);
@@ -3255,7 +3229,6 @@ namespace SS_OpenCV
                 symbols.Add(n7);
                 symbols.Add(n8);
                 symbols.Add(n9);
-
 
                 symbols.Add(na);
                 symbols.Add(nb);
@@ -3282,7 +3255,6 @@ namespace SS_OpenCV
                 symbols.Add(nx);
                 symbols.Add(nz);
 
-
                 nonUniformMatrix[0, 0] = 0;
                 nonUniformMatrix[0, 1] = 0;
                 nonUniformMatrix[0, 2] = 0;
@@ -3293,23 +3265,18 @@ namespace SS_OpenCV
                 nonUniformMatrix[2, 1] = 0;
                 nonUniformMatrix[2, 2] = 0;
 
-
-
                 // guarda na lista s, a MIplImage de cada numero de matricula possivel
                 for (i = 0; i < symbols.Count; i++)
                     s.Add(symbols[i].MIplImage);
 
                 for (i = 0; i < symbols.Count; i++)
-                    ConvertToBW_Otsu(symbols[i]);
-
+                   ConvertToBW_Otsu(symbols[i]);
 
                 if (difficultyLevel == 2 || difficultyLevel == 3 || difficultyLevel == 4)
                 {
                     img_type2Y = img.Copy();
                     img_type2YCopy = img_type2Y.Copy();
                     NonUniform(img_type2Y, img_type2YCopy, nonUniformMatrix, 1, 0); //aplicação de filtro nao uniforme
-                    //img_type2Y.Save("nonuniform.bmp");
-                   
 
                     contrastY = ContrastLineY(img_type2Y); //vector de contrastes entre pretos e brancos
 
@@ -3326,22 +3293,15 @@ namespace SS_OpenCV
                         {
                             posCY = false;
                             yfPlate = i;
-                            //break
-                            //yiPlate -= 10;
                             yPlateDiff = yfPlate - yiPlate;
-                            //yPlateDiff += 10;
                             if (yPlateDiff > 30)
                             {
                                 yiPlateAux = yiPlate;
                                 yPlateDiffAux = yPlateDiff;
                                 img.ROI = new Rectangle(0, yiPlate, img_type2Y.Width, yPlateDiff);  //recorte e Y
-                                //img.Save(i + ".bmp");
-
                                 img_plate = img.Copy();                 //passagem da regiao de interesse para uma nova imagem que so contém a matricula
                                 img_type2XCopy = img.Copy();
                                 img.Save("Plate.bmp");
-                               
-
                             }
                         }
                     }
@@ -3359,8 +3319,6 @@ namespace SS_OpenCV
                     histx = ProjectionXWhite(img_plate);
 
                     int tresh = (int)histx.Average();
-
-                    
 
                     for (i = 0; i < histx.Length; i++)
                     {
@@ -3450,63 +3408,12 @@ namespace SS_OpenCV
                         img_plate = img.Copy();
                         LP_Location = img.ROI;
                     }
-
-                        
-                    //img_type2X = img.Copy();  //passagem da regiao de intresse para uma nova imagem em que se realizara o recorte em x
-                    //img_type2XCopy = img_type2X.Copy();
-                    //Diferentiation(img_type2X, img_type2XCopy);    // diferenciacao
-                    //ColorFilter(img_type2X);                        //filtro de cor
-                    //img_type2X.Save("Diferentiation.bmp");
-                    //projectionXWhite = ProjectionXWhite(img_type2X);    //projecao do numero de pixeis brancos
-                    //for (i = 0; i < contrastX.Length; i++)
-                    //{
-                    //    if (!posCX && projectionXWhite[i] > 20)
-                    //    {
-                    //        posCX = true;
-                    //        xiPlate = i;
-                    //    }                                               //limites em X
-
-                    //    if (posCX && projectionXWhite[i] > 20)
-                    //        xfPlate = i;
-                    //}
-                    //xPlateDiff = xfPlate - xiPlate;
-                    //xPlateDiff += 10;
-                    //xiPlate -= 10;
-                    //img.ROI = new Rectangle(xiPlate, yiPlate, xPlateDiff, yPlateDiff);  //recorte em x e em Y
-                    //img_plate = img.Copy();                 //passagem da regiao de interesse para uma nova imagem que so contém a matricula
-                    //img.Save("Plate.bmp");
-                    //LP_Location = img.ROI;
-
-
-
-
-                    //coordinates = DetectPlateY(img);
-                    //xiPlate = coordinates[0];
-                    //yiPlate = coordinates[1];
-                    //xPlateDiff = coordinates[2];
-                    //yPlateDiff = coordinates[3];
-                    //img.ROI = new Rectangle(xiPlate, yiPlate, xPlateDiff, yPlateDiff);
-                    //img_plate = img.Copy();
-                    //LP_Location = img.ROI;
-
                 }
                 else if (difficultyLevel == 1) {
                     img_plate = img.Copy();         //se a imagem for de dif. 1, a regiao de interesse da matricula é a imagem completa
 
                     img_plate.Save("plateResice.bmp");
                 }
-
-                //else if (difficultyLevel == 3)
-                //{
-                //    coordinates = DetectPlateY(img);
-                //    xiPlate = coordinates[0];
-                //    yiPlate = coordinates[1];
-                //    xPlateDiff = coordinates[2];
-                //    yPlateDiff = coordinates[3];
-                //    img.ROI = new Rectangle(xiPlate, yiPlate, xPlateDiff, yPlateDiff);
-                //    img_plate = img.Copy();
-                //    LP_Location = img.ROI;
-                //}
 
                 //-------------------------------------------------------------RECORTE DAS LETRAS-------------------------------------------------------------------------------
                 Median(img_plate, img_plate);
@@ -3521,54 +3428,28 @@ namespace SS_OpenCV
                     projectionX = ProjectionX(img_plate, 3);
                 projectionY = ProjectionY(img_plate);
 
-
-
-                //if(difficultyLevel == 3)
-                //{
-                    yf = 0;
-                    do
+                yf = 0;
+                do
+                {
+                    for (i = yf; i < projectionY.Length; i++)
                     {
-                        for (i = yf; i < projectionY.Length; i++)
+                        if (projectionY[i] > 20 && posy == false)
                         {
-                            if (projectionY[i] > 20 && posy == false)
-                            {
-                                posy = true;
-                                yi = i;
+                            posy = true;
+                            yi = i;
 
-                            }
-                            //recorte do caractere i em Y
-                            if ((projectionY[i] < 20 || i == (projectionY.Length)-1)&& posy == true )
-                            {
-                                posy = false;
-                                yf = i;
-                                break;
-
-
-                            }
                         }
-                    } while (yf - yi < 30);
-                //}
-                //else
-                //{
-                //    for (i = 0; i < projectionY.Length; i++)
-                //    {
-                //        if (projectionY[i] > 50 && posy == false)
-                //        {
-                //            posy = true;
-                //            yi = i;
-
-                //        }
-                //        //recorte do caractere i em Y
-                //        if (projectionY[i] < 50 && posy == true)
-                //        {
-                //            posy = false;
-                //            yf = i;
-                //            break;
+                        //recorte do caractere i em Y
+                        if ((projectionY[i] < 20 || i == (projectionY.Length)-1)&& posy == true )
+                        {
+                            posy = false;
+                            yf = i;
+                            break;
 
 
-                //        }
-                //    }
-                //}
+                        }
+                    }
+                } while (yf - yi < 30);
 
 
                 int len = 0;
@@ -3635,9 +3516,7 @@ namespace SS_OpenCV
                             if (r.Count == 6)
                                 break;
                         }
-
                     }
-
                 }
 
                 LP_Chr1 = r[0];
@@ -3653,8 +3532,6 @@ namespace SS_OpenCV
                 LP_C4 = LpOut[3];
                 LP_C5 = LpOut[4];
                 LP_C6 = LpOut[5];
-
-
             }
         }
 
@@ -3787,30 +3664,6 @@ namespace SS_OpenCV
 
                 tresh = (int)histx.Average();
                 imgCounter = 0;
-
-                //for (int i = 0; i < histx.Length; i++)
-                //{
-                //    if (histx[i] > tresh && posCX == false)
-                //    {
-                //        posCX = true;
-                //        xiPlate = i;
-
-                //    }                                               //limites da matricula em Y
-                //    if (histx[i] < tresh && posCX == true)
-                //    {
-                //        posCX = false;
-                //        xfPlate = i;
-                //        xPlateDiff = xfPlate - xiPlate;
-                //        xiPlate -= 10;
-                //        xPlateDiff += 10;
-                //        if(xPlateDiff > 50)
-                //        {
-                //            aux.ROI = new Rectangle(xiPlate, yiPlateAux, xPlateDiff, yPlateDiffAux);
-                //            aux.Save("afterEffectsx" + imgCounter.ToString() + ".bmp");
-                //            imgCounter++;
-                //        }
-                //    }
-                //}
 
                 int xfFinal = 0, xiFinal = 0;
 
